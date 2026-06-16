@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PC-TONGSIN v2.5 :: 푸르메클럽 AI 활용 동호회</title>
+  <meta name="description" content="PC통신처럼 사람과 사람이 연결되고, AI와 기술로 더 스마트한 변화를 만들어가는 푸르메클럽 AI 활용 동호회입니다." />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/quiple/galmuri@latest/dist/galmuri.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- CRT 오버레이 (스캔라인 + 비네팅 + 깜빡임) -->
+  <div class="crt-overlay" aria-hidden="true"></div>
+  <div class="crt-flicker" aria-hidden="true"></div>
+
+  <!-- ============ 부팅 시퀀스 ============ -->
+  <div id="boot" class="boot">
+    <pre class="boot-log" id="bootLog"></pre>
+    <div class="boot-skip">[ 아무 키나 누르면 건너뛰기 ]</div>
+  </div>
+
+  <!-- ============ 본문 ============ -->
+  <main id="screen" class="screen" hidden>
+    <!-- 상단 타이틀 바 -->
+    <header class="topbar">
+      <span class="topbar-left">PC-TONGSIN v2.5</span>
+      <span class="topbar-center">Purme Club</span>
+      <span class="topbar-right">1988-∞</span>
+    </header>
+
+    <!-- 메뉴 바 -->
+    <nav class="menubar" aria-label="메인 메뉴">
+      <a href="#hero" data-key="1">[ MAIN ]</a>
+      <span class="sep">|</span>
+      <a href="#activities" data-key="2">[ BOARD ]</a>
+      <span class="sep">|</span>
+      <a href="#connect" data-key="3">[ SEARCH ]</a>
+      <span class="sep">|</span>
+      <a href="#join" data-key="4">[ MAIL ]</a>
+      <span class="sep">|</span>
+      <a href="#meeting" data-key="5">[ SETUP ]</a>
+      <span class="sep">|</span>
+      <a href="#play" data-key="6" class="menu-play">[ PLAY ]</a>
+    </nav>
+
+    <p class="welcome">
+      WELCOME TO PURME CLUB PC-TONGSIN SYSTEM...
+      <span class="welcome-time" id="welcomeTime">2026.06.16  09:00:00</span>
+    </p>
+
+    <!-- ============ HERO ============ -->
+    <section id="hero" class="hero">
+      <div class="hero-tag">[ AI × FUTURE × CONNECT ]</div>
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <p class="hero-club">Purme Club</p>
+          <h1 class="hero-title">PC<span class="ko">통신</span></h1>
+          <p class="hero-slogan">— AI로 통하고, 함께 신난다! <span class="spark">✦</span></p>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+<pre class="ascii-monitor">
+   .------------------------.
+   |  CONNECTING            |
+   |    ::: 0 0 1 0 0 :::   |
+   |  [#####.........] 38%  |
+   |  > handshake...ok      |
+   |  > login........ok     |
+   |  > ai.module....<span class="blink">_</span>     |
+   '------------------------'
+        ||              ||
+   _____||______________||_____
+  [____________________________]
+</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ABOUT ============ -->
+    <section id="about" class="window">
+      <div class="window-bar">
+        <span class="window-title">&gt; ABOUT US</span>
+        <span class="window-ctrl">_ □ X</span>
+      </div>
+      <div class="window-body about-body">
+        <p class="about-text">
+          PC통신처럼 사람과 사람이 연결되고,<br />
+          AI와 기술로 더 스마트한 변화를 만들어가는<br />
+          <strong>푸르메클럽 AI 활용 동호회</strong>입니다.
+        </p>
+        <ul class="about-list">
+          <li>+ AI 활용 사례 공유</li>
+          <li>+ 업무 자동화 / 효율화</li>
+          <li>+ 스터디 / 워크숍 / 프로젝트</li>
+          <li>+ 아이디어톤 &amp; 해커톤</li>
+          <li>+ 최신 IT·AI 트렌드 탐구</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ WE CONNECT ============ -->
+    <section id="connect" class="connect">
+      <h2 class="section-head">&gt;&gt; WE CONNECT</h2>
+      <div class="connect-grid">
+        <article class="connect-card">
+          <div class="connect-icon">[人]</div>
+          <h3>통(通)하다</h3>
+          <p>사람 · 기술 · 데이터<br />우리가 연결됩니다</p>
+        </article>
+        <article class="connect-card">
+          <div class="connect-icon">[ai]</div>
+          <h3>배우고</h3>
+          <p>AI와 디지털로<br />새로운 가치를 만듭니다</p>
+        </article>
+        <article class="connect-card">
+          <div class="connect-icon">[♺]</div>
+          <h3>공유하고</h3>
+          <p>지식과 경험을 나누며<br />함께 성장합니다</p>
+        </article>
+        <article class="connect-card">
+          <div class="connect-icon">[↑]</div>
+          <h3>신(新)나다</h3>
+          <p>업무는 스마트하게,<br />미래는 함께 만들어가요!</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ============ 활동 내용 / 누구나 환영 / 모임 안내 ============ -->
+    <section class="triple">
+      <!-- 활동 내용 -->
+      <div id="activities" class="window">
+        <div class="window-bar">
+          <span class="window-title">&gt; 활동 내용</span>
+          <span class="window-ctrl">_ □ X</span>
+        </div>
+        <div class="window-body">
+          <ol class="num-list">
+            <li><span class="num">01</span> AI 활용 사례 공유</li>
+            <li><span class="num">02</span> 업무 자동화 / 생산성 향상</li>
+            <li><span class="num">03</span> 스터디 / 워크숍 / 프로젝트</li>
+            <li><span class="num">04</span> 아이디어톤 &amp; 해커톤</li>
+            <li><span class="num">05</span> 최신 IT·AI 트렌드 탐구</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- 누구나 환영 -->
+      <div class="window">
+        <div class="window-bar">
+          <span class="window-title">&gt; 누구나 환영!</span>
+          <span class="window-ctrl">_ □ X</span>
+        </div>
+        <div class="window-body">
+          <ul class="welcome-list">
+            <li>// AI나 디자인에 관심 있는 분</li>
+            <li>// 배우고, 나누고 싶은 분</li>
+            <li>// 다양한 직군과 협업하고 싶은 분</li>
+            <li>// 함께 공부하며 성장하고 싶은 분</li>
+          </ul>
+          <p class="welcome-cta">
+            지금 바로 함께해요!<br />
+            <em>작은 연결이 큰 변화를 만듭니다.</em>
+          </p>
+        </div>
+      </div>
+
+      <!-- 모임 안내 -->
+      <div id="meeting" class="window">
+        <div class="window-bar">
+          <span class="window-title">&gt; 모임 안내</span>
+          <span class="window-ctrl">_ □ X</span>
+        </div>
+        <div class="window-body">
+          <ul class="info-list">
+            <li>// 정기 모임 : 매월 1회</li>
+            <li>// 장소 : 온/오프라인 병행</li>
+            <li>// 운영 : 자율 &amp; 함께</li>
+            <li>// 세부 일정 : 추후 공지</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PLAY :: 팩맨 ============ -->
+    <section id="play" class="window game-window">
+      <div class="window-bar">
+        <span class="window-title">&gt; PLAY.EXE — PURME-MAN</span>
+        <span class="window-ctrl">_ □ X</span>
+      </div>
+      <div class="window-body game-body">
+        <div class="game-hud">
+          <span class="hud-score">SCORE <b id="gScore">0</b></span>
+          <span class="hud-high">HI <b id="gHigh">0</b></span>
+          <span class="hud-lives">LIVES <b id="gLives">♥♥♥</b></span>
+        </div>
+
+        <div class="game-stage">
+          <canvas id="gameCanvas" width="380" height="380" aria-label="팩맨 게임 화면"></canvas>
+          <div class="game-overlay" id="gameOverlay">
+            <pre class="game-logo">
+ ____  _   _ ____  __  __ ___ 
+|  _ \| | | |  _ \|  \/  | __|
+| |_) | |_| | |_) | |\/| | _| 
+|  __/|_____|_| \_\_|  |_|___|
+|_|   P U R M E - M A N  v1.0</pre>
+            <p class="game-msg" id="gameMsg">방향키 또는 WASD로 시작!</p>
+            <button class="game-btn" id="gameStartBtn">▶ START [ENTER]</button>
+          </div>
+        </div>
+
+        <p class="game-help">
+          ▲▼◀▶ / WASD 이동 · 점(·) 모두 먹으면 클리어 · 큰 점(◉) 먹으면 고스트 사냥 · ENTER 다시하기
+        </p>
+      </div>
+    </section>
+
+    <!-- ============ 가입 문의 ============ -->
+    <section id="join" class="join">
+      <div class="join-inner">
+        <span class="join-icon" aria-hidden="true">✉</span>
+        <div class="join-text">
+          <h2>동호회 가입 문의</h2>
+          <p>&gt; 학령기치료팀 <strong>함형광</strong>, 내선번호 <strong>9095</strong><span class="blink">_</span></p>
+        </div>
+        <span class="join-icon" aria-hidden="true">☎</span>
+      </div>
+    </section>
+
+    <!-- ============ 푸터 (기능키) ============ -->
+    <footer class="fnbar">
+      <button data-target="#hero">[F1] HELP</button>
+      <button data-target="#join">[F2] MESSAGE</button>
+      <button data-target="#connect">[F3] SEARCH</button>
+      <button data-target="#activities">[F4] UPLOAD</button>
+      <button data-target="#meeting">[F5] OPTION</button>
+      <button data-target="#top">[F10] QUIT</button>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

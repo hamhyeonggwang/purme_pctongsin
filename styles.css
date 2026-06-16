@@ -1,0 +1,465 @@
+/* ============================================================
+   PC-TONGSIN v2.5  ::  Purme Club AI 동호회
+   레트로 PC통신 BBS 테마
+   ============================================================ */
+
+:root {
+  --bg: #0a0e3f;           /* 딥 네이비 배경 */
+  --bg-deep: #060933;      /* 더 짙은 배경 */
+  --ink: #aecbff;          /* 기본 텍스트 (연한 블루) */
+  --ink-bright: #e8f0ff;   /* 강조 텍스트 (거의 흰색) */
+  --cyan: #5bd2ff;         /* 시안 포인트 */
+  --blue: #5b8cff;         /* 블루 포인트 */
+  --accent: #00e0ff;       /* 형광 시안 */
+  --line: #2b46b8;         /* 보더 라인 */
+  --line-soft: #1d2f7a;    /* 약한 라인 */
+  --glow: 0 0 6px rgba(91, 210, 255, 0.55);
+  --mono: "Galmuri11", "Galmuri", "DungGeunMo", ui-monospace, "Courier New", monospace;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at 50% 0%, #131a5c 0%, var(--bg) 45%, var(--bg-deep) 100%);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 16px;
+  line-height: 1.7;
+  letter-spacing: 0.5px;
+  min-height: 100vh;
+  text-shadow: 0 0 2px rgba(120, 170, 255, 0.4);
+  -webkit-font-smoothing: none;
+}
+
+strong { color: var(--ink-bright); }
+em { color: var(--cyan); font-style: normal; }
+
+/* ---------- CRT 오버레이 ---------- */
+.crt-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9000;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0) 0px,
+      rgba(0, 0, 0, 0) 2px,
+      rgba(0, 0, 0, 0.18) 3px,
+      rgba(0, 0, 0, 0.18) 4px
+    );
+  mix-blend-mode: multiply;
+}
+.crt-overlay::after {
+  /* 비네팅 */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.55) 100%);
+}
+.crt-flicker {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9001;
+  background: rgba(91, 210, 255, 0.02);
+  animation: flicker 6s infinite steps(60);
+}
+@keyframes flicker {
+  0%, 96%, 100% { opacity: 0; }
+  97% { opacity: 0.6; }
+  98% { opacity: 0.1; }
+  99% { opacity: 0.4; }
+}
+
+.blink { animation: blink 1s steps(2, start) infinite; color: var(--accent); }
+@keyframes blink { to { visibility: hidden; } }
+
+/* ============================================================
+   부팅 시퀀스
+   ============================================================ */
+.boot {
+  position: fixed;
+  inset: 0;
+  z-index: 8000;
+  background: var(--bg-deep);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 6vh 8vw;
+}
+.boot-log {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 15px;
+  line-height: 1.9;
+  color: var(--cyan);
+  white-space: pre-wrap;
+  text-shadow: var(--glow);
+}
+.boot-skip {
+  margin-top: 28px;
+  color: var(--line);
+  font-size: 13px;
+  animation: blink 1.4s steps(2, start) infinite;
+}
+
+/* ============================================================
+   화면 레이아웃
+   ============================================================ */
+.screen {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 18px 16px 60px;
+  animation: powerOn 0.6s ease-out;
+}
+@keyframes powerOn {
+  0% { opacity: 0; transform: scaleY(0.004); filter: brightness(3); }
+  40% { transform: scaleY(0.02); }
+  100% { opacity: 1; transform: scaleY(1); filter: brightness(1); }
+}
+
+/* ---------- 상단바 ---------- */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 8px;
+  color: var(--cyan);
+  font-size: 14px;
+}
+.topbar-center { color: var(--ink-bright); letter-spacing: 2px; }
+
+/* ---------- 메뉴바 ---------- */
+.menubar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  padding: 12px 0 8px;
+  font-size: 14px;
+}
+.menubar a {
+  color: var(--ink);
+  text-decoration: none;
+  padding: 2px 4px;
+  transition: all 0.12s;
+}
+.menubar a:hover,
+.menubar a:focus {
+  color: var(--bg-deep);
+  background: var(--accent);
+  text-shadow: none;
+  outline: none;
+}
+.menubar .sep { color: var(--line); }
+
+.welcome {
+  margin: 4px 0 26px;
+  font-size: 13px;
+  color: var(--cyan);
+  border-bottom: 1px dashed var(--line-soft);
+  padding-bottom: 14px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.welcome-time { color: var(--ink); }
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero { margin-bottom: 38px; }
+.hero-tag {
+  display: inline-block;
+  border: 1px solid var(--cyan);
+  color: var(--cyan);
+  padding: 4px 12px;
+  font-size: 13px;
+  margin-bottom: 18px;
+  letter-spacing: 1px;
+}
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 24px;
+  align-items: center;
+}
+.hero-club {
+  color: var(--cyan);
+  font-size: 20px;
+  margin: 0 0 4px;
+}
+.hero-title {
+  margin: 0;
+  font-size: clamp(48px, 11vw, 104px);
+  line-height: 0.95;
+  color: var(--ink-bright);
+  letter-spacing: 2px;
+  text-shadow: 0 0 10px rgba(91, 140, 255, 0.8), 0 0 22px rgba(0, 224, 255, 0.4);
+}
+.hero-title .ko { color: var(--accent); }
+.hero-slogan {
+  margin: 18px 0 0;
+  font-size: clamp(15px, 2.4vw, 22px);
+  color: var(--ink-bright);
+}
+.spark { color: var(--accent); }
+
+.ascii-monitor {
+  margin: 0;
+  font-size: clamp(9px, 1.5vw, 13px);
+  line-height: 1.4;
+  color: var(--cyan);
+  text-shadow: var(--glow);
+}
+
+/* ============================================================
+   윈도우 박스 (공통)
+   ============================================================ */
+.window {
+  border: 1px solid var(--line);
+  background: rgba(8, 12, 56, 0.55);
+  margin-bottom: 22px;
+  box-shadow: inset 0 0 24px rgba(40, 70, 200, 0.12);
+}
+.window-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--line);
+  color: var(--ink-bright);
+  padding: 4px 10px;
+  font-size: 13px;
+  text-shadow: none;
+}
+.window-ctrl { letter-spacing: 2px; opacity: 0.85; }
+.window-body { padding: 18px 18px 20px; }
+
+.section-head {
+  font-size: 16px;
+  color: var(--cyan);
+  border-bottom: 1px dashed var(--line);
+  padding-bottom: 6px;
+  margin: 0 0 18px;
+  letter-spacing: 1px;
+}
+
+/* ---------- ABOUT ---------- */
+.about-body {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 24px;
+}
+.about-text { margin: 0; font-size: 15px; line-height: 1.9; }
+.about-list { list-style: none; margin: 0; padding: 0; }
+.about-list li { color: var(--cyan); padding: 2px 0; }
+
+/* ============================================================
+   WE CONNECT
+   ============================================================ */
+.connect { margin: 38px 0; }
+.connect-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+.connect-card {
+  border: 1px solid var(--line-soft);
+  padding: 18px 12px;
+  text-align: center;
+  transition: all 0.18s;
+}
+.connect-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 18px rgba(0, 224, 255, 0.25);
+  transform: translateY(-3px);
+}
+.connect-icon {
+  font-size: 30px;
+  color: var(--accent);
+  margin-bottom: 10px;
+  text-shadow: var(--glow);
+}
+.connect-card h3 { margin: 0 0 8px; color: var(--ink-bright); font-size: 18px; }
+.connect-card p { margin: 0; font-size: 13px; line-height: 1.6; }
+
+/* ============================================================
+   TRIPLE (활동/환영/안내)
+   ============================================================ */
+.triple {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 38px;
+  align-items: start;
+}
+.triple .window { margin-bottom: 0; height: 100%; }
+
+.num-list, .welcome-list, .info-list { list-style: none; margin: 0; padding: 0; font-size: 14px; }
+.num-list li, .welcome-list li, .info-list li { padding: 4px 0; }
+.num-list .num { color: var(--accent); margin-right: 6px; }
+.welcome-list li, .info-list li { color: var(--cyan); }
+.welcome-cta {
+  margin: 16px 0 0;
+  padding-top: 12px;
+  border-top: 1px dashed var(--line-soft);
+  text-align: center;
+  color: var(--ink-bright);
+  font-size: 13px;
+}
+
+/* ============================================================
+   가입 문의 CTA
+   ============================================================ */
+.join {
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 22px rgba(0, 224, 255, 0.3), inset 0 0 22px rgba(0, 224, 255, 0.08);
+  margin-bottom: 30px;
+}
+.join-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  padding: 24px 18px;
+}
+.join-icon { font-size: 34px; color: var(--accent); text-shadow: var(--glow); }
+.join-text { text-align: center; }
+.join-text h2 { margin: 0 0 6px; color: var(--ink-bright); font-size: 24px; letter-spacing: 1px; }
+.join-text p { margin: 0; font-size: 17px; color: var(--cyan); }
+
+/* ============================================================
+   PLAY :: 팩맨 게임
+   ============================================================ */
+.menu-play { color: var(--accent) !important; }
+.menu-play::after { content: " ★"; }
+
+.game-window { margin-top: 38px; }
+.game-body { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+
+.game-hud {
+  display: flex;
+  gap: 26px;
+  width: 100%;
+  max-width: 380px;
+  justify-content: space-between;
+  font-size: 14px;
+  color: var(--cyan);
+  letter-spacing: 1px;
+}
+.game-hud b { color: var(--accent); }
+.hud-lives b { color: #ff5b7f; letter-spacing: 1px; }
+
+.game-stage {
+  position: relative;
+  width: 380px;
+  max-width: 100%;
+}
+#gameCanvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+  border: 1px solid var(--line);
+  background: #04061f;
+  box-shadow: inset 0 0 26px rgba(40, 70, 200, 0.25), 0 0 16px rgba(0, 224, 255, 0.15);
+}
+
+.game-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: rgba(4, 6, 31, 0.92);
+  text-align: center;
+  transition: opacity 0.25s;
+}
+.game-overlay.hidden { opacity: 0; pointer-events: none; }
+.game-logo {
+  margin: 0;
+  font-size: clamp(7px, 2.1vw, 11px);
+  line-height: 1.15;
+  color: var(--accent);
+  text-shadow: var(--glow);
+}
+.game-msg {
+  margin: 4px 0 0;
+  color: var(--ink-bright);
+  font-size: 15px;
+}
+.game-btn {
+  font-family: var(--mono);
+  font-size: 15px;
+  color: #04061f;
+  background: var(--accent);
+  border: none;
+  padding: 8px 18px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  text-shadow: none;
+  transition: transform 0.1s, box-shadow 0.15s;
+}
+.game-btn:hover {
+  box-shadow: 0 0 16px rgba(0, 224, 255, 0.7);
+  transform: scale(1.04);
+}
+.game-help {
+  margin: 0;
+  font-size: 12px;
+  color: var(--ink);
+  text-align: center;
+  max-width: 420px;
+  line-height: 1.7;
+}
+
+/* ============================================================
+   푸터 기능키
+   ============================================================ */
+.fnbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  justify-content: center;
+  border-top: 1px solid var(--line);
+  padding-top: 14px;
+  font-size: 13px;
+}
+.fnbar button {
+  background: none;
+  border: none;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 2px 4px;
+  text-shadow: inherit;
+  letter-spacing: 0.5px;
+}
+.fnbar button:hover { color: var(--accent); }
+
+/* ============================================================
+   반응형
+   ============================================================ */
+@media (max-width: 760px) {
+  .hero-grid { grid-template-columns: 1fr; }
+  .hero-art { display: flex; justify-content: center; }
+  .about-body { grid-template-columns: 1fr; }
+  .connect-grid { grid-template-columns: repeat(2, 1fr); }
+  .triple { grid-template-columns: 1fr; }
+  .join-inner { flex-direction: column; gap: 12px; }
+  .topbar { font-size: 12px; }
+}
+@media (max-width: 420px) {
+  .connect-grid { grid-template-columns: 1fr; }
+  .menubar { font-size: 12px; }
+}

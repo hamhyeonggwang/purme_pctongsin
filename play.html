@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PC-TONGSIN v2.5 :: PLAY.EXE</title>
+  <meta name="description" content="푸르메클럽 PC-TONGSIN — PURME-MAN 팩맨 &amp; 레트로 테트리스." />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/quiple/galmuri@latest/dist/galmuri.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="crt-overlay" aria-hidden="true"></div>
+  <div class="crt-flicker" aria-hidden="true"></div>
+
+  <main id="screen" class="screen">
+    <header class="topbar">
+      <span class="topbar-left">PC-TONGSIN v2.5</span>
+      <span class="topbar-center">Purme Club</span>
+      <span class="topbar-right">1988-∞</span>
+    </header>
+
+    <nav class="menubar" aria-label="메인 메뉴">
+      <a href="index.html#hero" data-key="1">[ MAIN ]</a>
+      <span class="sep">|</span>
+      <a href="curriculum.html" data-key="2">[ LEARN ]</a>
+      <span class="sep">|</span>
+      <a href="play.html" data-key="3" class="menu-play is-current" aria-current="page">[ PLAY ]</a>
+    </nav>
+
+    <p class="welcome" id="playWelcome">
+      PLAY.EXE LOADED — PURME-MAN v1.0 READY...
+      <span class="welcome-time" id="welcomeTime">2026.06.16  09:00:00</span>
+    </p>
+
+    <section id="play" class="window game-window game-page-window">
+      <div class="window-bar">
+        <span class="window-title" id="playWindowTitle">&gt; PLAY.EXE — PURME-MAN</span>
+        <span class="window-ctrl">_ □ X</span>
+      </div>
+      <div class="window-body game-body">
+        <p class="game-menu-head">// 실행할 게임을 선택하세요</p>
+        <div class="board-tabs game-tabs" role="tablist" aria-label="게임 선택">
+          <button type="button" class="board-tab" role="tab" data-game="pacman" aria-selected="true">[ PURME-MAN ]</button>
+          <button type="button" class="board-tab" role="tab" data-game="tetris" aria-selected="false">[ TETRIS ]</button>
+        </div>
+
+        <div id="gamePacman" class="game-panel">
+          <div class="game-hud">
+            <span class="hud-score">SCORE <b id="gScore">0</b></span>
+            <span class="hud-high">HI <b id="gHigh">0</b></span>
+            <span class="hud-lives">LIVES <b id="gLives">♥♥♥</b></span>
+          </div>
+
+          <div class="game-stage">
+            <canvas id="gameCanvas" width="380" height="380" aria-label="팩맨 게임 화면"></canvas>
+            <div class="game-overlay" id="gameOverlay">
+              <pre class="game-logo">
+ ____  _   _ ____  __  __ ___ 
+|  _ \| | | |  _ \|  \/  | __|
+| |_) | |_| | |_) | |\/| | _| 
+|  __/|_____|_| \_\_|  |_|___|
+|_|   P U R M E - M A N  v1.0</pre>
+              <p class="game-msg" id="gameMsg">방향키 또는 WASD로 시작!</p>
+              <button type="button" class="game-btn" id="gameStartBtn">▶ START [ENTER]</button>
+            </div>
+          </div>
+
+          <p class="game-help">
+            ▲▼◀▶ / WASD 이동 · 점(·) 모두 먹으면 클리어 · 큰 점(◉) 먹으면 고스트 사냥 · ENTER 다시하기
+          </p>
+        </div>
+
+        <div id="gameTetris" class="game-panel" hidden>
+          <div class="tetris-layout">
+            <div class="game-stage tetris-stage">
+              <canvas id="tetrisCanvas" width="200" height="400" aria-label="테트리스 게임 화면"></canvas>
+              <div class="game-overlay" id="tetrisOverlay">
+                <pre class="game-logo">
+ _____ ___ _____ ____ ___ ____ 
+|_   _|_ _| ____|  _ \_ _/ ___|
+  | |  | ||  _| | |_) | |\___ \
+  | |  | || |___|  _ &lt;| | ___) |
+  |_| |___|_____|_| \_\___|____/
+        P U R M E - T E T R I S</pre>
+                <p class="game-msg" id="tetrisMsg">방향키 / WASD · SPACE 하드드롭</p>
+                <button type="button" class="game-btn" id="tetrisStartBtn">▶ START [ENTER]</button>
+              </div>
+            </div>
+
+            <aside class="tetris-sidebar" aria-label="테트리스 상태">
+              <div class="tetris-stat">
+                <span class="tetris-label">NEXT</span>
+                <canvas id="tetrisNext" width="80" height="80" aria-hidden="true"></canvas>
+              </div>
+              <div class="tetris-stat">
+                <span class="tetris-label">SCORE</span>
+                <b id="tScore">0</b>
+              </div>
+              <div class="tetris-stat">
+                <span class="tetris-label">HI</span>
+                <b id="tHigh">0</b>
+              </div>
+              <div class="tetris-stat">
+                <span class="tetris-label">LINE</span>
+                <b id="tLines">0</b>
+              </div>
+              <div class="tetris-stat">
+                <span class="tetris-label">LEVEL</span>
+                <b id="tLevel">1</b>
+              </div>
+            </aside>
+          </div>
+
+          <p class="game-help">
+            ◀▶ / AD 이동 · ▲ / W 회전 · ▼ / S 소프트드롭 · SPACE 하드드롭 · P 일시정지 · ENTER 시작/재시작
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="fnbar">
+      <button type="button" data-fkey="1" data-href="index.html#hero">[F1] MAIN</button>
+      <button type="button" data-fkey="2" data-href="curriculum.html">[F2] LEARN</button>
+      <button type="button" data-fkey="3" data-target="#play">[F3] PLAY</button>
+      <button type="button" data-fkey="10" data-href="index.html#hero">[F10] QUIT</button>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+  <script src="play.js"></script>
+  <script src="game.js"></script>
+  <script src="tetris.js"></script>
+</body>
+</html>

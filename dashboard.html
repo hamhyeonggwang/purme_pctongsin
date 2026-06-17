@@ -22,19 +22,22 @@
 
     <nav class="menubar" aria-label="메인 메뉴">
       <a href="index#hero" data-key="1">[ MAIN ]</a><span class="sep">|</span>
-      <a href="index#activities" data-key="2">[ BOARD ]</a><span class="sep">|</span>
+      <a href="index#board-showcase" data-key="2" class="is-current" aria-current="page">[ BOARD ]</a><span class="sep">|</span>
       <a href="curriculum" data-key="3">[ LEARN ]</a><span class="sep">|</span>
-      <a href="lab" data-key="4">[ LAB ]</a><span class="sep">|</span>
-      <a href="dashboard" data-key="5" class="is-current" aria-current="page">[ DASH ]</a><span class="sep">|</span>
-      <a href="project" data-key="6">[ PROJECT ]</a><span class="sep">|</span>
-      <a href="joinin" data-key="7">[ JOIN IN ]</a><span class="sep">|</span>
-      <a href="play" data-key="8" class="menu-play">[ PLAY ]</a>
+      <a href="joinin" data-key="4">[ JOIN IN ]</a><span class="sep">|</span>
+      <a href="play" data-key="5" class="menu-play">[ PLAY ]</a>
     </nav>
 
     <p class="welcome">
       DASHBOARD.SYS LOADED — ANONYMIZED SIGNUP DATA VIEW...
       <span class="welcome-time" id="welcomeTime">2026.06.16  09:00:00</span>
     </p>
+
+    <nav class="board-subnav" aria-label="BOARD 하위 메뉴">
+      <a href="lab">[ LAB ]</a>
+      <a href="dashboard" class="is-current" aria-current="page">[ DASH ]</a>
+      <a href="project">[ PROJECT ]</a>
+    </nav>
 
     <section class="window showcase-hero">
       <div class="window-bar">
@@ -68,10 +71,10 @@
 
     <footer class="fnbar">
       <button type="button" data-fkey="1" data-href="index#hero">[F1] MAIN</button>
-      <button type="button" data-fkey="4" data-href="lab">[F4] LAB</button>
-      <button type="button" data-fkey="6" data-href="project">[F6] PROJECT</button>
-      <button type="button" data-fkey="7" data-href="joinin">[F7] JOIN</button>
-      <button type="button" data-fkey="8" data-href="play">[F8] PLAY</button>
+      <button type="button" data-fkey="2" data-href="index#board-showcase">[F2] BOARD</button>
+      <button type="button" data-fkey="3" data-href="curriculum">[F3] LEARN</button>
+      <button type="button" data-fkey="4" data-href="joinin">[F4] JOIN</button>
+      <button type="button" data-fkey="5" data-href="play">[F5] PLAY</button>
       <button type="button" data-fkey="10" data-href="index#hero">[F10] QUIT</button>
     </footer>
   </main>

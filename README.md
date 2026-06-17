@@ -7,11 +7,11 @@
 
 | URL | 파일 | 설명 |
 |---|---|---|
-| `/` | `index.html` | 메인 BBS (소개 · 활동 · 가입 CTA · PLAY 티저) |
+| `/` | `index.html` | 메인 BBS (소개 · BOARD 하위 실습 · 가입 CTA · PLAY 티저) |
 | `/curriculum` | `curriculum.html` | 6개월 AI 교육 과정 (EDUCATION.SYS) |
-| `/lab` | `lab.html` | 프롬프트 실습실 (메모 → 보고서/회의록/메시지/리서치 플랜) |
-| `/dashboard` | `dashboard.html` | 가입 신청 데이터 익명 집계 대시보드 |
-| `/project` | `project.html` | 개인 AI 프로젝트 기획서 빌더 |
+| `/lab` | `lab.html` | BOARD 하위: 프롬프트 실습실 (메모 → 보고서/회의록/메시지/리서치 플랜) |
+| `/dashboard` | `dashboard.html` | BOARD 하위: 가입 신청 데이터 익명 집계 대시보드 |
+| `/project` | `project.html` | BOARD 하위: 개인 AI 프로젝트 기획서 빌더 |
 | `/play` | `play.html` | PURME-MAN 팩맨 + 레트로 테트리스 + 갤러그풍 슈팅 + 알카노이드 벽돌깨기 |
 | `/joinin` | `joinin.html` | `[ JOIN IN ]` 가입 신청 설문 (Supabase) |
 
@@ -20,13 +20,18 @@
 | 키 | 메뉴 | 이동 |
 |---|---|---|
 | 1 | MAIN | `index#hero` |
-| 2 | BOARD | `index#activities` |
+| 2 | BOARD | `index#board-showcase` |
 | 3 | LEARN | `curriculum` |
-| 4 | LAB | `lab` |
-| 5 | DASH | `dashboard` |
-| 6 | PROJECT | `project` |
-| 7 | JOIN IN | `joinin` |
-| 8 | PLAY | `play` |
+| 4 | JOIN IN | `joinin` |
+| 5 | PLAY | `play` |
+
+### BOARD 하위 메뉴
+
+| 메뉴 | 이동 | 설명 |
+|---|---|---|
+| LAB | `lab` | 프롬프트 실습실 |
+| DASH | `dashboard` | 익명 가입 데이터 대시보드 |
+| PROJECT | `project` | 개인 AI 프로젝트 기획서 빌더 |
 
 ## 구성
 

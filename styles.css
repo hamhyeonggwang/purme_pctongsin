@@ -1008,6 +1008,27 @@ em { color: var(--cyan); font-style: normal; }
   gap: 18px;
   margin-bottom: 18px;
 }
+.board-subnav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 18px;
+  padding: 10px;
+  border: 1px dashed var(--line);
+  background: rgba(0, 0, 0, 0.16);
+}
+.board-subnav a {
+  color: var(--ink);
+  text-decoration: none;
+  padding: 4px 8px;
+}
+.board-subnav a:hover,
+.board-subnav a:focus,
+.board-subnav a.is-current {
+  color: var(--bg-deep);
+  background: var(--cyan);
+  outline: none;
+}
 .showcase-link-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

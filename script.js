@@ -32,6 +32,10 @@
 
   function navigateTo(href) {
     if (!href) return;
+    if (href === "#top") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
     if (href.startsWith("#")) {
       const el = document.querySelector(href);
       if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -41,8 +45,8 @@
   }
 
   function activateFnButton(fkey) {
-    const btn = document.querySelector(`.fnbar button[data-fkey="${fkey}"]`);
-    if (btn) btn.click();
+    const el = document.querySelector(`.fnbar [data-fkey="${fkey}"]`);
+    if (el) el.click();
   }
 
   function typeBoot() {
@@ -104,7 +108,7 @@
     setInterval(tick, 1000);
   }
 
-  document.querySelectorAll(".fnbar button").forEach((btn) => {
+  document.querySelectorAll(".fnbar button, .fnbar a[data-fkey]").forEach((btn) => {
     btn.addEventListener("click", () => {
       const href = btn.getAttribute("data-href");
       const target = btn.getAttribute("data-target");

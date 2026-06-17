@@ -31,17 +31,15 @@
 
     <!-- 메뉴 바 -->
     <nav class="menubar" aria-label="메인 메뉴">
-      <a href="#hero" data-key="1">[ MAIN ]</a>
+      <a href="#hero" data-key="1" class="is-current" aria-current="page">[ MAIN ]</a>
       <span class="sep">|</span>
       <a href="#activities" data-key="2">[ BOARD ]</a>
       <span class="sep">|</span>
-      <a href="#connect" data-key="3">[ SEARCH ]</a>
+      <a href="curriculum" data-key="3">[ LEARN ]</a>
       <span class="sep">|</span>
-      <a href="joinin" data-key="4">[ MAIL ]</a>
+      <a href="joinin" data-key="4">[ JOIN IN ]</a>
       <span class="sep">|</span>
-      <a href="#meeting" data-key="5">[ SETUP ]</a>
-      <span class="sep">|</span>
-      <a href="#play" data-key="6" class="menu-play">[ PLAY ]</a>
+      <a href="play" data-key="5" class="menu-play">[ PLAY ]</a>
     </nav>
 
     <p class="welcome">
@@ -181,36 +179,17 @@
       </div>
     </section>
 
-    <!-- ============ PLAY :: 팩맨 ============ -->
-    <section id="play" class="window game-window">
+    <!-- ============ PLAY 티저 ============ -->
+    <section id="play-teaser" class="window play-teaser">
       <div class="window-bar">
-        <span class="window-title">&gt; PLAY.EXE — PURME-MAN</span>
+        <span class="window-title">&gt; PLAY.EXE</span>
         <span class="window-ctrl">_ □ X</span>
       </div>
-      <div class="window-body game-body">
-        <div class="game-hud">
-          <span class="hud-score">SCORE <b id="gScore">0</b></span>
-          <span class="hud-high">HI <b id="gHigh">0</b></span>
-          <span class="hud-lives">LIVES <b id="gLives">♥♥♥</b></span>
-        </div>
-
-        <div class="game-stage">
-          <canvas id="gameCanvas" width="380" height="380" aria-label="팩맨 게임 화면"></canvas>
-          <div class="game-overlay" id="gameOverlay">
-            <pre class="game-logo">
- ____  _   _ ____  __  __ ___ 
-|  _ \| | | |  _ \|  \/  | __|
-| |_) | |_| | |_) | |\/| | _| 
-|  __/|_____|_| \_\_|  |_|___|
-|_|   P U R M E - M A N  v1.0</pre>
-            <p class="game-msg" id="gameMsg">방향키 또는 WASD로 시작!</p>
-            <button class="game-btn" id="gameStartBtn">▶ START [ENTER]</button>
-          </div>
-        </div>
-
-        <p class="game-help">
-          ▲▼◀▶ / WASD 이동 · 점(·) 모두 먹으면 클리어 · 큰 점(◉) 먹으면 고스트 사냥 · ENTER 다시하기
-        </p>
+      <div class="window-body play-teaser-body">
+        <pre class="play-teaser-art" aria-hidden="true">  [ PURME-MAN ]  팩맨 v1.0
+  [ TETRIS   ]  레트로 테트리스</pre>
+        <p class="play-teaser-desc">// 퇴근 후 BBS에서 한 판! 게임은 PLAY.EXE에서 실행하세요.</p>
+        <a href="play" class="play-teaser-btn">▶ [ PLAY ] 실행하기</a>
       </div>
     </section>
 
@@ -220,6 +199,7 @@
         <span class="join-icon" aria-hidden="true">✉</span>
         <div class="join-text">
           <h2>동호회 가입 신청</h2>
+          <p class="join-tag">&gt; JOIN IN :: 가입 신청서</p>
           <p class="join-desc">
             6월 중 오리엔테이션을 준비 중입니다.<br />
             PC통신 감성의 <strong>가입 신청서</strong>를 작성해 주세요. (약 1~2분)
@@ -235,16 +215,15 @@
 
     <!-- ============ 푸터 (기능키) ============ -->
     <footer class="fnbar">
-      <button data-target="#hero">[F1] HELP</button>
-      <a href="joinin" class="fnbar-link">[F2] MESSAGE</a>
-      <button data-target="#connect">[F3] SEARCH</button>
-      <button data-target="#activities">[F4] UPLOAD</button>
-      <button data-target="#meeting">[F5] OPTION</button>
-      <button data-target="#top">[F10] QUIT</button>
+      <button type="button" data-fkey="1" data-target="#hero">[F1] HELP</button>
+      <button type="button" data-fkey="3" data-target="#connect">[F3] SEARCH</button>
+      <button type="button" data-fkey="4" data-href="joinin">[F4] JOIN IN</button>
+      <button type="button" data-fkey="5" data-href="play">[F5] PLAY</button>
+      <button type="button" data-fkey="9" data-target="#meeting">[F9] OPTION</button>
+      <button type="button" data-fkey="10" data-target="#top">[F10] QUIT</button>
     </footer>
   </main>
 
   <script src="script.js"></script>
-  <script src="game.js"></script>
 </body>
 </html>

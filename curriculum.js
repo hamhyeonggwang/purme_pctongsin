@@ -259,7 +259,7 @@
   }
 
   function goToJoin() {
-    window.location.href = "index.html#join";
+    window.location.href = "joinin";
   }
 
   tabs.forEach((tab) => {

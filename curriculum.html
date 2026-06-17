@@ -21,11 +21,15 @@
     </header>
 
     <nav class="menubar" aria-label="메인 메뉴">
-      <a href="index.html#hero" data-key="1">[ MAIN ]</a>
+      <a href="index#hero" data-key="1">[ MAIN ]</a>
       <span class="sep">|</span>
-      <a href="curriculum.html" data-key="2" class="is-current" aria-current="page">[ LEARN ]</a>
+      <a href="index#activities" data-key="2">[ BOARD ]</a>
       <span class="sep">|</span>
-      <a href="play.html" data-key="3" class="menu-play">[ PLAY ]</a>
+      <a href="curriculum" data-key="3" class="is-current" aria-current="page">[ LEARN ]</a>
+      <span class="sep">|</span>
+      <a href="joinin" data-key="4">[ JOIN IN ]</a>
+      <span class="sep">|</span>
+      <a href="play" data-key="5" class="menu-play">[ PLAY ]</a>
     </nav>
 
     <p class="welcome">
@@ -130,7 +134,7 @@ MEMBERS ONLINE: 20</pre>
         </div>
         <div class="window-body">
           <div id="curriculumMenu" class="curriculum-menu">
-            <p class="curriculum-menu-head">// Level 선택 — 번호를 클릭하거나 키보드 [1-3] 입력</p>
+            <p class="curriculum-menu-head">// Level 선택 [1-3] · 메뉴 [4] JOIN IN · [5] PLAY</p>
             <div class="board-tabs" role="tablist" aria-label="Level 선택">
               <button type="button" class="board-tab" role="tab" data-track="beginner" data-key="1" aria-selected="false">[1] LV.1</button>
               <button type="button" class="board-tab" role="tab" data-track="intermediate" data-key="2" aria-selected="false">[2] LV.2</button>
@@ -230,10 +234,11 @@ STATUS: READY FOR FUTURE</pre>
     </section>
 
     <footer class="fnbar">
-      <button type="button" data-fkey="1" data-href="index.html#hero">[F1] MAIN</button>
-      <button type="button" data-fkey="2" data-target="#curriculum">[F2] LEARN</button>
-      <button type="button" data-fkey="3" data-href="play.html">[F3] PLAY</button>
-      <button type="button" data-fkey="10" data-href="index.html#hero">[F10] QUIT</button>
+      <button type="button" data-fkey="1" data-href="index#hero">[F1] MAIN</button>
+      <button type="button" data-fkey="3" data-target="#curriculum">[F3] LEARN</button>
+      <button type="button" data-fkey="4" data-href="joinin">[F4] JOIN IN</button>
+      <button type="button" data-fkey="5" data-href="play">[F5] PLAY</button>
+      <button type="button" data-fkey="10" data-href="index#hero">[F10] QUIT</button>
     </footer>
   </main>
 

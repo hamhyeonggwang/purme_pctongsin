@@ -149,6 +149,7 @@ em { color: var(--cyan); font-style: normal; }
   text-decoration: none;
   padding: 2px 4px;
   transition: all 0.12s;
+  white-space: nowrap;
 }
 .menubar a:hover,
 .menubar a:focus {
@@ -338,7 +339,47 @@ em { color: var(--cyan); font-style: normal; }
 .join-icon { font-size: 34px; color: var(--accent); text-shadow: var(--glow); }
 .join-text { text-align: center; }
 .join-text h2 { margin: 0 0 6px; color: var(--ink-bright); font-size: 24px; letter-spacing: 1px; }
-.join-text p { margin: 0; font-size: 17px; color: var(--cyan); }
+.join-tag { margin: 0 0 8px; font-size: 13px; color: var(--accent); letter-spacing: 0.5px; }
+.join-desc { margin: 0 0 14px; font-size: 15px; color: var(--cyan); line-height: 1.8; }
+.join-btn {
+  display: inline-block;
+  margin: 0 0 14px;
+  padding: 12px 28px;
+  background: var(--accent);
+  color: var(--bg-deep);
+  font-family: var(--mono);
+  font-size: 16px;
+  letter-spacing: 1px;
+  text-decoration: none;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.35);
+}
+.join-btn:hover { background: var(--ink-bright); color: var(--bg-deep); }
+.join-contact { margin: 0; font-size: 14px; color: var(--ink); }
+
+/* ============================================================
+   PLAY 티저 (index)
+   ============================================================ */
+.play-teaser { margin-bottom: 38px; }
+.play-teaser-body { text-align: center; }
+.play-teaser-art {
+  margin: 0 0 12px;
+  color: var(--cyan);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.play-teaser-desc { margin: 0 0 16px; font-size: 14px; color: var(--ink); }
+.play-teaser-btn {
+  display: inline-block;
+  padding: 12px 28px;
+  background: var(--accent);
+  color: var(--bg-deep);
+  font-family: var(--mono);
+  font-size: 16px;
+  letter-spacing: 1px;
+  text-decoration: none;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.35);
+}
+.play-teaser-btn:hover { background: var(--ink-bright); }
 
 /* ============================================================
    PLAY :: 팩맨 게임

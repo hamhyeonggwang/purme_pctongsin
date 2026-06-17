@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PC-TONGSIN v2.5 :: 가입 신청 — Purme Club</title>
+<style>
+  @font-face {
+    font-family: 'Galmuri11';
+    src: url('https://cdn.jsdelivr.net/npm/galmuri/dist/Galmuri11.woff2') format('woff2');
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Galmuri9';
+    src: url('https://cdn.jsdelivr.net/npm/galmuri/dist/Galmuri9.woff2') format('woff2');
+    font-display: swap;
+  }
+
+  :root {
+    --bg-deep:   #050a2e;
+    --bg-blue:   #0a1364;
+    --bg-panel:  #0c1a78;
+    --cyan:      #57e6e0;
+    --white:     #eef0ff;
+    --yellow:    #ffd93d;
+    --magenta:   #ff6ec7;
+    --dim:       #7a86d6;
+    --line:      #3a4bc4;
+    --ok:        #5dffa0;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg-deep);
+    color: var(--white);
+    font-family: 'Galmuri11', 'D2Coding', 'Courier New', monospace;
+    -webkit-font-smoothing: none;
+    image-rendering: pixelated;
+    line-height: 1.9;
+    font-size: 16px;
+    letter-spacing: 0.2px;
+  }
+
+  /* CRT 분위기 */
+  body::before {
+    content: "";
+    position: fixed; inset: 0;
+    pointer-events: none; z-index: 9999;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(0,0,0,0) 0px,
+      rgba(0,0,0,0) 2px,
+      rgba(0,0,0,0.18) 3px,
+      rgba(0,0,0,0) 4px
+    );
+    mix-blend-mode: multiply;
+  }
+  body::after {
+    content: "";
+    position: fixed; inset: 0;
+    pointer-events: none; z-index: 9998;
+    background: radial-gradient(ellipse at center, rgba(10,19,100,0) 55%, rgba(2,4,20,0.65) 100%);
+  }
+
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 24px 16px 64px;
+    position: relative; z-index: 1;
+  }
+
+  /* ===== 접속 화면 ===== */
+  #boot {
+    position: fixed; inset: 0; z-index: 5000;
+    background: var(--bg-deep);
+    display: flex; flex-direction: column;
+    justify-content: center;
+    padding: 24px;
+  }
+  #boot .boot-inner { max-width: 620px; margin: 0 auto; width: 100%; }
+  #bootlog { white-space: pre-wrap; color: var(--cyan); font-size: 15px; min-height: 240px; }
+  #bootlog .ok { color: var(--ok); }
+  #bootlog .y  { color: var(--yellow); }
+  .cursor { display:inline-block; width:9px; height:18px; background:var(--cyan);
+            vertical-align:-3px; animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  #enter-btn {
+    margin-top: 28px;
+    display: none;
+    font-family: inherit; font-size: 16px;
+    background: var(--yellow); color: #1a1a1a;
+    border: none; padding: 12px 22px; cursor: pointer;
+    letter-spacing: 1px;
+    box-shadow: 4px 4px 0 #00000055;
+  }
+  #enter-btn:hover, #enter-btn:focus { background: #fff; outline: 2px solid var(--cyan); }
+
+  /* ===== 헤더 ===== */
+  .masthead { border: 2px solid var(--cyan); padding: 14px 18px; margin-bottom: 8px;
+              background: linear-gradient(180deg, var(--bg-blue), var(--bg-deep)); }
+  .masthead .brand { color: var(--yellow); font-size: 22px; letter-spacing: 1px; }
+  .masthead .sub { color: var(--cyan); font-size: 13px; margin-top: 4px; }
+  .masthead .blink-tag { color: var(--magenta); }
+
+  .statusbar {
+    display: flex; flex-wrap: wrap; gap: 4px 16px;
+    font-size: 12px; color: var(--dim);
+    border: 1px solid var(--line); border-top: none;
+    padding: 6px 18px; margin-bottom: 22px;
+    background: #060c33;
+  }
+  .statusbar b { color: var(--cyan); }
+
+  .notice { color: var(--dim); font-size: 14px; margin: 0 2px 26px; }
+  .notice .hi { color: var(--white); }
+
+  /* ===== 설문 박스 ===== */
+  .q {
+    border: 1px solid var(--line);
+    margin-bottom: 18px;
+    background: #07103f;
+  }
+  .q-head {
+    background: var(--bg-panel);
+    color: var(--white);
+    padding: 8px 14px;
+    font-size: 15px;
+    border-bottom: 1px solid var(--line);
+  }
+  .q-head .num { color: var(--yellow); margin-right: 8px; }
+  .q-head .req { color: var(--magenta); font-size: 12px; margin-left: 6px; }
+  .q-body { padding: 14px; }
+  .hint { color: var(--dim); font-size: 12px; margin: -4px 0 12px; }
+
+  /* 입력 */
+  input[type="text"], textarea {
+    width: 100%;
+    font-family: inherit; font-size: 15px;
+    background: #030720; color: var(--cyan);
+    border: 1px solid var(--line);
+    padding: 10px 12px;
+    caret-color: var(--yellow);
+  }
+  input[type="text"]:focus, textarea:focus {
+    outline: none; border-color: var(--cyan);
+    box-shadow: 0 0 0 1px var(--cyan);
+  }
+  input::placeholder, textarea::placeholder { color: #45508f; }
+  textarea { resize: vertical; min-height: 78px; line-height: 1.7; }
+
+  /* 선택 항목 — DOS 선택바 */
+  .opt {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 6px 10px; cursor: pointer; user-select: none;
+    border: 1px solid transparent;
+  }
+  .opt:hover { background: #0d1a5e; }
+  .opt .mark {
+    color: var(--cyan); flex-shrink: 0; width: 1.6em;
+  }
+  .opt input { position: absolute; opacity: 0; width: 0; height: 0; }
+  .opt.checked { background: var(--yellow); color: #1a1a1a; border-color: #fff; }
+  .opt.checked .mark { color: #1a1a1a; }
+  .opt:focus-within { outline: 1px dashed var(--cyan); outline-offset: -1px; }
+  .opt .etc-in {
+    margin-left: 6px; padding: 2px 6px; font-size: 14px;
+    background: #030720; color: var(--cyan); border: 1px solid var(--line);
+    min-width: 140px;
+  }
+  .opt.checked .etc-in { background:#fff; color:#1a1a1a; border-color:#1a1a1a; }
+
+  /* 전송 */
+  .send-row { margin-top: 28px; text-align: center; }
+  #send-btn {
+    font-family: inherit; font-size: 17px; letter-spacing: 2px;
+    background: var(--magenta); color: #1a1a1a;
+    border: none; padding: 14px 40px; cursor: pointer;
+    box-shadow: 5px 5px 0 #00000055;
+  }
+  #send-btn:hover, #send-btn:focus { background: var(--yellow); outline: 2px solid #fff; }
+  #send-btn:disabled { opacity: .5; cursor: progress; }
+  .err { color: var(--magenta); font-size: 13px; margin-top: 12px; min-height: 18px; }
+
+  /* 전송중 / 완료 오버레이 */
+  #overlay {
+    position: fixed; inset: 0; z-index: 6000; display: none;
+    background: var(--bg-deep);
+    flex-direction: column; justify-content: center; align-items: center;
+    padding: 24px; text-align: center;
+  }
+  #overlay .box { max-width: 540px; }
+  #xferlog { color: var(--cyan); white-space: pre-wrap; font-size: 14px; text-align: left;
+             min-height: 120px; width: 100%; }
+  #done-art { color: var(--ok); font-size: 13px; white-space: pre; display: none;
+              line-height: 1.4; }
+  #done-msg { display:none; margin-top: 20px; }
+  #done-msg .big { color: var(--yellow); font-size: 20px; }
+  #done-msg .small { color: var(--dim); font-size: 13px; margin-top: 12px; }
+
+  .back-link {
+    display: inline-block;
+    margin-bottom: 14px;
+    color: var(--cyan);
+    font-size: 13px;
+    text-decoration: none;
+  }
+  .back-link:hover { color: var(--yellow); }
+
+  .footer { margin-top: 40px; text-align: center; color: var(--dim); font-size: 11px; }
+  .footer .line { color: var(--line); }
+
+  @media (max-width: 520px) {
+    body { font-size: 15px; }
+    .masthead .brand { font-size: 18px; }
+    #send-btn { width: 100%; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cursor { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===================== 접속 화면 ===================== -->
+<div id="boot">
+  <div class="boot-inner">
+    <div id="bootlog"></div>
+    <button id="enter-btn">[ 접속하기 ]  ▶</button>
+  </div>
+</div>
+
+<!-- ===================== 본문 ===================== -->
+<div class="wrap" id="main" style="display:none;">
+
+  <a href="/" class="back-link">&lt; [ MAIN ] 홈으로 돌아가기</a>
+
+  <div class="masthead">
+    <div class="brand">Purme Club · PC통신</div>
+    <div class="sub">:: 가입 신청 모듈 &nbsp;<span class="blink-tag">[정식등록 준비 中]</span></div>
+  </div>
+  <div class="statusbar">
+    <span>접속 <b>09600 bps</b></span>
+    <span>NODE <b>#07</b></span>
+    <span>SYSOP <b>STARLIGHT</b></span>
+    <span id="clock">--:--:--</span>
+  </div>
+
+  <p class="notice">
+    어서 오세요. 정식 등록 전이지만 많은 관심을 보내주셔서<br>
+    <span class="hi">6월 중 운영 오리엔테이션</span>을 준비하고 있습니다.<br>
+    더 알찬 자리를 위해 아래 가입 신청서를 남겨주세요. 약 1~2분이면 충분합니다.
+  </p>
+
+  <!-- Q1 -->
+  <div class="q">
+    <div class="q-head"><span class="num">[ 01 ]</span> 대화명 (닉네임)<span class="req">* 필수</span></div>
+    <div class="q-body">
+      <input type="text" id="f_handle" maxlength="20" placeholder="예) 별빛아빠">
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="q">
+    <div class="q-head"><span class="num">[ 02 ]</span> 나에게 의미 있는 일</div>
+    <div class="q-body">
+      <input type="text" id="f_field" maxlength="40" placeholder="예) 아이 돌보기, 건강관리, 오늘도 무사히 살기 …">
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="q">
+    <div class="q-head"><span class="num">[ 03 ]</span> 써보신 AI 도구</div>
+    <div class="q-body">
+      <div class="hint">▸ 해당하는 것을 모두 골라주세요 (없어도 환영!)</div>
+      <div id="grp_tools"></div>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="q">
+    <div class="q-head"><span class="num">[ 04 ]</span> 나의 AI 활용 수준</div>
+    <div class="q-body">
+      <div id="grp_level"></div>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="q">
+    <div class="q-head"><span class="num">[ 05 ]</span> "이건 AI로 안 될까?" 싶은 고민</div>
+    <div class="q-body">
+      <div class="hint">▸ 업무나 일상에서 답답했던 점을 자유롭게 적어주세요</div>
+      <textarea id="f_pain" maxlength="500" placeholder="예) 회의록 정리에 시간이 너무 오래 걸려요 …"></textarea>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="q">
+    <div class="q-head"><span class="num">[ 06 ]</span> 배워보고 싶은 주제</div>
+    <div class="q-body">
+      <div class="hint">▸ 복수 선택 가능</div>
+      <div id="grp_interest"></div>
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="q">
+    <div class="q-head"><span class="num">[ 07 ]</span> 선호하는 모임 방식</div>
+    <div class="q-body">
+      <div id="grp_style"></div>
+    </div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="q">
+    <div class="q-head"><span class="num">[ 08 ]</span> 운영진에게 한마디 (선택)</div>
+    <div class="q-body">
+      <textarea id="f_msg" maxlength="500" placeholder="오리엔테이션에 바라는 점, 하고 싶은 말 …"></textarea>
+    </div>
+  </div>
+
+  <div class="send-row">
+    <button id="send-btn">▲ 신 청 서  전 송 ▲</button>
+    <div class="err" id="err"></div>
+  </div>
+
+  <div class="footer">
+    <span class="line">──────────────────────────────</span><br>
+    AI 활용동호회 · PC 통신 &nbsp;|&nbsp; 무단 복제 시.. 별일 없습니다. 따라해보세요.
+  </div>
+</div>
+
+<!-- ===================== 전송/완료 오버레이 ===================== -->
+<div id="overlay">
+  <div class="box">
+    <div id="xferlog"></div>
+    <pre id="done-art"></pre>
+    <div id="done-msg">
+      <div class="big" id="done-name">환영합니다!</div>
+      <div class="small">
+        신청서가 호스트에 등록되었습니다.<br>
+        오리엔테이션 일정이 확정되면 채팅방으로 안내드릴게요.<br>
+        이제 창을 닫으셔도 좋습니다. 🛰
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =====================================================================
+   설정 — Supabase 연결
+   값을 채우면 실제 DB에 저장됩니다. 비워두면 "데모 모드"로 동작합니다.
+   (데모 모드: 전송 흐름은 그대로 보이되 DB 저장은 생략, 콘솔에 결과 출력)
+   ===================================================================== */
+const SUPABASE_URL = "";        // 예) https://xxxx.supabase.co
+const SUPABASE_ANON_KEY = "";   // 예) eyJhbGci...
+const SUPABASE_TABLE = "club_signups";
+
+/* ---------- 선택지 데이터 ---------- */
+const TOOLS = [
+  "ChatGPT", "Claude (클로드)", "Gemini (제미나이)", "Perplexity",
+  "이미지 생성 (Midjourney·DALL·E 등)", "영상·음성 (Runway·Suno 등)",
+  "코딩 도구 (Cursor·Copilot 등)", "자동화 (n8n·Make·Zapier 등)",
+  "거의 안 써봤어요 (이제 시작!)"
+];
+const LEVELS = [
+  "거의 처음이에요", "가끔 검색·질문용으로 써요",
+  "업무·일상에 종종 활용해요", "꽤 능숙하게 다뤄요"
+];
+const INTERESTS = [
+  "업무 자동화", "글쓰기·자료 정리", "이미지·영상 제작",
+  "코딩·앱 만들기", "데이터 분석", "일상 활용 팁"
+];
+const STYLES = [
+  "함께 따라 해보는 실습형", "사례·정보 공유 위주의 자유형",
+  "주제 강의 + 질의응답형", "다 좋아요 / 상관없어요"
+];
+
+/* ---------- 옵션 렌더링 ---------- */
+function makeOptions(containerId, items, type, name, withEtc) {
+  const box = document.getElementById(containerId);
+  items.forEach((label, i) => {
+    const id = name + "_" + i;
+    const row = document.createElement("label");
+    row.className = "opt";
+    row.setAttribute("tabindex", "0");
+    row.innerHTML =
+      '<span class="mark">' + (type === "radio" ? "( )" : "[ ]") + '</span>' +
+      '<input type="' + type + '" name="' + name + '" id="' + id + '" value="' + label + '">' +
+      '<span class="lbl">' + label + '</span>';
+    box.appendChild(row);
+  });
+  if (withEtc) {
+    const id = name + "_etc";
+    const row = document.createElement("label");
+    row.className = "opt";
+    row.setAttribute("tabindex", "0");
+    row.innerHTML =
+      '<span class="mark">[ ]</span>' +
+      '<input type="checkbox" name="' + name + '" id="' + id + '" value="__ETC__">' +
+      '<span class="lbl">기타</span>' +
+      '<input type="text" class="etc-in" id="' + name + '_etctext" placeholder="직접 입력" maxlength="40">';
+    box.appendChild(row);
+  }
+  // 상호작용
+  box.querySelectorAll(".opt").forEach(opt => {
+    const input = opt.querySelector('input[type="radio"],input[type="checkbox"]');
+    const sync = () => {
+      if (type === "radio") {
+        box.querySelectorAll(".opt").forEach(o => {
+          o.classList.remove("checked");
+          o.querySelector(".mark").textContent = "( )";
+        });
+      }
+      if (input.checked) {
+        opt.classList.add("checked");
+        opt.querySelector(".mark").textContent = type === "radio" ? "(●)" : "[X]";
+      } else {
+        opt.classList.remove("checked");
+        opt.querySelector(".mark").textContent = type === "radio" ? "( )" : "[ ]";
+      }
+    };
+    opt.addEventListener("click", (e) => {
+      if (e.target.classList.contains("etc-in")) return; // 기타 입력칸 클릭은 통과
+    });
+    input.addEventListener("change", sync);
+    opt.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        if (document.activeElement.classList.contains("etc-in")) return;
+        e.preventDefault();
+        input.checked = type === "radio" ? true : !input.checked;
+        input.dispatchEvent(new Event("change"));
+      }
+    });
+  });
+}
+
+makeOptions("grp_tools", TOOLS, "checkbox", "tools", true);
+makeOptions("grp_level", LEVELS, "radio", "level", false);
+makeOptions("grp_interest", INTERESTS, "checkbox", "interest", true);
+makeOptions("grp_style", STYLES, "radio", "style", false);
+
+/* ---------- 시계 ---------- */
+function tick() {
+  const d = new Date();
+  const p = n => String(n).padStart(2, "0");
+  const el = document.getElementById("clock");
+  if (el) el.textContent = p(d.getHours()) + ":" + p(d.getMinutes()) + ":" + p(d.getSeconds());
+}
+setInterval(tick, 1000); tick();
+
+/* ---------- 접속 시퀀스 ---------- */
+const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const bootLines = [
+  "AI활용동호회 호스트에 전화를 겁니다...",
+  "ATDT 0 1 4 1 0",
+  "··· 삐~ 끼이익 치직 ···",
+  '<span class="ok">CONNECT 9600/ARQ</span>',
+  "",
+  "  ┌──────────────────────────────────┐",
+  '  │   <span class="y">A I   활 용 동 호 회</span>   ::  P C 통 신   │',
+  "  └──────────────────────────────────┘",
+  "",
+  "로그인 확인................. <span class=\"ok\">OK</span>",
+  "게시판 마운트............... <span class=\"ok\">OK</span>",
+  "가입 신청 모듈 로딩......... <span class=\"ok\">OK</span>",
+  "",
+  '<span class="y">접속을 환영합니다. 아래 버튼으로 입장하세요.</span>'
+];
+const logEl = document.getElementById("bootlog");
+const enterBtn = document.getElementById("enter-btn");
+
+function runBoot() {
+  if (reduce) {
+    logEl.innerHTML = bootLines.join("\n");
+    enterBtn.style.display = "inline-block";
+    enterBtn.focus();
+    return;
+  }
+  let i = 0;
+  logEl.innerHTML = '<span class="cursor"></span>';
+  function next() {
+    if (i >= bootLines.length) {
+      logEl.innerHTML = logEl.innerHTML.replace(/<span class="cursor"><\/span>/, "");
+      enterBtn.style.display = "inline-block";
+      enterBtn.focus();
+      return;
+    }
+    const html = bootLines.slice(0, i + 1).join("\n");
+    logEl.innerHTML = html + '<span class="cursor"></span>';
+    i++;
+    const delay = bootLines[i - 1].includes("삐~") ? 700 : 230;
+    setTimeout(next, delay);
+  }
+  next();
+}
+runBoot();
+
+enterBtn.addEventListener("click", () => {
+  document.getElementById("boot").style.display = "none";
+  document.getElementById("main").style.display = "block";
+  document.getElementById("f_handle").focus();
+});
+
+/* ---------- 값 수집 ---------- */
+function getChecked(name) {
+  const out = [];
+  document.querySelectorAll('input[name="' + name + '"]:checked').forEach(inp => {
+    if (inp.value === "__ETC__") {
+      const t = document.getElementById(name + "_etctext");
+      if (t && t.value.trim()) out.push("기타: " + t.value.trim());
+    } else {
+      out.push(inp.value);
+    }
+  });
+  return out;
+}
+function getRadio(name) {
+  const sel = document.querySelector('input[name="' + name + '"]:checked');
+  return sel ? sel.value : null;
+}
+
+/* ---------- 전송 ---------- */
+const sendBtn = document.getElementById("send-btn");
+const errEl = document.getElementById("err");
+
+sendBtn.addEventListener("click", async () => {
+  errEl.textContent = "";
+  const handle = document.getElementById("f_handle").value.trim();
+  if (!handle) {
+    errEl.textContent = "▶ 대화명(닉네임)은 꼭 입력해주세요.";
+    document.getElementById("f_handle").focus();
+    return;
+  }
+  const payload = {
+    handle: handle,
+    field: document.getElementById("f_field").value.trim() || null,
+    tools: getChecked("tools"),
+    level: getRadio("level"),
+    pain_point: document.getElementById("f_pain").value.trim() || null,
+    interests: getChecked("interest"),
+    meeting_style: getRadio("style"),
+    message: document.getElementById("f_msg").value.trim() || null
+  };
+
+  sendBtn.disabled = true;
+  await runTransfer(payload);
+});
+
+async function runTransfer(payload) {
+  const overlay = document.getElementById("overlay");
+  const xfer = document.getElementById("xferlog");
+  overlay.style.display = "flex";
+
+  const steps = [
+    "▶ 신청서를 패킷으로 변환합니다...",
+    "▶ 호스트에 업로드 중  [■■■■■■■■■■] 100%",
+    "▶ 무결성 검사................ OK"
+  ];
+  xfer.textContent = "";
+  for (const s of steps) {
+    xfer.textContent += s + "\n";
+    if (!reduce) await sleep(520);
+  }
+
+  // 실제 저장
+  let saved = false, errMsg = "";
+  if (SUPABASE_URL && SUPABASE_ANON_KEY) {
+    try {
+      const res = await fetch(SUPABASE_URL + "/rest/v1/" + SUPABASE_TABLE, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": SUPABASE_ANON_KEY,
+          "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+          "Prefer": "return=minimal"
+        },
+        body: JSON.stringify(payload)
+      });
+      saved = res.ok;
+      if (!res.ok) errMsg = "HTTP " + res.status;
+    } catch (e) {
+      errMsg = String(e);
+    }
+  } else {
+    // 데모 모드
+    console.log("[데모 모드] 저장될 데이터:", payload);
+    saved = true;
+    errMsg = "DEMO";
+  }
+
+  if (saved) {
+    xfer.textContent += (errMsg === "DEMO"
+      ? "▶ (데모 모드) 호스트 연결 없이 흐름만 시연합니다.\n"
+      : "▶ 호스트 응답............... 등록 완료\n");
+    await sleep(reduce ? 0 : 400);
+    showDone(payload.handle);
+  } else {
+    xfer.textContent += "\n✗ 전송 실패: " + errMsg + "\n  잠시 후 다시 시도해주세요.";
+    const retry = document.createElement("button");
+    retry.textContent = "[ 닫기 ]";
+    retry.style.cssText = "margin-top:18px;font-family:inherit;font-size:15px;background:var(--yellow);color:#1a1a1a;border:none;padding:10px 20px;cursor:pointer;";
+    retry.onclick = () => { overlay.style.display = "none"; sendBtn.disabled = false; };
+    document.getElementById("overlay").querySelector(".box").appendChild(retry);
+  }
+}
+
+function showDone(name) {
+  const art =
+"   ★ ┌───────────────┐ ★\n" +
+"     │   접 속 완 료   │\n" +
+"   ★ └───────────────┘ ★";
+  const artEl = document.getElementById("done-art");
+  artEl.textContent = art;
+  artEl.style.display = "block";
+  document.getElementById("done-name").textContent = "환영합니다, " + name + " 님!";
+  document.getElementById("done-msg").style.display = "block";
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+</script>
+</body>
+</html>

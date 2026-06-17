@@ -33,9 +33,15 @@
     <nav class="menubar" aria-label="메인 메뉴">
       <a href="#hero" data-key="1">[ MAIN ]</a>
       <span class="sep">|</span>
-      <a href="curriculum.html" data-key="2">[ LEARN ]</a>
+      <a href="#activities" data-key="2">[ BOARD ]</a>
       <span class="sep">|</span>
-      <a href="play.html" data-key="3" class="menu-play">[ PLAY ]</a>
+      <a href="#connect" data-key="3">[ SEARCH ]</a>
+      <span class="sep">|</span>
+      <a href="joinin" data-key="4">[ MAIL ]</a>
+      <span class="sep">|</span>
+      <a href="#meeting" data-key="5">[ SETUP ]</a>
+      <span class="sep">|</span>
+      <a href="#play" data-key="6" class="menu-play">[ PLAY ]</a>
     </nav>
 
     <p class="welcome">
@@ -175,13 +181,53 @@
       </div>
     </section>
 
-    <!-- ============ 가입 문의 ============ -->
+    <!-- ============ PLAY :: 팩맨 ============ -->
+    <section id="play" class="window game-window">
+      <div class="window-bar">
+        <span class="window-title">&gt; PLAY.EXE — PURME-MAN</span>
+        <span class="window-ctrl">_ □ X</span>
+      </div>
+      <div class="window-body game-body">
+        <div class="game-hud">
+          <span class="hud-score">SCORE <b id="gScore">0</b></span>
+          <span class="hud-high">HI <b id="gHigh">0</b></span>
+          <span class="hud-lives">LIVES <b id="gLives">♥♥♥</b></span>
+        </div>
+
+        <div class="game-stage">
+          <canvas id="gameCanvas" width="380" height="380" aria-label="팩맨 게임 화면"></canvas>
+          <div class="game-overlay" id="gameOverlay">
+            <pre class="game-logo">
+ ____  _   _ ____  __  __ ___ 
+|  _ \| | | |  _ \|  \/  | __|
+| |_) | |_| | |_) | |\/| | _| 
+|  __/|_____|_| \_\_|  |_|___|
+|_|   P U R M E - M A N  v1.0</pre>
+            <p class="game-msg" id="gameMsg">방향키 또는 WASD로 시작!</p>
+            <button class="game-btn" id="gameStartBtn">▶ START [ENTER]</button>
+          </div>
+        </div>
+
+        <p class="game-help">
+          ▲▼◀▶ / WASD 이동 · 점(·) 모두 먹으면 클리어 · 큰 점(◉) 먹으면 고스트 사냥 · ENTER 다시하기
+        </p>
+      </div>
+    </section>
+
+    <!-- ============ 가입 신청 / 문의 ============ -->
     <section id="join" class="join">
       <div class="join-inner">
         <span class="join-icon" aria-hidden="true">✉</span>
         <div class="join-text">
-          <h2>동호회 가입 문의</h2>
-          <p>&gt; 학령기치료팀 <strong>함형광</strong>, 내선번호 <strong>9095</strong><span class="blink">_</span></p>
+          <h2>동호회 가입 신청</h2>
+          <p class="join-desc">
+            6월 중 오리엔테이션을 준비 중입니다.<br />
+            PC통신 감성의 <strong>가입 신청서</strong>를 작성해 주세요. (약 1~2분)
+          </p>
+          <a href="joinin" class="join-btn">▲ 가입 신청서 작성 ▲</a>
+          <p class="join-contact">
+            &gt; 문의 : 학령기치료팀 <strong>함형광</strong>, 내선 <strong>9095</strong><span class="blink">_</span>
+          </p>
         </div>
         <span class="join-icon" aria-hidden="true">☎</span>
       </div>
@@ -189,13 +235,16 @@
 
     <!-- ============ 푸터 (기능키) ============ -->
     <footer class="fnbar">
-      <button type="button" data-fkey="1" data-target="#hero">[F1] MAIN</button>
-      <button type="button" data-fkey="2" data-href="curriculum.html">[F2] LEARN</button>
-      <button type="button" data-fkey="3" data-href="play.html">[F3] PLAY</button>
-      <button type="button" data-fkey="10" data-target="#hero">[F10] QUIT</button>
+      <button data-target="#hero">[F1] HELP</button>
+      <a href="joinin" class="fnbar-link">[F2] MESSAGE</a>
+      <button data-target="#connect">[F3] SEARCH</button>
+      <button data-target="#activities">[F4] UPLOAD</button>
+      <button data-target="#meeting">[F5] OPTION</button>
+      <button data-target="#top">[F10] QUIT</button>
     </footer>
   </main>
 
   <script src="script.js"></script>
+  <script src="game.js"></script>
 </body>
 </html>

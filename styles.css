@@ -1057,6 +1057,17 @@ em { color: var(--cyan); font-style: normal; }
   display: block;
   line-height: 1.6;
 }
+.showcase-inline-link {
+  display: inline-block;
+  color: var(--cyan);
+  margin-top: 14px;
+  text-decoration: none;
+}
+.showcase-inline-link:hover,
+.showcase-inline-link:focus {
+  color: var(--yellow);
+  outline: none;
+}
 .showcase-label {
   display: block;
   color: var(--yellow);
@@ -1174,6 +1185,21 @@ em { color: var(--cyan); font-style: normal; }
 .safety-list input {
   accent-color: var(--cyan);
   margin-right: 8px;
+}
+.rule-list {
+  margin: 0;
+}
+.rule-list dt {
+  color: var(--yellow);
+  margin: 0 0 6px;
+}
+.rule-list dd {
+  color: var(--ink);
+  margin: 0 0 16px;
+  line-height: 1.7;
+}
+.rule-list dd:last-child {
+  margin-bottom: 0;
 }
 
 @media (max-width: 760px) {

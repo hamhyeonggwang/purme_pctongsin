@@ -8,6 +8,7 @@
 | URL | 파일 | 설명 |
 |---|---|---|
 | `/` | `index.html` | 메인 BBS (소개 · BOARD 하위 실습 · 가입 CTA · PLAY 티저) |
+| `/about` | `about.html` | 동호회 소개 및 동호회칙 초안 |
 | `/curriculum` | `curriculum.html` | 6개월 AI 교육 과정 (EDUCATION.SYS) |
 | `/lab` | `lab.html` | BOARD 하위: 프롬프트 실습실 (메모 → 보고서/회의록/메시지/리서치 플랜) |
 | `/dashboard` | `dashboard.html` | BOARD 하위: 가입 신청 데이터 익명 집계 대시보드 |
@@ -20,10 +21,11 @@
 | 키 | 메뉴 | 이동 |
 |---|---|---|
 | 1 | MAIN | `index#hero` |
-| 2 | BOARD | `index#board-showcase` |
-| 3 | LEARN | `curriculum` |
-| 4 | JOIN IN | `joinin` |
-| 5 | PLAY | `play` |
+| 2 | ABOUT | `about` |
+| 3 | BOARD | `index#board-showcase` |
+| 4 | LEARN | `curriculum` |
+| 5 | JOIN IN | `joinin` |
+| 6 | PLAY | `play` |
 
 ### BOARD 하위 메뉴
 
@@ -39,6 +41,7 @@
 |---|---|
 | `styles.css` | 레트로 디자인 시스템 (네이비 + 시안, CRT 스캔라인, 픽셀 폰트) |
 | `script.js` | 부팅 시퀀스 / 실시간 시계 / 메뉴·단축키 네비게이션 |
+| `about.html` | 동호회 소개 및 회칙 초안 페이지 |
 | `curriculum.js` | 교육 과정 터미널 UI |
 | `lab.js` | 프롬프트 실습실 템플릿 변환 시뮬레이터 |
 | `dashboard.js` | Supabase RPC 기반 익명 가입 통계 대시보드 |

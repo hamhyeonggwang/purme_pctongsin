@@ -1,34 +1,229 @@
--- ============================================================
---  AI 활용동호회 : PC 통신 — 가입 신청 테이블
---  Supabase 대시보드 > SQL Editor 에 붙여넣고 실행하세요.
--- ============================================================
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PC-TONGSIN v2.5 :: 푸르메클럽 AI 활용 동호회</title>
+  <meta name="description" content="PC통신처럼 사람과 사람이 연결되고, AI와 기술로 더 스마트한 변화를 만들어가는 푸르메클럽 AI 활용 동호회입니다." />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/quiple/galmuri@latest/dist/galmuri.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- CRT 오버레이 (스캔라인 + 비네팅 + 깜빡임) -->
+  <div class="crt-overlay" aria-hidden="true"></div>
+  <div class="crt-flicker" aria-hidden="true"></div>
 
-create table if not exists club_signups (
-  id            uuid primary key default gen_random_uuid(),
-  created_at    timestamptz default now(),
-  handle        text not null,        -- 대화명(닉네임)
-  field         text,                 -- 하는 일 / 분야
-  tools         text[],               -- 써본 AI 도구 (복수)
-  level         text,                 -- 활용 수준
-  pain_point    text,                 -- AI로 풀고 싶은 고민
-  interests     text[],               -- 배우고 싶은 주제 (복수)
-  meeting_style text,                 -- 선호 모임 방식
-  message       text                  -- 운영진에게 한마디
-);
+  <!-- ============ 부팅 시퀀스 ============ -->
+  <div id="boot" class="boot">
+    <pre class="boot-log" id="bootLog"></pre>
+    <div class="boot-skip">[ 아무 키나 누르면 건너뛰기 ]</div>
+  </div>
 
--- RLS 활성화 후, 익명 사용자의 "삽입(가입신청)"만 허용
-alter table club_signups enable row level security;
+  <!-- ============ 본문 ============ -->
+  <main id="screen" class="screen" hidden>
+    <!-- 상단 타이틀 바 -->
+    <header class="topbar">
+      <span class="topbar-left">PC-TONGSIN v2.5</span>
+      <span class="topbar-center">Purme Club</span>
+      <span class="topbar-right">1988-∞</span>
+    </header>
 
-create policy "anyone can sign up"
-  on club_signups for insert
-  to anon
-  with check (true);
+    <!-- 메뉴 바 -->
+    <nav class="menubar" aria-label="메인 메뉴">
+      <a href="#hero" data-key="1" class="is-current" aria-current="page">[ MAIN ]</a>
+      <span class="sep">|</span>
+      <a href="#activities" data-key="2">[ BOARD ]</a>
+      <span class="sep">|</span>
+      <a href="curriculum" data-key="3">[ LEARN ]</a>
+      <span class="sep">|</span>
+      <a href="joinin" data-key="4">[ JOIN IN ]</a>
+      <span class="sep">|</span>
+      <a href="play" data-key="5" class="menu-play">[ PLAY ]</a>
+    </nav>
 
--- (선택) 가입 현황을 한눈에 보는 뷰
-create or replace view club_signups_summary as
-select
-  created_at::date as day,
-  count(*)         as signups
-from club_signups
-group by 1
-order by 1 desc;
+    <p class="welcome">
+      WELCOME TO PURME CLUB PC-TONGSIN SYSTEM...
+      <span class="welcome-time" id="welcomeTime">2026.06.16  09:00:00</span>
+    </p>
+
+    <!-- ============ HERO ============ -->
+    <section id="hero" class="hero">
+      <div class="hero-tag">[ AI × FUTURE × CONNECT ]</div>
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <p class="hero-club">Purme Club</p>
+          <h1 class="hero-title">PC<span class="ko">통신</span></h1>
+          <p class="hero-slogan">— AI로 통하고, 함께 신난다! <span class="spark">✦</span></p>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+<pre class="ascii-monitor">
+   .------------------------.
+   |  CONNECTING            |
+   |    ::: 0 0 1 0 0 :::   |
+   |  [#####.........] 38%  |
+   |  > handshake...ok      |
+   |  > login........ok     |
+   |  > ai.module....<span class="blink">_</span>     |
+   '------------------------'
+        ||              ||
+   _____||______________||_____
+  [____________________________]
+</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ABOUT ============ -->
+    <section id="about" class="window">
+      <div class="window-bar">
+        <span class="window-title">&gt; ABOUT US</span>
+        <span class="window-ctrl">_ □ X</span>
+      </div>
+      <div class="window-body about-body">
+        <p class="about-text">
+          PC통신처럼 사람과 사람이 연결되고,<br />
+          AI와 기술로 더 스마트한 변화를 만들어가는<br />
+          <strong>푸르메클럽 AI 활용 동호회</strong>입니다.
+        </p>
+        <ul class="about-list">
+          <li>+ AI 활용 사례 공유</li>
+          <li>+ 업무 자동화 / 효율화</li>
+          <li>+ 스터디 / 워크숍 / 프로젝트</li>
+          <li>+ 아이디어톤 &amp; 해커톤</li>
+          <li>+ 최신 IT·AI 트렌드 탐구</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ WE CONNECT ============ -->
+    <section id="connect" class="connect">
+      <h2 class="section-head">&gt;&gt; WE CONNECT</h2>
+      <div class="connect-grid">
+        <article class="connect-card">
+          <div class="connect-icon">[人]</div>
+          <h3>통(通)하다</h3>
+          <p>사람 · 기술 · 데이터<br />우리가 연결됩니다</p>
+        </article>
+        <article class="connect-card">
+          <div class="connect-icon">[ai]</div>
+          <h3>배우고</h3>
+          <p>AI와 디지털로<br />새로운 가치를 만듭니다</p>
+        </article>
+        <article class="connect-card">
+          <div class="connect-icon">[♺]</div>
+          <h3>공유하고</h3>
+          <p>지식과 경험을 나누며<br />함께 성장합니다</p>
+        </article>
+        <article class="connect-card">
+          <div class="connect-icon">[↑]</div>
+          <h3>신(新)나다</h3>
+          <p>업무는 스마트하게,<br />미래는 함께 만들어가요!</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ============ 활동 내용 / 누구나 환영 / 모임 안내 ============ -->
+    <section class="triple">
+      <!-- 활동 내용 -->
+      <div id="activities" class="window">
+        <div class="window-bar">
+          <span class="window-title">&gt; 활동 내용</span>
+          <span class="window-ctrl">_ □ X</span>
+        </div>
+        <div class="window-body">
+          <ol class="num-list">
+            <li><span class="num">01</span> AI 활용 사례 공유</li>
+            <li><span class="num">02</span> 업무 자동화 / 생산성 향상</li>
+            <li><span class="num">03</span> 스터디 / 워크숍 / 프로젝트</li>
+            <li><span class="num">04</span> 아이디어톤 &amp; 해커톤</li>
+            <li><span class="num">05</span> 최신 IT·AI 트렌드 탐구</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- 누구나 환영 -->
+      <div class="window">
+        <div class="window-bar">
+          <span class="window-title">&gt; 누구나 환영!</span>
+          <span class="window-ctrl">_ □ X</span>
+        </div>
+        <div class="window-body">
+          <ul class="welcome-list">
+            <li>// AI나 디자인에 관심 있는 분</li>
+            <li>// 배우고, 나누고 싶은 분</li>
+            <li>// 다양한 직군과 협업하고 싶은 분</li>
+            <li>// 함께 공부하며 성장하고 싶은 분</li>
+          </ul>
+          <p class="welcome-cta">
+            지금 바로 함께해요!<br />
+            <em>작은 연결이 큰 변화를 만듭니다.</em>
+          </p>
+        </div>
+      </div>
+
+      <!-- 모임 안내 -->
+      <div id="meeting" class="window">
+        <div class="window-bar">
+          <span class="window-title">&gt; 모임 안내</span>
+          <span class="window-ctrl">_ □ X</span>
+        </div>
+        <div class="window-body">
+          <ul class="info-list">
+            <li>// 정기 모임 : 매월 1회</li>
+            <li>// 장소 : 온/오프라인 병행</li>
+            <li>// 운영 : 자율 &amp; 함께</li>
+            <li>// 세부 일정 : 추후 공지</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PLAY 티저 ============ -->
+    <section id="play-teaser" class="window play-teaser">
+      <div class="window-bar">
+        <span class="window-title">&gt; PLAY.EXE</span>
+        <span class="window-ctrl">_ □ X</span>
+      </div>
+      <div class="window-body play-teaser-body">
+        <pre class="play-teaser-art" aria-hidden="true">  [ PURME-MAN ]  팩맨 v1.0
+  [ TETRIS   ]  레트로 테트리스</pre>
+        <p class="play-teaser-desc">// 퇴근 후 BBS에서 한 판! 게임은 PLAY.EXE에서 실행하세요.</p>
+        <a href="play" class="play-teaser-btn">▶ [ PLAY ] 실행하기</a>
+      </div>
+    </section>
+
+    <!-- ============ 가입 신청 / 문의 ============ -->
+    <section id="join" class="join">
+      <div class="join-inner">
+        <span class="join-icon" aria-hidden="true">✉</span>
+        <div class="join-text">
+          <h2>동호회 가입 신청</h2>
+          <p class="join-tag">&gt; JOIN IN :: 가입 신청서</p>
+          <p class="join-desc">
+            6월 중 오리엔테이션을 준비 중입니다.<br />
+            PC통신 감성의 <strong>가입 신청서</strong>를 작성해 주세요. (약 1~2분)
+          </p>
+          <a href="joinin" class="join-btn">▲ 가입 신청서 작성 ▲</a>
+          <p class="join-contact">
+            &gt; 문의 : 학령기치료팀 <strong>함형광</strong>, 내선 <strong>9095</strong><span class="blink">_</span>
+          </p>
+        </div>
+        <span class="join-icon" aria-hidden="true">☎</span>
+      </div>
+    </section>
+
+    <!-- ============ 푸터 (기능키) ============ -->
+    <footer class="fnbar">
+      <button type="button" data-fkey="1" data-target="#hero">[F1] HELP</button>
+      <button type="button" data-fkey="3" data-target="#connect">[F3] SEARCH</button>
+      <button type="button" data-fkey="4" data-href="joinin">[F4] JOIN IN</button>
+      <button type="button" data-fkey="5" data-href="play">[F5] PLAY</button>
+      <button type="button" data-fkey="9" data-target="#meeting">[F9] OPTION</button>
+      <button type="button" data-fkey="10" data-target="#top">[F10] QUIT</button>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

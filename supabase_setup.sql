@@ -183,12 +183,12 @@ as $$
     from public.club_signups
   ),
   tool_items as (
-    select value #>> '{}' as item
-    from base, jsonb_array_elements(base.tools)
+    select value as item
+    from base, jsonb_array_elements_text(to_jsonb(base.tools)) as value
   ),
   interest_items as (
-    select value #>> '{}' as item
-    from base, jsonb_array_elements(base.interests)
+    select value as item
+    from base, jsonb_array_elements_text(to_jsonb(base.interests)) as value
   )
   select jsonb_build_object(
     'total', (select count(*) from base),

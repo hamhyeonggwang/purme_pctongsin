@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PC-TONGSIN v2.5 :: LAB.EXE</title>
+  <meta name="description" content="푸르메클럽 AI 활용 동호회 프롬프트 실습실 — 메모를 보고서, 회의록, 메시지, 리서치 플랜으로 변환하는 체험 페이지." />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/quiple/galmuri@latest/dist/galmuri.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="crt-overlay" aria-hidden="true"></div>
+  <div class="crt-flicker" aria-hidden="true"></div>
+
+  <main id="screen" class="screen">
+    <header class="topbar">
+      <span class="topbar-left">PC-TONGSIN v2.5</span>
+      <span class="topbar-center">Purme Club</span>
+      <span class="topbar-right">1988-∞</span>
+    </header>
+
+    <nav class="menubar" aria-label="메인 메뉴">
+      <a href="index#hero" data-key="1">[ MAIN ]</a><span class="sep">|</span>
+      <a href="index#activities" data-key="2">[ BOARD ]</a><span class="sep">|</span>
+      <a href="curriculum" data-key="3">[ LEARN ]</a><span class="sep">|</span>
+      <a href="lab" data-key="4" class="is-current" aria-current="page">[ LAB ]</a><span class="sep">|</span>
+      <a href="dashboard" data-key="5">[ DASH ]</a><span class="sep">|</span>
+      <a href="project" data-key="6">[ PROJECT ]</a><span class="sep">|</span>
+      <a href="joinin" data-key="7">[ JOIN IN ]</a><span class="sep">|</span>
+      <a href="play" data-key="8" class="menu-play">[ PLAY ]</a>
+    </nav>
+
+    <p class="welcome">
+      LAB.EXE LOADED — PROMPT SIMULATOR READY...
+      <span class="welcome-time" id="welcomeTime">2026.06.16  09:00:00</span>
+    </p>
+
+    <section class="window showcase-hero">
+      <div class="window-bar">
+        <span class="window-title">&gt; PROMPT.LAB</span>
+        <span class="window-ctrl">_ □ X</span>
+      </div>
+      <div class="window-body">
+        <p class="showcase-kicker">LV.1 AI 활용가 실습 예시</p>
+        <h1 class="showcase-title">메모를 업무 산출물로 바꾸는 프롬프트 실습실</h1>
+        <p class="showcase-desc">// 실제 AI API 없이도 프롬프트 구조와 산출물 형식을 체험할 수 있는 교육용 시뮬레이터입니다.</p>
+      </div>
+    </section>
+
+    <section class="showcase-grid">
+      <div class="window">
+        <div class="window-bar">
+          <span class="window-title">&gt; INPUT.MEMO</span>
+          <span class="window-ctrl">_ □ X</span>
+        </div>
+        <div class="window-body">
+          <label class="showcase-label" for="labInput">원본 메모</label>
+          <textarea id="labInput" class="showcase-textarea" rows="9">다음 달 AI 동호회 오리엔테이션 준비. 대상은 AI 초보 직원. 목표는 부담 없이 참여하게 만들기. 필요한 것: 일정 안내, 실습 예시, 참여 신청 독려, 개인정보 주의 안내.</textarea>
+          <div class="showcase-actions" role="group" aria-label="변환 형식 선택">
+            <button type="button" class="terminal-action" data-lab-mode="report">보고서 초안</button>
+            <button type="button" class="terminal-action" data-lab-mode="minutes">회의록 요약</button>
+            <button type="button" class="terminal-action" data-lab-mode="message">안내 메시지</button>
+            <button type="button" class="terminal-action" data-lab-mode="research">리서치 플랜</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="window">
+        <div class="window-bar">
+          <span class="window-title">&gt; OUTPUT.DRAFT</span>
+          <span class="window-ctrl">_ □ X</span>
+        </div>
+        <div class="window-body">
+          <pre class="showcase-output" id="labOutput" aria-live="polite">[ 변환 버튼을 선택하세요 ]</pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="window">
+      <div class="window-bar">
+        <span class="window-title">&gt; PROMPT.TEMPLATE</span>
+        <span class="window-ctrl">_ □ X</span>
+      </div>
+      <div class="window-body">
+        <pre class="terminal-log" id="labTemplate">역할: 업무 문서 코치
+목표: 메모를 명확한 산출물로 변환
+조건: 핵심 요약, 실행 항목, 주의사항 포함
+톤: 친절하고 실무적인 문체</pre>
+      </div>
+    </section>
+
+    <footer class="fnbar">
+      <button type="button" data-fkey="1" data-href="index#hero">[F1] MAIN</button>
+      <button type="button" data-fkey="3" data-href="curriculum">[F3] LEARN</button>
+      <button type="button" data-fkey="5" data-href="dashboard">[F5] DASH</button>
+      <button type="button" data-fkey="6" data-href="project">[F6] PROJECT</button>
+      <button type="button" data-fkey="8" data-href="play">[F8] PLAY</button>
+      <button type="button" data-fkey="10" data-href="index#hero">[F10] QUIT</button>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+  <script src="lab.js"></script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PC-TONGSIN v2.5 :: PROJECT.BLD</title>
+  <meta name="description" content="푸르메클럽 AI 활용 동호회 개인 프로젝트 빌더 — 문제 정의부터 MVP까지 AI 프로젝트 기획서를 만드는 체험 페이지." />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/quiple/galmuri@latest/dist/galmuri.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="crt-overlay" aria-hidden="true"></div>
+  <div class="crt-flicker" aria-hidden="true"></div>
+
+  <main id="screen" class="screen">
+    <header class="topbar">
+      <span class="topbar-left">PC-TONGSIN v2.5</span>
+      <span class="topbar-center">Purme Club</span>
+      <span class="topbar-right">1988-∞</span>
+    </header>
+
+    <nav class="menubar" aria-label="메인 메뉴">
+      <a href="index#hero" data-key="1">[ MAIN ]</a><span class="sep">|</span>
+      <a href="index#activities" data-key="2">[ BOARD ]</a><span class="sep">|</span>
+      <a href="curriculum" data-key="3">[ LEARN ]</a><span class="sep">|</span>
+      <a href="lab" data-key="4">[ LAB ]</a><span class="sep">|</span>
+      <a href="dashboard" data-key="5">[ DASH ]</a><span class="sep">|</span>
+      <a href="project" data-key="6" class="is-current" aria-current="page">[ PROJECT ]</a><span class="sep">|</span>
+      <a href="joinin" data-key="7">[ JOIN IN ]</a><span class="sep">|</span>
+      <a href="play" data-key="8" class="menu-play">[ PLAY ]</a>
+    </nav>
+
+    <p class="welcome">
+      PROJECT.BLD LOADED — AI MVP BLUEPRINT GENERATOR...
+      <span class="welcome-time" id="welcomeTime">2026.06.16  09:00:00</span>
+    </p>
+
+    <section class="window showcase-hero">
+      <div class="window-bar">
+        <span class="window-title">&gt; PROJECT.BUILDER</span>
+        <span class="window-ctrl">_ □ X</span>
+      </div>
+      <div class="window-body">
+        <p class="showcase-kicker">LV.3 개인 프로젝트 산출물 예시</p>
+        <h1 class="showcase-title">내 업무 문제를 AI 프로젝트 기획서로 만들기</h1>
+        <p class="showcase-desc">// 교육 마지막 단계에서 만들 수 있는 결과물을 웹에서 직접 체험하는 빌더입니다.</p>
+      </div>
+    </section>
+
+    <section class="showcase-grid">
+      <form class="window project-form" id="projectForm">
+        <div class="window-bar">
+          <span class="window-title">&gt; INPUT.SPEC</span>
+          <span class="window-ctrl">_ □ X</span>
+        </div>
+        <div class="window-body">
+          <label class="showcase-label" for="projectProblem">해결하고 싶은 문제</label>
+          <input id="projectProblem" class="showcase-input" value="반복되는 회의록 정리 시간이 오래 걸린다" />
+
+          <label class="showcase-label" for="projectUser">주 사용자</label>
+          <input id="projectUser" class="showcase-input" value="팀 회의가 많은 실무자와 운영진" />
+
+          <label class="showcase-label" for="projectData">활용할 자료</label>
+          <input id="projectData" class="showcase-input" value="회의 메모, 녹취 요약, 결정사항 목록" />
+
+          <label class="showcase-label" for="projectAutomation">자동화 아이디어</label>
+          <input id="projectAutomation" class="showcase-input" value="메모를 붙여넣으면 회의록과 할 일 목록으로 변환" />
+
+          <button type="submit" class="terminal-action">기획서 생성</button>
+        </div>
+      </form>
+
+      <div class="window">
+        <div class="window-bar">
+          <span class="window-title">&gt; OUTPUT.BLUEPRINT</span>
+          <span class="window-ctrl">_ □ X</span>
+        </div>
+        <div class="window-body">
+          <pre class="showcase-output" id="projectOutput" aria-live="polite"></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="window">
+      <div class="window-bar">
+        <span class="window-title">&gt; AI.SAFETY.CHECK</span>
+        <span class="window-ctrl">_ □ X</span>
+      </div>
+      <div class="window-body">
+        <ul class="safety-list">
+          <li><label><input type="checkbox" checked /> 개인정보와 민감정보를 입력하지 않는다.</label></li>
+          <li><label><input type="checkbox" checked /> AI 결과물은 사람이 최종 검토한다.</label></li>
+          <li><label><input type="checkbox" /> 출처가 필요한 정보는 별도로 확인한다.</label></li>
+          <li><label><input type="checkbox" /> 자동화는 작은 MVP로 먼저 검증한다.</label></li>
+        </ul>
+      </div>
+    </section>
+
+    <footer class="fnbar">
+      <button type="button" data-fkey="1" data-href="index#hero">[F1] MAIN</button>
+      <button type="button" data-fkey="4" data-href="lab">[F4] LAB</button>
+      <button type="button" data-fkey="5" data-href="dashboard">[F5] DASH</button>
+      <button type="button" data-fkey="7" data-href="joinin">[F7] JOIN</button>
+      <button type="button" data-fkey="8" data-href="play">[F8] PLAY</button>
+      <button type="button" data-fkey="10" data-href="index#hero">[F10] QUIT</button>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+  <script src="project.js"></script>
+</body>
+</html>

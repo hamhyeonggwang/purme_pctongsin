@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PC-TONGSIN v2.5 :: DASHBOARD.SYS</title>
+  <meta name="description" content="푸르메클럽 AI 활용 동호회 가입 신청 데이터를 익명 통계로 살펴보는 교육용 대시보드." />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/quiple/galmuri@latest/dist/galmuri.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="crt-overlay" aria-hidden="true"></div>
+  <div class="crt-flicker" aria-hidden="true"></div>
+
+  <main id="screen" class="screen">
+    <header class="topbar">
+      <span class="topbar-left">PC-TONGSIN v2.5</span>
+      <span class="topbar-center">Purme Club</span>
+      <span class="topbar-right">1988-∞</span>
+    </header>
+
+    <nav class="menubar" aria-label="메인 메뉴">
+      <a href="index#hero" data-key="1">[ MAIN ]</a><span class="sep">|</span>
+      <a href="index#activities" data-key="2">[ BOARD ]</a><span class="sep">|</span>
+      <a href="curriculum" data-key="3">[ LEARN ]</a><span class="sep">|</span>
+      <a href="lab" data-key="4">[ LAB ]</a><span class="sep">|</span>
+      <a href="dashboard" data-key="5" class="is-current" aria-current="page">[ DASH ]</a><span class="sep">|</span>
+      <a href="project" data-key="6">[ PROJECT ]</a><span class="sep">|</span>
+      <a href="joinin" data-key="7">[ JOIN IN ]</a><span class="sep">|</span>
+      <a href="play" data-key="8" class="menu-play">[ PLAY ]</a>
+    </nav>
+
+    <p class="welcome">
+      DASHBOARD.SYS LOADED — ANONYMIZED SIGNUP DATA VIEW...
+      <span class="welcome-time" id="welcomeTime">2026.06.16  09:00:00</span>
+    </p>
+
+    <section class="window showcase-hero">
+      <div class="window-bar">
+        <span class="window-title">&gt; DATA.DASHBOARD</span>
+        <span class="window-ctrl">_ □ X</span>
+      </div>
+      <div class="window-body">
+        <p class="showcase-kicker">LV.1 데이터 분석 · LV.2 Supabase 연동 예시</p>
+        <h1 class="showcase-title">가입 신청 데이터를 운영 인사이트로 바꾸기</h1>
+        <p class="showcase-desc">// 개인 응답은 공개하지 않고, 관심 주제와 AI 활용 수준 같은 집계 정보만 표시합니다.</p>
+      </div>
+    </section>
+
+    <section class="dashboard-summary" aria-label="가입 데이터 요약">
+      <article class="window stat-card">
+        <div class="window-bar"><span class="window-title">&gt; TOTAL</span><span class="window-ctrl">_ □ X</span></div>
+        <div class="window-body"><b id="dashTotal">--</b><span>signups</span></div>
+      </article>
+      <article class="window stat-card">
+        <div class="window-bar"><span class="window-title">&gt; STATUS</span><span class="window-ctrl">_ □ X</span></div>
+        <div class="window-body"><b id="dashStatus">LOADING</b><span>data link</span></div>
+      </article>
+    </section>
+
+    <section class="showcase-grid">
+      <div class="window"><div class="window-bar"><span class="window-title">&gt; AI.LEVEL</span><span class="window-ctrl">_ □ X</span></div><div class="window-body"><div id="dashLevels" class="bar-list"></div></div></div>
+      <div class="window"><div class="window-bar"><span class="window-title">&gt; INTEREST.TOP</span><span class="window-ctrl">_ □ X</span></div><div class="window-body"><div id="dashInterests" class="bar-list"></div></div></div>
+      <div class="window"><div class="window-bar"><span class="window-title">&gt; TOOL.USAGE</span><span class="window-ctrl">_ □ X</span></div><div class="window-body"><div id="dashTools" class="bar-list"></div></div></div>
+      <div class="window"><div class="window-bar"><span class="window-title">&gt; MEETING.STYLE</span><span class="window-ctrl">_ □ X</span></div><div class="window-body"><div id="dashStyles" class="bar-list"></div></div></div>
+    </section>
+
+    <footer class="fnbar">
+      <button type="button" data-fkey="1" data-href="index#hero">[F1] MAIN</button>
+      <button type="button" data-fkey="4" data-href="lab">[F4] LAB</button>
+      <button type="button" data-fkey="6" data-href="project">[F6] PROJECT</button>
+      <button type="button" data-fkey="7" data-href="joinin">[F7] JOIN</button>
+      <button type="button" data-fkey="8" data-href="play">[F8] PLAY</button>
+      <button type="button" data-fkey="10" data-href="index#hero">[F10] QUIT</button>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>

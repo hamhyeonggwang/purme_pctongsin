@@ -9,6 +9,9 @@
 |---|---|---|
 | `/` | `index.html` | 메인 BBS (소개 · 활동 · 가입 CTA · PLAY 티저) |
 | `/curriculum` | `curriculum.html` | 6개월 AI 교육 과정 (EDUCATION.SYS) |
+| `/lab` | `lab.html` | 프롬프트 실습실 (메모 → 보고서/회의록/메시지/리서치 플랜) |
+| `/dashboard` | `dashboard.html` | 가입 신청 데이터 익명 집계 대시보드 |
+| `/project` | `project.html` | 개인 AI 프로젝트 기획서 빌더 |
 | `/play` | `play.html` | PURME-MAN 팩맨 + 레트로 테트리스 + 갤러그풍 슈팅 + 알카노이드 벽돌깨기 |
 | `/joinin` | `joinin.html` | `[ JOIN IN ]` 가입 신청 설문 (Supabase) |
 
@@ -19,8 +22,11 @@
 | 1 | MAIN | `index#hero` |
 | 2 | BOARD | `index#activities` |
 | 3 | LEARN | `curriculum` |
-| 4 | JOIN IN | `joinin` |
-| 5 | PLAY | `play` |
+| 4 | LAB | `lab` |
+| 5 | DASH | `dashboard` |
+| 6 | PROJECT | `project` |
+| 7 | JOIN IN | `joinin` |
+| 8 | PLAY | `play` |
 
 ## 구성
 
@@ -29,13 +35,16 @@
 | `styles.css` | 레트로 디자인 시스템 (네이비 + 시안, CRT 스캔라인, 픽셀 폰트) |
 | `script.js` | 부팅 시퀀스 / 실시간 시계 / 메뉴·단축키 네비게이션 |
 | `curriculum.js` | 교육 과정 터미널 UI |
+| `lab.js` | 프롬프트 실습실 템플릿 변환 시뮬레이터 |
+| `dashboard.js` | Supabase RPC 기반 익명 가입 통계 대시보드 |
+| `project.js` | 개인 AI 프로젝트 기획서 생성 빌더 |
 | `play.js` | 게임 탭 전환 |
 | `arcade.js` | 공통 효과음 / 닉네임 / Supabase HIGH SCORE 랭킹 |
 | `game.js` | PURME-MAN 팩맨 (`play.html`) |
 | `tetris.js` | 테트리스 (`play.html`) |
 | `galaga.js` | 갤러그풍 슈팅 (`play.html`) |
 | `arkanoid.js` | 알카노이드 벽돌깨기 (`play.html`) |
-| `supabase_setup.sql` | 가입 신청 및 게임 랭킹 DB 스키마 |
+| `supabase_setup.sql` | 가입 신청, 익명 대시보드 집계, 게임 랭킹 DB 스키마 |
 
 ## 로컬 미리보기
 

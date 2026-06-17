@@ -169,9 +169,78 @@ with check (true);
 grant insert on table public.game_scores to anon, authenticated;
 grant execute on function public.get_game_leaderboard(text, integer) to anon, authenticated;
 
+-- Anonymous signup dashboard ------------------------------------------------
+
+create or replace function public.get_signup_dashboard()
+returns jsonb
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  with base as (
+    select *
+    from public.club_signups
+  ),
+  tool_items as (
+    select value #>> '{}' as item
+    from base, jsonb_array_elements(base.tools)
+  ),
+  interest_items as (
+    select value #>> '{}' as item
+    from base, jsonb_array_elements(base.interests)
+  )
+  select jsonb_build_object(
+    'total', (select count(*) from base),
+    'levels', coalesce((
+      select jsonb_object_agg(coalesce(level, '미응답'), cnt)
+      from (
+        select level, count(*) as cnt
+        from base
+        group by level
+        order by count(*) desc
+      ) as rows
+    ), '{}'::jsonb),
+    'meeting_styles', coalesce((
+      select jsonb_object_agg(coalesce(meeting_style, '미응답'), cnt)
+      from (
+        select meeting_style, count(*) as cnt
+        from base
+        group by meeting_style
+        order by count(*) desc
+      ) as rows
+    ), '{}'::jsonb),
+    'tools', coalesce((
+      select jsonb_object_agg(item, cnt)
+      from (
+        select item, count(*) as cnt
+        from tool_items
+        where item is not null and item <> ''
+        group by item
+        order by count(*) desc
+        limit 8
+      ) as rows
+    ), '{}'::jsonb),
+    'interests', coalesce((
+      select jsonb_object_agg(item, cnt)
+      from (
+        select item, count(*) as cnt
+        from interest_items
+        where item is not null and item <> ''
+        group by item
+        order by count(*) desc
+        limit 8
+      ) as rows
+    ), '{}'::jsonb)
+  );
+$$;
+
+grant execute on function public.get_signup_dashboard() to anon, authenticated;
+
 -- Optional admin query after setup:
 -- select created_at, handle, level, tools, interests, meeting_style
 -- from public.club_signups
 -- order by created_at desc;
 --
 -- select * from public.get_game_leaderboard('pacman', 10);
+-- select public.get_signup_dashboard();

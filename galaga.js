@@ -102,6 +102,7 @@
   }
 
   function newGame() {
+    if (window.PurmeArcade) window.PurmeArcade.start("galaga");
     score = 0;
     lives = 3;
     wave = 1;
@@ -115,6 +116,7 @@
   function nextWave() {
     wave += 1;
     score += 500 + wave * 100;
+    if (window.PurmeArcade) window.PurmeArcade.play("coin");
     buildWave();
     resetPlayer();
     updateHud();
@@ -146,6 +148,7 @@
     if (playerShots.length >= MAX_PLAYER_SHOTS) return;
     playerShots.push({ x: player.x, y: player.y - 18, w: 3, h: 12 });
     player.cooldown = 11;
+    if (window.PurmeArcade) window.PurmeArcade.play("click");
   }
 
   function spawnBurst(x, y, color, count) {
@@ -181,6 +184,9 @@
     if (lives <= 0) {
       state = "over";
       showOverlay("RETRY", "GAME OVER — ENTER 다시하기");
+      if (window.PurmeArcade) {
+        window.PurmeArcade.submitScore("galaga", score, { wave });
+      }
       return;
     }
     resetPlayer();
@@ -272,6 +278,7 @@
         if (enemy.hp <= 0) {
           const points = enemy.type === "boss" ? 180 : enemy.type === "bee" ? 100 : 70;
           score += points + wave * 10;
+          if (window.PurmeArcade) window.PurmeArcade.scoreBlip();
           spawnBurst(enemy.x, enemy.y, enemy.type === "boss" ? "#ff9ce0" : "#5bd2ff", 14);
           enemies.splice(j, 1);
           updateHud();

@@ -9,22 +9,25 @@
     pacman: document.getElementById("gamePacman"),
     tetris: document.getElementById("gameTetris"),
     galaga: document.getElementById("gameGalaga"),
+    arkanoid: document.getElementById("gameArkanoid"),
   };
   const titleEl = document.getElementById("playWindowTitle");
   const welcomeEl = document.getElementById("playWelcome");
 
-  if (!tabs.length || !panels.pacman || !panels.tetris || !panels.galaga) return;
+  if (!tabs.length || !panels.pacman || !panels.tetris || !panels.galaga || !panels.arkanoid) return;
 
   const TITLES = {
     pacman: "> PLAY.EXE — PURME-MAN",
     tetris: "> PLAY.EXE — TETRIS",
     galaga: "> PLAY.EXE — GALAGA",
+    arkanoid: "> PLAY.EXE — ARKANOID",
   };
 
   const WELCOME = {
     pacman: "PLAY.EXE LOADED — PURME-MAN v1.0 READY...",
     tetris: "PLAY.EXE LOADED — TETRIS v1.0 READY...",
     galaga: "PLAY.EXE LOADED — GALAGA v1.0 READY...",
+    arkanoid: "PLAY.EXE LOADED — ARKANOID v1.0 READY...",
   };
 
   function switchGame(id) {

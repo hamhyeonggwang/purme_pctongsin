@@ -389,7 +389,14 @@ em { color: var(--cyan); font-style: normal; }
 
 .game-window { margin-top: 38px; }
 .game-page-window { margin-top: 0; margin-bottom: 30px; }
-.game-body { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.game-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  max-width: 680px;
+  margin: 0 auto;
+}
 
 .game-hud {
   display: flex;
@@ -408,6 +415,28 @@ em { color: var(--cyan); font-style: normal; }
   position: relative;
   width: 380px;
   max-width: 100%;
+  background:
+    linear-gradient(180deg, rgba(91, 210, 255, 0.04), rgba(4, 6, 31, 0.2)),
+    #04061f;
+  padding: 8px;
+  border: 2px solid var(--line);
+  box-shadow: inset 0 0 28px rgba(40, 70, 200, 0.25), 0 0 18px rgba(0, 224, 255, 0.16);
+}
+.game-stage::after {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.03) 0,
+      rgba(255, 255, 255, 0.03) 1px,
+      rgba(0, 0, 0, 0.14) 2px,
+      rgba(0, 0, 0, 0.14) 4px
+    );
+  mix-blend-mode: screen;
 }
 #gameCanvas {
   display: block;
@@ -418,7 +447,8 @@ em { color: var(--cyan); font-style: normal; }
   background: #04061f;
   box-shadow: inset 0 0 26px rgba(40, 70, 200, 0.25), 0 0 16px rgba(0, 224, 255, 0.15);
 }
-#galagaCanvas {
+#galagaCanvas,
+#arkanoidCanvas {
   display: block;
   width: 100%;
   height: auto;
@@ -430,7 +460,8 @@ em { color: var(--cyan); font-style: normal; }
 
 .game-overlay {
   position: absolute;
-  inset: 0;
+  inset: 8px;
+  z-index: 3;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -491,6 +522,7 @@ em { color: var(--cyan); font-style: normal; }
 }
 .game-panel {
   width: 100%;
+  max-width: 640px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -498,6 +530,139 @@ em { color: var(--cyan); font-style: normal; }
 }
 .game-panel[hidden] {
   display: none;
+}
+
+.arcade-console {
+  width: 100%;
+  max-width: 640px;
+  border: 2px solid var(--line);
+  background:
+    linear-gradient(180deg, rgba(0, 224, 255, 0.08), rgba(4, 6, 31, 0.55)),
+    #05082b;
+  box-shadow: inset 0 0 32px rgba(0, 224, 255, 0.12);
+}
+.arcade-marquee {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  align-items: center;
+  border-bottom: 1px dashed var(--line);
+  padding: 8px 10px;
+  color: var(--accent);
+  font-size: 13px;
+}
+.arcade-coin {
+  font-family: var(--mono);
+  color: #04061f;
+  background: var(--accent);
+  border: none;
+  padding: 5px 9px;
+  cursor: pointer;
+  text-shadow: none;
+}
+.arcade-prompt {
+  justify-self: center;
+  color: #ffe14d;
+  animation: blink 1s steps(2, start) infinite;
+  letter-spacing: 2px;
+}
+.arcade-resolution {
+  color: var(--ink);
+  white-space: nowrap;
+}
+.arcade-leaderboard {
+  padding: 9px 12px 12px;
+}
+.arcade-leaderboard h2 {
+  margin: 0 0 6px;
+  color: var(--cyan);
+  font-size: 13px;
+  font-weight: normal;
+}
+.arcade-leaderboard ol {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 3px 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 12px;
+}
+.arcade-leaderboard li {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--ink);
+  border-bottom: 1px dotted rgba(91, 210, 255, 0.22);
+}
+.arcade-leaderboard li b {
+  color: var(--accent);
+  font-weight: normal;
+}
+.arcade-name-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(4, 6, 31, 0.86);
+}
+.arcade-name-modal[hidden] {
+  display: none;
+}
+.arcade-name-box {
+  width: min(92vw, 360px);
+  border: 2px solid var(--accent);
+  background: #05082b;
+  box-shadow: 0 0 30px rgba(0, 224, 255, 0.35), inset 0 0 28px rgba(40, 70, 200, 0.25);
+  padding: 22px;
+  text-align: center;
+}
+.arcade-name-title {
+  margin: 0 0 8px;
+  color: #ffe14d;
+  font-size: 18px;
+  letter-spacing: 2px;
+}
+.arcade-name-score {
+  margin: 0 0 14px;
+  color: var(--cyan);
+}
+.arcade-name-score b {
+  color: var(--accent);
+}
+.arcade-name-box label {
+  display: block;
+  color: var(--ink);
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+#arcadeNameInput {
+  width: 120px;
+  border: 1px solid var(--line);
+  background: #04061f;
+  color: #ffe14d;
+  font: 28px/1 var(--mono);
+  letter-spacing: 8px;
+  text-align: center;
+  padding: 8px 2px 8px 10px;
+  text-transform: uppercase;
+}
+.arcade-name-status {
+  min-height: 20px;
+  margin: 10px 0 14px;
+  color: var(--cyan);
+  font-size: 12px;
+}
+.arcade-name-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+.arcade-skip {
+  background: var(--line);
+  color: var(--ink-bright);
 }
 
 /* 테트리스 */
@@ -514,6 +679,9 @@ em { color: var(--cyan); font-style: normal; }
 }
 .galaga-stage {
   width: 360px;
+}
+.arkanoid-stage {
+  width: 380px;
 }
 #tetrisCanvas,
 #tetrisNext {

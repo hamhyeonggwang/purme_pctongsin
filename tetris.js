@@ -187,6 +187,7 @@
       highScore = score;
       localStorage.setItem("purmetris_high", String(highScore));
     }
+    if (window.PurmeArcade) window.PurmeArcade.play(cleared >= 4 ? "coin" : "score");
     updateHud();
   }
 
@@ -280,7 +281,15 @@
     nextPiece = randomPiece();
     if (collides(active, 0, 0, active.rot)) {
       state = "over";
+      if (score > highScore) {
+        highScore = score;
+        localStorage.setItem("purmetris_high", String(highScore));
+      }
+      updateHud();
       showOverlay("RETRY", "GAME OVER — ENTER 다시하기");
+      if (window.PurmeArcade) {
+        window.PurmeArcade.submitScore("tetris", score, { lines, level });
+      }
     }
   }
 
@@ -480,6 +489,7 @@
   }
 
   function newGame() {
+    if (window.PurmeArcade) window.PurmeArcade.start("tetris");
     board = emptyBoard();
     score = 0;
     lines = 0;

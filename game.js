@@ -122,6 +122,7 @@
   }
 
   function newGame() {
+    if (window.PurmeArcade) window.PurmeArcade.start("pacman");
     grid = buildGrid();
     dotsLeft = countDots();
     score = 0;
@@ -201,10 +202,14 @@
     if (!aligned(pac)) return;
     const c = colOf(pac.x), r = rowOf(pac.y);
     const cell = grid[r][c];
-    if (cell === DOT) { grid[r][c] = EMPTY; score += 10; dotsLeft--; }
+    if (cell === DOT) {
+      grid[r][c] = EMPTY; score += 10; dotsLeft--;
+      if (window.PurmeArcade) window.PurmeArcade.scoreBlip();
+    }
     else if (cell === POWER) {
       grid[r][c] = EMPTY; score += 50; dotsLeft--;
       frightTimer = FRIGHT_FRAMES; eatCombo = 0;
+      if (window.PurmeArcade) window.PurmeArcade.play("coin");
     }
     if (dotsLeft <= 0) winGame();
   }
@@ -218,6 +223,7 @@
           g.eaten = true;
           eatCombo++;
           score += 200 * eatCombo;
+          if (window.PurmeArcade) window.PurmeArcade.play("score");
           // 집으로 즉시 복귀
           g.x = center(g.home.c); g.y = center(g.home.r);
           g.dir = DIRS.up;
@@ -247,11 +253,17 @@
     state = "over";
     saveHigh();
     showOverlay("GAME OVER", "ENTER 로 다시 도전!");
+    if (window.PurmeArcade) {
+      window.PurmeArcade.submitScore("pacman", score, { result: "game_over" });
+    }
   }
   function winGame() {
     state = "win";
     saveHigh();
     showOverlay("★ CLEAR! ★", "모든 점을 먹었어요! ENTER 로 한 판 더!");
+    if (window.PurmeArcade) {
+      window.PurmeArcade.submitScore("pacman", score, { result: "clear" });
+    }
   }
   function saveHigh() {
     if (score > highScore) {

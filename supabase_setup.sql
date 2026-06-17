@@ -74,7 +74,104 @@ with check (true);
 grant usage on schema public to anon, authenticated;
 grant insert on table public.club_signups to anon, authenticated;
 
+-- Arcade high score storage -------------------------------------------------
+
+create table if not exists public.game_scores (
+  id uuid primary key default gen_random_uuid(),
+  game_id text not null,
+  nickname text not null,
+  score integer not null,
+  meta jsonb not null default '{}'::jsonb,
+  created_at timestamptz not null default now(),
+
+  constraint game_scores_game_id_check
+    check (game_id in ('pacman', 'tetris', 'galaga', 'arkanoid')),
+  constraint game_scores_nickname_check
+    check (nickname ~ '^[A-Z0-9]{3}$'),
+  constraint game_scores_score_check
+    check (score >= 0),
+  constraint game_scores_meta_is_object
+    check (jsonb_typeof(meta) = 'object')
+);
+
+comment on table public.game_scores is
+  'PC-TONGSIN arcade high scores, kept to top 10 rows per game.';
+comment on column public.game_scores.game_id is 'Game identifier: pacman, tetris, galaga, or arkanoid.';
+comment on column public.game_scores.nickname is 'Three-character arcade nickname.';
+comment on column public.game_scores.score is 'Final score submitted by the browser.';
+comment on column public.game_scores.meta is 'Optional game metadata such as level, lines, wave, or stage.';
+
+create index if not exists game_scores_leaderboard_idx
+  on public.game_scores (game_id, score desc, created_at asc);
+
+create or replace function public.prune_game_scores()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  delete from public.game_scores as stale
+  where stale.game_id = new.game_id
+    and stale.id not in (
+      select kept.id
+      from public.game_scores as kept
+      where kept.game_id = new.game_id
+      order by kept.score desc, kept.created_at asc
+      limit 10
+    );
+
+  return new;
+end;
+$$;
+
+drop trigger if exists prune_game_scores_after_insert on public.game_scores;
+create trigger prune_game_scores_after_insert
+after insert on public.game_scores
+for each row
+execute function public.prune_game_scores();
+
+create or replace function public.get_game_leaderboard(
+  p_game_id text,
+  p_limit integer default 10
+)
+returns table (
+  rank bigint,
+  nickname text,
+  score integer,
+  created_at timestamptz
+)
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select
+    row_number() over (order by gs.score desc, gs.created_at asc) as rank,
+    gs.nickname,
+    gs.score,
+    gs.created_at
+  from public.game_scores as gs
+  where gs.game_id = p_game_id
+  order by gs.score desc, gs.created_at asc
+  limit least(greatest(coalesce(p_limit, 10), 1), 10);
+$$;
+
+alter table public.game_scores enable row level security;
+
+drop policy if exists "Public can submit game scores" on public.game_scores;
+create policy "Public can submit game scores"
+on public.game_scores
+for insert
+to anon, authenticated
+with check (true);
+
+grant insert on table public.game_scores to anon, authenticated;
+grant execute on function public.get_game_leaderboard(text, integer) to anon, authenticated;
+
 -- Optional admin query after setup:
 -- select created_at, handle, level, tools, interests, meeting_style
 -- from public.club_signups
 -- order by created_at desc;
+--
+-- select * from public.get_game_leaderboard('pacman', 10);

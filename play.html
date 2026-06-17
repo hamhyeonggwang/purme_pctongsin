@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PC-TONGSIN v2.5 :: PLAY.EXE</title>
-  <meta name="description" content="푸르메클럽 PC-TONGSIN — PURME-MAN 팩맨, 레트로 테트리스, 갤러그풍 슈팅." />
+  <meta name="description" content="푸르메클럽 PC-TONGSIN — PURME-MAN 팩맨, 레트로 테트리스, 갤러그풍 슈팅, 알카노이드 벽돌깨기." />
   <link rel="preconnect" href="https://cdn.jsdelivr.net" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/quiple/galmuri@latest/dist/galmuri.css" />
   <link rel="stylesheet" href="styles.css" />
@@ -48,6 +48,21 @@
           <button type="button" class="board-tab" role="tab" data-game="pacman" aria-selected="true">[ PURME-MAN ]</button>
           <button type="button" class="board-tab" role="tab" data-game="tetris" aria-selected="false">[ TETRIS ]</button>
           <button type="button" class="board-tab" role="tab" data-game="galaga" aria-selected="false">[ GALAGA ]</button>
+          <button type="button" class="board-tab" role="tab" data-game="arkanoid" aria-selected="false">[ ARKANOID ]</button>
+        </div>
+
+        <div class="arcade-console" aria-label="아케이드 상태와 랭킹">
+          <div class="arcade-marquee">
+            <button type="button" class="arcade-coin" id="arcadeCoinButton">INSERT COIN</button>
+            <span class="arcade-prompt" id="arcadePrompt">PRESS START</span>
+            <span class="arcade-resolution">640×480 MODE</span>
+          </div>
+          <section class="arcade-leaderboard" aria-label="최고 점수 랭킹">
+            <h2>HIGH SCORE // <span id="arcadeLeaderTitle">PURME-MAN</span></h2>
+            <ol id="arcadeLeaderList">
+              <li>CONNECTING...</li>
+            </ol>
+          </section>
         </div>
 
         <div id="gamePacman" class="game-panel">
@@ -149,6 +164,34 @@
             ◀▶ / AD 이동 · SPACE 발사 · P 일시정지 · ENTER 시작/재시작 · 적이 하단에 닿으면 함선 손상
           </p>
         </div>
+
+        <div id="gameArkanoid" class="game-panel" hidden>
+          <div class="game-hud arkanoid-hud">
+            <span class="hud-score">SCORE <b id="aScore">0</b></span>
+            <span class="hud-high">HI <b id="aHigh">0</b></span>
+            <span class="hud-lives">BALLS <b id="aLives">●●●</b></span>
+            <span class="hud-wave">STAGE <b id="aStage">1</b></span>
+          </div>
+
+          <div class="game-stage arkanoid-stage">
+            <canvas id="arkanoidCanvas" width="380" height="420" aria-label="알카노이드 벽돌깨기 게임 화면"></canvas>
+            <div class="game-overlay" id="arkanoidOverlay">
+              <pre class="game-logo">
+    _    ____  _  __    _    _   _  ___ ___ ____  
+   / \  |  _ \| |/ /   / \  | \ | |/ _ \_ _|  _ \ 
+  / _ \ | |_) | ' /   / _ \ |  \| | | | | || | | |
+ / ___ \|  _ <| . \  / ___ \| |\  | |_| | || |_| |
+/_/   \_\_| \_\_|\_\/_/   \_\_| \_|\___/___|____/ 
+        P U R M E - A R K A N O I D</pre>
+              <p class="game-msg" id="arkanoidMsg">패들을 움직여 모든 벽돌을 깨세요</p>
+              <button type="button" class="game-btn" id="arkanoidStartBtn">▶ START [ENTER]</button>
+            </div>
+          </div>
+
+          <p class="game-help">
+            ◀▶ / AD 이동 · SPACE 발사 · P 일시정지 · ENTER 시작/재시작 · 반사 위치로 각도 조절
+          </p>
+        </div>
       </div>
     </section>
 
@@ -161,10 +204,26 @@
     </footer>
   </main>
 
+  <div class="arcade-name-modal" id="arcadeNameModal" hidden>
+    <form class="arcade-name-box" id="arcadeNameForm">
+      <p class="arcade-name-title">NEW HIGH SCORE</p>
+      <p class="arcade-name-score">SCORE <b id="arcadeFinalScore">0</b></p>
+      <label for="arcadeNameInput">ENTER YOUR INITIALS</label>
+      <input id="arcadeNameInput" type="text" inputmode="latin" maxlength="3" autocomplete="off" value="AAA" />
+      <p class="arcade-name-status" id="arcadeNameStatus">3글자 닉네임을 입력하세요.</p>
+      <div class="arcade-name-actions">
+        <button type="submit" class="game-btn" id="arcadeNameSubmit">SAVE</button>
+        <button type="button" class="game-btn arcade-skip" id="arcadeNameSkip">SKIP</button>
+      </div>
+    </form>
+  </div>
+
   <script src="script.js"></script>
+  <script src="arcade.js"></script>
   <script src="play.js"></script>
   <script src="game.js"></script>
   <script src="tetris.js"></script>
   <script src="galaga.js"></script>
+  <script src="arkanoid.js"></script>
 </body>
 </html>

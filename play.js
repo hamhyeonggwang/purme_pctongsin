@@ -5,26 +5,32 @@
   "use strict";
 
   const tabs = document.querySelectorAll(".game-tabs .board-tab");
-  const pacmanPanel = document.getElementById("gamePacman");
-  const tetrisPanel = document.getElementById("gameTetris");
+  const panels = {
+    pacman: document.getElementById("gamePacman"),
+    tetris: document.getElementById("gameTetris"),
+    galaga: document.getElementById("gameGalaga"),
+  };
   const titleEl = document.getElementById("playWindowTitle");
   const welcomeEl = document.getElementById("playWelcome");
 
-  if (!tabs.length || !pacmanPanel || !tetrisPanel) return;
+  if (!tabs.length || !panels.pacman || !panels.tetris || !panels.galaga) return;
 
   const TITLES = {
     pacman: "> PLAY.EXE — PURME-MAN",
     tetris: "> PLAY.EXE — TETRIS",
+    galaga: "> PLAY.EXE — GALAGA",
   };
 
   const WELCOME = {
     pacman: "PLAY.EXE LOADED — PURME-MAN v1.0 READY...",
     tetris: "PLAY.EXE LOADED — TETRIS v1.0 READY...",
+    galaga: "PLAY.EXE LOADED — GALAGA v1.0 READY...",
   };
 
   function switchGame(id) {
-    pacmanPanel.hidden = id !== "pacman";
-    tetrisPanel.hidden = id !== "tetris";
+    Object.keys(panels).forEach((key) => {
+      panels[key].hidden = key !== id;
+    });
     if (titleEl) titleEl.textContent = TITLES[id] || "> PLAY.EXE";
     if (welcomeEl) {
       const timeEl = welcomeEl.querySelector(".welcome-time");

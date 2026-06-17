@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PC-TONGSIN v2.5 :: PLAY.EXE</title>
-  <meta name="description" content="푸르메클럽 PC-TONGSIN — PURME-MAN 팩맨 &amp; 레트로 테트리스." />
+  <meta name="description" content="푸르메클럽 PC-TONGSIN — PURME-MAN 팩맨, 레트로 테트리스, 갤러그풍 슈팅." />
   <link rel="preconnect" href="https://cdn.jsdelivr.net" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/quiple/galmuri@latest/dist/galmuri.css" />
   <link rel="stylesheet" href="styles.css" />
@@ -47,6 +47,7 @@
         <div class="board-tabs game-tabs" role="tablist" aria-label="게임 선택">
           <button type="button" class="board-tab" role="tab" data-game="pacman" aria-selected="true">[ PURME-MAN ]</button>
           <button type="button" class="board-tab" role="tab" data-game="tetris" aria-selected="false">[ TETRIS ]</button>
+          <button type="button" class="board-tab" role="tab" data-game="galaga" aria-selected="false">[ GALAGA ]</button>
         </div>
 
         <div id="gamePacman" class="game-panel">
@@ -120,6 +121,34 @@
             ◀▶ / AD 이동 · ▲ / W 회전 · ▼ / S 소프트드롭 · SPACE 하드드롭 · P 일시정지 · ENTER 시작/재시작
           </p>
         </div>
+
+        <div id="gameGalaga" class="game-panel" hidden>
+          <div class="game-hud galaga-hud">
+            <span class="hud-score">SCORE <b id="gaScore">0</b></span>
+            <span class="hud-high">HI <b id="gaHigh">0</b></span>
+            <span class="hud-lives">SHIPS <b id="gaLives">▲▲▲</b></span>
+            <span class="hud-wave">WAVE <b id="gaWave">1</b></span>
+          </div>
+
+          <div class="game-stage galaga-stage">
+            <canvas id="galagaCanvas" width="360" height="420" aria-label="갤러그풍 슈팅 게임 화면"></canvas>
+            <div class="game-overlay" id="galagaOverlay">
+              <pre class="game-logo">
+ ____    _    _        _    ____    _    
+|  _ \  / \  | |      / \  / ___|  / \   
+| |_) |/ _ \ | |     / _ \| |  _  / _ \  
+|  __// ___ \| |___ / ___ \ |_| |/ ___ \ 
+|_|  /_/   \_\_____/_/   \_\____/_/   \_\
+        P U R M E - G A L A G A</pre>
+              <p class="game-msg" id="galagaMsg">좌우 이동 · SPACE 발사 · 적 편대를 격추하세요</p>
+              <button type="button" class="game-btn" id="galagaStartBtn">▶ START [ENTER]</button>
+            </div>
+          </div>
+
+          <p class="game-help">
+            ◀▶ / AD 이동 · SPACE 발사 · P 일시정지 · ENTER 시작/재시작 · 적이 하단에 닿으면 함선 손상
+          </p>
+        </div>
       </div>
     </section>
 
@@ -136,5 +165,6 @@
   <script src="play.js"></script>
   <script src="game.js"></script>
   <script src="tetris.js"></script>
+  <script src="galaga.js"></script>
 </body>
 </html>

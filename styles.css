@@ -418,6 +418,15 @@ em { color: var(--cyan); font-style: normal; }
   background: #04061f;
   box-shadow: inset 0 0 26px rgba(40, 70, 200, 0.25), 0 0 16px rgba(0, 224, 255, 0.15);
 }
+#galagaCanvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+  border: 1px solid var(--line);
+  background: #04061f;
+  box-shadow: inset 0 0 26px rgba(40, 70, 200, 0.25), 0 0 16px rgba(0, 224, 255, 0.15);
+}
 
 .game-overlay {
   position: absolute;
@@ -502,6 +511,9 @@ em { color: var(--cyan); font-style: normal; }
 }
 .tetris-stage {
   width: 200px;
+}
+.galaga-stage {
+  width: 360px;
 }
 #tetrisCanvas,
 #tetrisNext {

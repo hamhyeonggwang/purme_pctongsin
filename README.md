@@ -9,7 +9,7 @@
 |---|---|---|
 | `/` | `index.html` | 메인 BBS (소개 · 활동 · 가입 CTA · PLAY 티저) |
 | `/curriculum` | `curriculum.html` | 6개월 AI 교육 과정 (EDUCATION.SYS) |
-| `/play` | `play.html` | PURME-MAN 팩맨 + 레트로 테트리스 |
+| `/play` | `play.html` | PURME-MAN 팩맨 + 레트로 테트리스 + 갤러그풍 슈팅 |
 | `/joinin` | `joinin.html` | `[ JOIN IN ]` 가입 신청 설문 (Supabase) |
 
 ### 공통 메뉴
@@ -32,6 +32,7 @@
 | `play.js` | 게임 탭 전환 |
 | `game.js` | PURME-MAN 팩맨 (`play.html`) |
 | `tetris.js` | 테트리스 (`play.html`) |
+| `galaga.js` | 갤러그풍 슈팅 (`play.html`) |
 | `supabase_setup.sql` | 가입 신청 DB 스키마 |
 
 ## 로컬 미리보기

@@ -394,7 +394,7 @@ em { color: var(--cyan); font-style: normal; }
   flex-direction: column;
   align-items: center;
   gap: 14px;
-  max-width: 680px;
+  max-width: 900px;
   margin: 0 auto;
 }
 
@@ -532,57 +532,44 @@ em { color: var(--cyan); font-style: normal; }
   display: none;
 }
 
-.arcade-console {
+.arcade-prompt-row {
   width: 100%;
-  max-width: 640px;
+  text-align: center;
+}
+.arcade-prompt {
+  display: inline-block;
+  color: #ffe14d;
+  animation: blink 1s steps(2, start) infinite;
+  letter-spacing: 2px;
+  font-size: 14px;
+}
+.arcade-play-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 640px) 220px;
+  gap: 18px;
+  align-items: start;
+  width: 100%;
+}
+.arcade-game-area {
+  min-width: 0;
+}
+.arcade-leaderboard {
+  position: sticky;
+  top: 18px;
   border: 2px solid var(--line);
   background:
     linear-gradient(180deg, rgba(0, 224, 255, 0.08), rgba(4, 6, 31, 0.55)),
     #05082b;
   box-shadow: inset 0 0 32px rgba(0, 224, 255, 0.12);
-}
-.arcade-marquee {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 12px;
-  align-items: center;
-  border-bottom: 1px dashed var(--line);
-  padding: 8px 10px;
-  color: var(--accent);
-  font-size: 13px;
-}
-.arcade-coin {
-  font-family: var(--mono);
-  color: #04061f;
-  background: var(--accent);
-  border: none;
-  padding: 5px 9px;
-  cursor: pointer;
-  text-shadow: none;
-}
-.arcade-prompt {
-  justify-self: center;
-  color: #ffe14d;
-  animation: blink 1s steps(2, start) infinite;
-  letter-spacing: 2px;
-}
-.arcade-resolution {
-  color: var(--ink);
-  white-space: nowrap;
-}
-.arcade-leaderboard {
-  padding: 9px 12px 12px;
+  padding: 12px;
 }
 .arcade-leaderboard h2 {
-  margin: 0 0 6px;
+  margin: 0 0 10px;
   color: var(--cyan);
   font-size: 13px;
   font-weight: normal;
 }
 .arcade-leaderboard ol {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 3px 18px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -592,6 +579,7 @@ em { color: var(--cyan); font-style: normal; }
   display: flex;
   justify-content: space-between;
   gap: 8px;
+  min-height: 20px;
   color: var(--ink);
   border-bottom: 1px dotted rgba(91, 210, 255, 0.22);
 }
@@ -985,8 +973,16 @@ em { color: var(--cyan); font-style: normal; }
   .curriculum-dual { grid-template-columns: 1fr; }
   .terminal-output { max-height: 280px; }
   .tetris-layout { flex-direction: column; align-items: center; }
+  .arcade-play-layout { grid-template-columns: 1fr; }
+  .arcade-leaderboard { position: static; }
+  .arcade-leaderboard ol {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 3px 18px;
+  }
 }
 @media (max-width: 420px) {
   .connect-grid { grid-template-columns: 1fr; }
   .menubar { font-size: 12px; }
+  .arcade-leaderboard ol { grid-template-columns: 1fr; }
 }

@@ -51,45 +51,37 @@
           <button type="button" class="board-tab" role="tab" data-game="arkanoid" aria-selected="false">[ ARKANOID ]</button>
         </div>
 
-        <div class="arcade-console" aria-label="아케이드 상태와 랭킹">
-          <div class="arcade-marquee">
-            <button type="button" class="arcade-coin" id="arcadeCoinButton">INSERT COIN</button>
-            <span class="arcade-prompt" id="arcadePrompt">PRESS START</span>
-            <span class="arcade-resolution">640×480 MODE</span>
-          </div>
-          <section class="arcade-leaderboard" aria-label="최고 점수 랭킹">
-            <h2>HIGH SCORE // <span id="arcadeLeaderTitle">PURME-MAN</span></h2>
-            <ol id="arcadeLeaderList">
-              <li>CONNECTING...</li>
-            </ol>
-          </section>
+        <div class="arcade-prompt-row">
+          <span class="arcade-prompt" id="arcadePrompt">PRESS START</span>
         </div>
 
-        <div id="gamePacman" class="game-panel">
-          <div class="game-hud">
-            <span class="hud-score">SCORE <b id="gScore">0</b></span>
-            <span class="hud-high">HI <b id="gHigh">0</b></span>
-            <span class="hud-lives">LIVES <b id="gLives">♥♥♥</b></span>
-          </div>
+        <div class="arcade-play-layout">
+          <div class="arcade-game-area">
+            <div id="gamePacman" class="game-panel">
+              <div class="game-hud">
+                <span class="hud-score">SCORE <b id="gScore">0</b></span>
+                <span class="hud-high">HI <b id="gHigh">0</b></span>
+                <span class="hud-lives">LIVES <b id="gLives">♥♥♥</b></span>
+              </div>
 
-          <div class="game-stage">
-            <canvas id="gameCanvas" width="380" height="380" aria-label="팩맨 게임 화면"></canvas>
-            <div class="game-overlay" id="gameOverlay">
-              <pre class="game-logo">
+              <div class="game-stage">
+                <canvas id="gameCanvas" width="380" height="380" aria-label="팩맨 게임 화면"></canvas>
+                <div class="game-overlay" id="gameOverlay">
+                  <pre class="game-logo">
  ____  _   _ ____  __  __ ___ 
 |  _ \| | | |  _ \|  \/  | __|
 | |_) | |_| | |_) | |\/| | _| 
 |  __/|_____|_| \_\_|  |_|___|
 |_|   P U R M E - M A N  v1.0</pre>
-              <p class="game-msg" id="gameMsg">방향키 또는 WASD로 시작!</p>
-              <button type="button" class="game-btn" id="gameStartBtn">▶ START [ENTER]</button>
-            </div>
-          </div>
+                  <p class="game-msg" id="gameMsg">방향키 또는 WASD로 시작!</p>
+                  <button type="button" class="game-btn" id="gameStartBtn">▶ START [ENTER]</button>
+                </div>
+              </div>
 
-          <p class="game-help">
-            ▲▼◀▶ / WASD 이동 · 점(·) 모두 먹으면 클리어 · 큰 점(◉) 먹으면 고스트 사냥 · ENTER 다시하기
-          </p>
-        </div>
+              <p class="game-help">
+                ▲▼◀▶ / WASD 이동 · 점(·) 모두 먹으면 클리어 · 큰 점(◉) 먹으면 고스트 사냥 · ENTER 다시하기
+              </p>
+            </div>
 
         <div id="gameTetris" class="game-panel" hidden>
           <div class="tetris-layout">
@@ -191,6 +183,16 @@
           <p class="game-help">
             ◀▶ / AD 이동 · SPACE 발사 · P 일시정지 · ENTER 시작/재시작 · 반사 위치로 각도 조절
           </p>
+        </div>
+
+          </div>
+
+          <aside class="arcade-leaderboard" aria-label="최고 점수 랭킹">
+            <h2>HIGH SCORE // <span id="arcadeLeaderTitle">PURME-MAN</span></h2>
+            <ol id="arcadeLeaderList">
+              <li>CONNECTING...</li>
+            </ol>
+          </aside>
         </div>
       </div>
     </section>

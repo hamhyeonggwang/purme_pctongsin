@@ -16,7 +16,6 @@
   };
 
   const els = {
-    coin: document.getElementById("arcadeCoinButton"),
     prompt: document.getElementById("arcadePrompt"),
     leaderTitle: document.getElementById("arcadeLeaderTitle"),
     leaderList: document.getElementById("arcadeLeaderList"),
@@ -249,13 +248,6 @@
 
   function scoreBlip() {
     play("score");
-  }
-
-  if (els.coin) {
-    els.coin.addEventListener("click", () => {
-      setPrompt("PRESS START");
-      play("coin");
-    });
   }
 
   if (els.input) {

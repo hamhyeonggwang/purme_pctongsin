@@ -249,28 +249,11 @@
 <!-- ===================== 본문 ===================== -->
 <div class="wrap" id="main" style="display:none;">
 
-  <div class="joinin-chrome">
-    <header class="topbar">
-      <span class="topbar-left">PC-TONGSIN v2.5</span>
-      <span class="topbar-center">Purme Club</span>
-      <span class="topbar-right">1988-∞</span>
-    </header>
-    <nav class="menubar" aria-label="메인 메뉴">
-      <a href="index#hero" data-key="1">[ MAIN ]</a>
-      <span class="sep">|</span>
-      <a href="index#activities" data-key="2">[ BOARD ]</a>
-      <span class="sep">|</span>
-      <a href="curriculum" data-key="3">[ LEARN ]</a>
-      <span class="sep">|</span>
-      <a href="joinin" data-key="4" class="is-current" aria-current="page">[ JOIN IN ]</a>
-      <span class="sep">|</span>
-      <a href="play" data-key="5" class="menu-play">[ PLAY ]</a>
-    </nav>
-  </div>
+  <a href="/" class="back-link">&lt; [ MAIN ] 홈으로 돌아가기</a>
 
   <div class="masthead">
     <div class="brand">Purme Club · PC통신</div>
-    <div class="sub">:: JOIN IN 모듈 &nbsp;<span class="blink-tag">[정식등록 준비 中]</span></div>
+    <div class="sub">:: 가입 신청 모듈 &nbsp;<span class="blink-tag">[정식등록 준비 中]</span></div>
   </div>
   <div class="statusbar">
     <span>접속 <b>09600 bps</b></span>
@@ -356,12 +339,6 @@
     <button id="send-btn">▲ 신 청 서  전 송 ▲</button>
     <div class="err" id="err"></div>
   </div>
-
-  <footer class="fnbar joinin-fnbar">
-    <button type="button" data-fkey="1" data-href="index#hero">[F1] MAIN</button>
-    <button type="button" data-fkey="5" data-href="play">[F5] PLAY</button>
-    <button type="button" data-fkey="10" data-href="index#hero">[F10] QUIT</button>
-  </footer>
 
   <div class="footer">
     <span class="line">──────────────────────────────</span><br>
@@ -658,6 +635,5 @@ function showDone(name) {
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 </script>
-<script src="script.js"></script>
 </body>
 </html>

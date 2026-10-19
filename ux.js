@@ -4,6 +4,8 @@
   const sections = [...document.querySelectorAll("[data-stage]")];
   const links = [...document.querySelectorAll("[data-stage-link]")];
   const progress = document.querySelector(".scroll-progress span");
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const revealItems = [...document.querySelectorAll("[data-reveal]")];
 
   const setActive = (stage) => {
     links.forEach((link) => {
@@ -15,6 +17,23 @@
       }
     });
   };
+
+  if (!reduceMotion && revealItems.length && "IntersectionObserver" in window) {
+    document.documentElement.classList.add("motion-ready");
+    const revealObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("is-visible");
+          revealObserver.unobserve(entry.target);
+        });
+      },
+      { rootMargin: "0px 0px -8% 0px", threshold: 0.08 }
+    );
+    revealItems.forEach((item) => revealObserver.observe(item));
+  } else {
+    revealItems.forEach((item) => item.classList.add("is-visible"));
+  }
 
   if ("IntersectionObserver" in window) {
     const observer = new IntersectionObserver(

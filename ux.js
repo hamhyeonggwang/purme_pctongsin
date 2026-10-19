@@ -1,6 +1,10 @@
 (() => {
   "use strict";
 
+  if (new URLSearchParams(window.location.search).get("preview") === "1") {
+    document.documentElement.classList.add("preview-mode");
+  }
+
   const sections = [...document.querySelectorAll("[data-stage]")];
   const links = [...document.querySelectorAll("[data-stage-link]")];
   const progress = document.querySelector(".scroll-progress span");

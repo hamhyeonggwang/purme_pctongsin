@@ -1,259 +1,152 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PC-TONGSIN v2.5 :: 푸르메클럽 AI 활용 동호회</title>
-  <meta name="description" content="PC통신처럼 사람과 사람이 연결되고, AI와 기술로 더 스마트한 변화를 만들어가는 푸르메클럽 AI 활용 동호회입니다." />
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/quiple/galmuri@latest/dist/galmuri.css" />
-  <link rel="stylesheet" href="styles.css" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="PC통신 — AI 소식을 읽고, 프로젝트에 참여하고, 결과물을 공유하는 AI 활용 동호회 포털" />
+  <title>[PC통신] AI 활용 동호회</title>
+  <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
-  <!-- CRT 오버레이 (스캔라인 + 비네팅 + 깜빡임) -->
-  <div class="crt-overlay" aria-hidden="true"></div>
-  <div class="crt-flicker" aria-hidden="true"></div>
-
-  <!-- ============ 부팅 시퀀스 ============ -->
-  <div id="boot" class="boot">
-    <pre class="boot-log" id="bootLog"></pre>
-    <div class="boot-skip">[ 아무 키나 누르면 건너뛰기 ]</div>
-  </div>
-
-  <!-- ============ 본문 ============ -->
-  <main id="screen" class="screen" hidden>
-    <!-- 상단 타이틀 바 -->
-    <header class="topbar">
-      <span class="topbar-left">PC-TONGSIN v2.5</span>
-      <span class="topbar-center">Purme Club</span>
-      <span class="topbar-right">1988-∞</span>
-    </header>
-
-    <!-- 메뉴 바 -->
-    <nav class="menubar" aria-label="메인 메뉴">
-      <a href="#hero" data-key="1" class="is-current" aria-current="page">[ MAIN ]</a>
-      <span class="sep">|</span>
-      <a href="about" data-key="2">[ ABOUT ]</a>
-      <span class="sep">|</span>
-      <a href="#board-showcase" data-key="3">[ BOARD ]</a>
-      <span class="sep">|</span>
-      <a href="curriculum" data-key="4">[ LEARN ]</a>
-      <span class="sep">|</span>
-      <a href="joinin" data-key="5">[ JOIN IN ]</a>
-      <span class="sep">|</span>
-      <a href="play" data-key="6" class="menu-play">[ PLAY ]</a>
+  <header class="site-header">
+    <a class="wordmark" href="#top" aria-label="PC통신 홈">[PC통신]<span class="wordmark-dot"></span></a>
+    <p class="header-descriptor">AI 활용 동호회</p>
+    <nav class="nav" aria-label="주요 메뉴">
+      <a href="#news">AI NEWS</a>
+      <a href="#projects">PROJECT</a>
+      <a href="#archive">ARCHIVE</a>
+      <a href="#gallery">GALLERY</a>
+      <a class="nav-login" href="#join">LOGIN</a>
     </nav>
+  </header>
 
-    <p class="welcome">
-      WELCOME TO PURME CLUB PC-TONGSIN SYSTEM...
-      <span class="welcome-time" id="welcomeTime">2026.06.16  09:00:00</span>
-    </p>
-
-    <!-- ============ HERO ============ -->
-    <section id="hero" class="hero">
-      <div class="hero-tag">[ AI × FUTURE × CONNECT ]</div>
+  <main id="top">
+    <section class="hero shell">
+      <div class="hero-kicker"><span>AI CLUB / DIGITAL MAGAZINE</span><span>ISSUE 001 · OCT 2026</span></div>
       <div class="hero-grid">
-        <div class="hero-copy">
-          <p class="hero-club">Purme Club</p>
-          <h1 class="hero-title">PC<span class="ko">통신</span></h1>
-          <p class="hero-slogan">— AI랑 통하고, 새 재미를 찾다 <span class="spark">✦</span></p>
+        <div>
+          <p class="hero-label">AI를 실제 업무에 사용하는 사람들의 동호회</p>
+          <h1>AI를 읽고,<br>써보고,<br>만듭니다.</h1>
         </div>
-        <div class="hero-art" aria-hidden="true">
-<pre class="ascii-monitor">
-   .------------------------.
-   |  CONNECTING            |
-   |    ::: 0 0 1 0 0 :::   |
-   |  [#####.........] 38%  |
-   |  > handshake...ok      |
-   |  > login........ok     |
-   |  > ai.module....<span class="blink">_</span>     |
-   '------------------------'
-        ||              ||
-   _____||______________||_____
-  [____________________________]
-</pre>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ ABOUT ============ -->
-    <section id="about" class="window">
-      <div class="window-bar">
-        <span class="window-title">&gt; ABOUT US</span>
-        <span class="window-ctrl">_ □ X</span>
-      </div>
-      <div class="window-body about-body">
-        <p class="about-text">
-          PC통신처럼 사람과 사람이 연결되고,<br />
-          AI와 기술로 더 스마트한 변화를 만들어가는<br />
-          <strong>푸르메클럽 AI 활용 동호회</strong>입니다.
-        </p>
-        <ul class="about-list">
-          <li>+ AI 활용 사례 공유</li>
-          <li>+ 업무 자동화 / 효율화</li>
-          <li>+ 스터디 / 워크숍 / 프로젝트</li>
-          <li>+ 아이디어톤 &amp; 해커톤</li>
-          <li>+ 최신 IT·AI 트렌드 탐구</li>
-        </ul>
-        <a href="about" class="showcase-inline-link">▶ ABOUT.DOC 동호회칙 초안 보기</a>
-      </div>
-    </section>
-
-    <!-- ============ WE CONNECT ============ -->
-    <section id="connect" class="connect">
-      <h2 class="section-head">&gt;&gt; WE CONNECT</h2>
-      <div class="connect-grid">
-        <article class="connect-card">
-          <div class="connect-icon">[人]</div>
-          <h3>통(通)하다</h3>
-          <p>사람 · 기술 · 데이터<br />우리가 연결됩니다</p>
-        </article>
-        <article class="connect-card">
-          <div class="connect-icon">[ai]</div>
-          <h3>배우고</h3>
-          <p>AI와 디지털로<br />새로운 가치를 만듭니다</p>
-        </article>
-        <article class="connect-card">
-          <div class="connect-icon">[♺]</div>
-          <h3>공유하고</h3>
-          <p>지식과 경험을 나누며<br />함께 성장합니다</p>
-        </article>
-        <article class="connect-card">
-          <div class="connect-icon">[↑]</div>
-          <h3>신(新)나다</h3>
-          <p>업무는 스마트하게,<br />미래는 함께 만들어가요!</p>
-        </article>
-      </div>
-    </section>
-
-    <!-- ============ 활동 내용 / 누구나 환영 / 모임 안내 ============ -->
-    <section class="triple">
-      <!-- 활동 내용 -->
-      <div id="activities" class="window">
-        <div class="window-bar">
-          <span class="window-title">&gt; 활동 내용</span>
-          <span class="window-ctrl">_ □ X</span>
-        </div>
-        <div class="window-body">
-          <ol class="num-list">
-            <li><span class="num">01</span> AI 활용 사례 공유</li>
-            <li><span class="num">02</span> 업무 자동화 / 생산성 향상</li>
-            <li><span class="num">03</span> 스터디 / 워크숍 / 프로젝트</li>
-            <li><span class="num">04</span> 아이디어톤 &amp; 해커톤</li>
-            <li><span class="num">05</span> 최신 IT·AI 트렌드 탐구</li>
-          </ol>
-        </div>
-      </div>
-
-      <!-- 누구나 환영 -->
-      <div class="window">
-        <div class="window-bar">
-          <span class="window-title">&gt; 누구나 환영!</span>
-          <span class="window-ctrl">_ □ X</span>
-        </div>
-        <div class="window-body">
-          <ul class="welcome-list">
-            <li>// AI나 디자인에 관심 있는 분</li>
-            <li>// 배우고, 나누고 싶은 분</li>
-            <li>// 다양한 직군과 협업하고 싶은 분</li>
-            <li>// 함께 공부하며 성장하고 싶은 분</li>
-          </ul>
-          <p class="welcome-cta">
-            지금 바로 함께해요!<br />
-            <em>작은 연결이 큰 변화를 만듭니다.</em>
+        <div class="hero-aside">
+          <p class="hero-description">
+            <strong>PC통신</strong>은 최신 AI 소식을 큐레이션하고,
+            회원이 직접 프로젝트에 참여해 실제 결과물을 만들고 공유하는 동호회 포털입니다.
           </p>
-        </div>
-      </div>
-
-      <!-- 모임 안내 -->
-      <div id="meeting" class="window">
-        <div class="window-bar">
-          <span class="window-title">&gt; 모임 안내</span>
-          <span class="window-ctrl">_ □ X</span>
-        </div>
-        <div class="window-body">
-          <ul class="info-list">
-            <li>// 정기 모임 : 매월 1회</li>
-            <li>// 장소 : 온/오프라인 병행</li>
-            <li>// 운영 : 자율 &amp; 함께</li>
-            <li>// 세부 일정 : 추후 공지</li>
-          </ul>
+          <p class="brand-line">사용의 차이가 결과의 차이를 만든다.</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#news">이번 주 AI 소식 보기</a>
+            <a class="button button-secondary" href="#projects">프로젝트 참여하기</a>
+          </div>
+          <div class="status-line"><span class="status-dot"></span> ONLINE · AI × PEOPLE × PROJECT</div>
         </div>
       </div>
     </section>
 
-    <!-- ============ BOARD 하위 메뉴: AI 교육 쇼케이스 ============ -->
-    <section id="board-showcase" class="window">
-      <div class="window-bar">
-        <span class="window-title">&gt; AI_SHOWCASE.SYS</span>
-        <span class="window-ctrl">_ □ X</span>
+    <section id="news" class="section shell">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">THIS WEEK IN AI</p>
+          <h2>이번 주,<br>무엇이 달라졌나.</h2>
+        </div>
+        <p class="section-intro">업계 뉴스 자체와 ChatGPT·Claude·Gemini 업데이트, 추천 AI 서비스를 5개만 골라 보여줍니다.</p>
       </div>
-      <div class="window-body">
-        <p class="terminal-log">[ BOARD ] 하위 실습 게시판 — 교육 커리큘럼에서 배우는 기능을 웹에서 직접 체험합니다.</p>
-        <div class="showcase-link-grid">
-          <a href="lab" class="showcase-link-card">
-            <strong>[ LAB ]</strong>
-            <span>프롬프트 실습실 · 메모를 업무 산출물로 변환</span>
-          </a>
-          <a href="dashboard" class="showcase-link-card">
-            <strong>[ DASH ]</strong>
-            <span>가입 데이터 대시보드 · 익명 집계 분석 예시</span>
-          </a>
-          <a href="project" class="showcase-link-card">
-            <strong>[ PROJECT ]</strong>
-            <span>개인 프로젝트 빌더 · AI MVP 기획서 생성</span>
-          </a>
+
+      <article class="lead-story">
+        <div class="lead-art">
+          <span class="story-index">01 / OPENAI</span>
+          <strong>SLIDES</strong>
+          <i></i>
+        </div>
+        <div class="lead-copy">
+          <div class="meta"><span>OPENAI</span><span>OCT 16</span></div>
+          <h3>ChatGPT 안에서 프레젠테이션을 만들고 함께 편집한다</h3>
+          <p>생성에서 끝나는 기능보다, 실제 산출물 편집 흐름 안으로 들어오는 변화가 더 중요합니다.</p>
+          <a class="text-link" href="https://help.openai.com/en/articles/6825453-chatgpt-release-notes" target="_blank" rel="noreferrer">원문 보기 ↗</a>
+        </div>
+      </article>
+
+      <div class="news-list">
+        <a href="https://blog.google/innovation-and-ai/products/gemini-app/gemini-4-argon-availability/" target="_blank" rel="noreferrer"><span>02</span><b>GOOGLE</b><strong>Gemini 4 Argon, Gemini 앱으로 들어오다</strong><time>OCT 13</time></a>
+        <a href="https://blogs.microsoft.com/blog/2026/10/12/microsoft-to-expand-azure-maia-system-to-multi-gigawatt-deployments/" target="_blank" rel="noreferrer"><span>03</span><b>INDUSTRY</b><strong>Microsoft, Azure Maia를 대규모 AI 추론 인프라로 확대</strong><time>OCT 12</time></a>
+        <a href="https://www.anthropic.com/claude-haiku-5-5" target="_blank" rel="noreferrer"><span>04</span><b>ANTHROPIC</b><strong>Claude Haiku 5.5, 빠르고 반복적인 작업을 겨냥하다</strong><time>OCT 07</time></a>
+        <a href="https://blog.google/innovation-and-ai/products/gemini-app/new-connected-apps-gemini/" target="_blank" rel="noreferrer"><span>05</span><b>TOOLS</b><strong>Gemini Connected Apps, AI가 여러 업무 도구 사이를 오간다</strong><time>SEP 23</time></a>
+      </div>
+    </section>
+
+    <section id="projects" class="projects">
+      <div class="shell">
+        <div class="projects-head">
+          <div>
+            <p class="eyebrow acid">FROM READ TO MAKE</p>
+            <h2>뉴스를 읽었다면,<br>이번엔 직접 만들어봅니다.</h2>
+          </div>
+          <p>운영진이 프로젝트를 개설하고, 회원은 버튼 한 번으로 참여 신청합니다. 1인 프로젝트와 팀 프로젝트를 모두 운영합니다.</p>
+        </div>
+
+        <div class="project-grid">
+          <article class="project-card featured-project">
+            <div class="project-art"><span>PROJECT 001</span><strong>REAL</strong></div>
+            <div class="project-copy">
+              <div class="project-status"><span>RECRUITING</span><span>04 / 06 MEMBERS</span></div>
+              <h3>진짜 쓰는 AI</h3>
+              <p>아이디어가 아니라 실제 업무에서 사용할 수 있는 결과물을 만드는 프로젝트.</p>
+              <button type="button">참여 신청</button>
+            </div>
+          </article>
+          <article class="project-card">
+            <div class="project-art inverse"><span>PROJECT 002</span><strong>SOLO</strong></div>
+            <div class="project-copy">
+              <div class="project-status"><span>RECRUITING</span><span>02 MEMBERS</span></div>
+              <h3>1인 AI 미션</h3>
+              <p>혼자 시작하고 짧게 완성하는 작은 AI 활용 실험.</p>
+              <button type="button">프로젝트 보기</button>
+            </div>
+          </article>
         </div>
       </div>
     </section>
 
-    <!-- ============ PLAY 티저 ============ -->
-    <section id="play-teaser" class="window play-teaser">
-      <div class="window-bar">
-        <span class="window-title">&gt; PLAY.EXE</span>
-        <span class="window-ctrl">_ □ X</span>
+    <section id="archive" class="section shell">
+      <div class="section-head compact">
+        <div><p class="eyebrow">ARCHIVE</p><h2>다시 쓸 수 있게<br>남깁니다.</h2></div>
+        <p class="section-intro">제품명이 아니라 사용 목적을 기준으로 지식을 축적합니다.</p>
       </div>
-      <div class="window-body play-teaser-body">
-        <pre class="play-teaser-art" aria-hidden="true">  [ PURME-MAN ]  팩맨 v1.0
-  [ TETRIS   ]  레트로 테트리스</pre>
-        <p class="play-teaser-desc">// 퇴근 후 BBS에서 한 판! 게임은 PLAY.EXE에서 실행하세요.</p>
-        <a href="play" class="play-teaser-btn">▶ [ PLAY ] 실행하기</a>
+      <div class="archive-grid">
+        <a href="#"><span>01</span><strong>AI 시작하기</strong><small>START</small></a>
+        <a href="#"><span>02</span><strong>업무 활용</strong><small>WORK</small></a>
+        <a href="#"><span>03</span><strong>자동화</strong><small>AUTOMATE</small></a>
+        <a href="#"><span>04</span><strong>만들기</strong><small>BUILD</small></a>
+        <a href="#"><span>05</span><strong>교육자료</strong><small>LEARN</small></a>
+        <a href="#"><span>06</span><strong>PC통신 자료</strong><small>CLUB</small></a>
       </div>
     </section>
 
-    <!-- ============ 가입 신청 / 문의 ============ -->
+    <section id="gallery" class="section shell">
+      <div class="section-head compact">
+        <div><p class="eyebrow">PROJECT GALLERY</p><h2>우리가 만든 것들.</h2></div>
+        <p class="section-intro">회의 사진보다 실제 결과물의 화면을 보여줍니다.</p>
+      </div>
+      <div class="gallery-grid">
+        <div class="gallery-item large"><span>RESULT 01</span><strong>BUILD</strong></div>
+        <div class="gallery-item tall"><span>RESULT 02</span><strong>SHIP</strong></div>
+        <div class="gallery-item"><span>RESULT 03</span><strong>USE</strong></div>
+        <div class="gallery-item"><span>RESULT 04</span><strong>TEST</strong></div>
+      </div>
+    </section>
+
     <section id="join" class="join">
-      <div class="join-inner">
-        <span class="join-icon" aria-hidden="true">✉</span>
-        <div class="join-text">
-          <h2>동호회 가입 신청</h2>
-          <p class="join-tag">&gt; JOIN IN :: 가입 신청서</p>
-          <p class="join-desc">
-            6월 중 오리엔테이션을 준비 중입니다.<br />
-            PC통신 감성의 <strong>가입 신청서</strong>를 작성해 주세요. (약 1~2분)
-          </p>
-          <a href="joinin" class="join-btn">▲ 가입 신청서 작성 ▲</a>
-          <p class="join-contact">
-            &gt; 문의 : 학령기치료팀 <strong>함형광</strong>, 내선 <strong>9095</strong><span class="blink">_</span>
-          </p>
-        </div>
-        <span class="join-icon" aria-hidden="true">☎</span>
+      <div class="shell join-grid">
+        <div><p class="eyebrow acid">JOIN [PC통신]</p><h2>AI를 구경하는 사람에서<br>직접 써보는 사람으로.</h2></div>
+        <div><p>비회원은 뉴스와 프로젝트 결과물을 볼 수 있습니다. 승인된 회원은 프로젝트 참여와 회원 전용 자료 다운로드가 가능합니다.</p><a class="button button-primary" href="#">가입 신청</a></div>
       </div>
     </section>
-
-    <!-- ============ 푸터 (기능키) ============ -->
-    <footer class="fnbar">
-      <button type="button" data-fkey="1" data-target="#hero">[F1] HELP</button>
-      <button type="button" data-fkey="2" data-href="about">[F2] ABOUT</button>
-      <button type="button" data-fkey="3" data-target="#board-showcase">[F3] BOARD</button>
-      <button type="button" data-fkey="4" data-href="curriculum">[F4] LEARN</button>
-      <button type="button" data-fkey="5" data-href="joinin">[F5] JOIN</button>
-      <button type="button" data-fkey="6" data-href="play">[F6] PLAY</button>
-      <button type="button" data-fkey="9" data-target="#meeting">[F9] OPTION</button>
-      <button type="button" data-fkey="10" data-target="#top">[F10] QUIT</button>
-    </footer>
   </main>
 
-  <script src="script.js"></script>
+  <footer class="site-footer shell">
+    <strong>[PC통신]</strong>
+    <span>AI × PEOPLE × PROJECT</span>
+    <span>READ → TRY → MAKE → SHARE → REUSE</span>
+  </footer>
 </body>
 </html>

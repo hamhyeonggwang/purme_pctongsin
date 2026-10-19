@@ -4,6 +4,16 @@
 
 create extension if not exists pgcrypto;
 
+create or replace function public.set_updated_at()
+returns trigger
+language plpgsql
+as $
+begin
+  new.updated_at = now();
+  return new;
+end;
+$;
+
 -- ---------------------------------------------------------------------------
 -- Join requests
 -- ---------------------------------------------------------------------------
@@ -126,5 +136,11 @@ using ((select auth.uid()) = user_id);
 -- Legacy data
 -- ---------------------------------------------------------------------------
 
-comment on table public.club_signups is
-  'Legacy PC통신 8-question signup survey. Preserved for historical analysis; not used for new membership requests.';
+do $
+begin
+  if to_regclass('public.club_signups') is not null then
+    comment on table public.club_signups is
+      'Legacy PC통신 8-question signup survey. Preserved for historical analysis; not used for new membership requests.';
+  end if;
+end;
+$;

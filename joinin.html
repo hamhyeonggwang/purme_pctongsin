@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>가입 신청 · [PC통신]</title>
-  <meta name="description" content="PC통신 AI 활용 동호회 가입 신청">
+  <meta name="description" content="푸르메클럽 AI 활용 동호회 PC통신 가입 신청">
   <link rel="stylesheet" href="/site.css">
   <link rel="stylesheet" href="/join.css">
   <script src="/ux.js" defer></script>
@@ -14,12 +14,12 @@
   <a class="skip-link" href="#join-form">가입 신청서로 바로가기</a>
   <header class="site-header">
     <a class="brand" href="/" aria-label="PC통신 홈"><span class="brand-bracket">[</span><span class="brand-name">PC통신</span><span class="brand-bracket">]</span></a>
-    <span class="header-description">AI 활용 동호회</span>
+    <span class="header-description">푸르메클럽 AI 활용 동호회</span>
     <nav class="desktop-nav" aria-label="주요 메뉴">
-      <a href="/#read">AI 소식</a><a href="/#try">프로젝트</a><a href="/#reuse">자료실</a><a href="/#share">결과물</a><a href="/#member">가입 안내</a>
+      <a href="/#read">AI 소식</a><a href="/#try">프로젝트</a><a href="/#reuse">자료실</a><a href="/#share">결과물</a><a href="/about">ABOUT</a><a href="/joinin" aria-current="page">JOIN</a>
     </nav>
     <details class="mobile-menu"><summary>메뉴</summary><nav aria-label="모바일 메뉴">
-      <a href="/#read">AI 소식</a><a href="/#try">프로젝트</a><a href="/#reuse">자료실</a><a href="/#share">결과물</a><a href="/#member">가입 안내</a>
+      <a href="/#read">AI 소식</a><a href="/#try">프로젝트</a><a href="/#reuse">자료실</a><a href="/#share">결과물</a><a href="/about">ABOUT</a><a href="/joinin">JOIN</a>
     </nav></details>
   </header>
 
@@ -29,11 +29,21 @@
     <section class="join-hero">
       <div>
         <p class="micro-label">JOIN / PC통신</p>
-        <h1>가입은 간단하게,<br>참여는 실제로.</h1>
+        <h1>AI를 잘할 필요는<br>없습니다.</h1>
       </div>
       <div class="join-intro">
-        <p>가입 신청에는 <strong>이름, 부서·소속, 이메일</strong>만 받습니다. 운영진 승인 후 회원 계정이 만들어지고 로그인 안내를 받습니다.</p>
-        <p class="join-note">프로젝트 참여 이유나 자기소개는 요구하지 않습니다.</p>
+        <p>직접 써보고 싶은 사람이면 됩니다. 처음 사용하는 사람부터 직접 도구를 만드는 사람까지 함께합니다.</p>
+        <p class="join-note">가입 신청에는 이름, 부서·소속, 이메일만 받습니다. 참여 이유나 자기소개는 요구하지 않습니다.</p>
+      </div>
+    </section>
+
+    <section class="join-fit" aria-labelledby="join-fit-title">
+      <div><p class="micro-label">WHO CAN JOIN</p><h2 id="join-fit-title">이런 분이면 충분합니다.</h2></div>
+      <div class="join-fit-grid">
+        <p>AI를 처음 써보고 싶은 사람</p>
+        <p>업무에서 더 잘 활용하고 싶은 사람</p>
+        <p>배운 것을 함께 나누고 싶은 사람</p>
+        <p>다른 직군과 무언가 만들어보고 싶은 사람</p>
       </div>
     </section>
 
@@ -49,52 +59,33 @@
           <div><p class="micro-label">MEMBERSHIP REQUEST</p><h2>가입 신청</h2></div>
           <span>약 30초</span>
         </div>
-
-        <div class="field">
-          <label for="joinName">이름 <b>필수</b></label>
-          <input id="joinName" name="name" type="text" autocomplete="name" maxlength="60" required placeholder="이름">
-        </div>
-
-        <div class="field">
-          <label for="joinDepartment">부서·소속 <b>필수</b></label>
-          <input id="joinDepartment" name="department" type="text" autocomplete="organization" maxlength="100" required placeholder="예: 학령기치료팀">
-        </div>
-
-        <div class="field">
-          <label for="joinEmail">이메일 <b>필수</b></label>
-          <input id="joinEmail" name="email" type="email" autocomplete="email" maxlength="254" required placeholder="name@example.com">
-          <small>승인 및 로그인 안내에 사용합니다.</small>
-        </div>
-
+        <div class="field"><label for="joinName">이름 <b>필수</b></label><input id="joinName" name="name" type="text" autocomplete="name" maxlength="60" required placeholder="이름"></div>
+        <div class="field"><label for="joinDepartment">부서·소속 <b>필수</b></label><input id="joinDepartment" name="department" type="text" autocomplete="organization" maxlength="100" required placeholder="예: 학령기치료팀"></div>
+        <div class="field"><label for="joinEmail">이메일 <b>필수</b></label><input id="joinEmail" name="email" type="email" autocomplete="email" maxlength="254" required placeholder="name@example.com"><small>승인 및 로그인 안내에 사용합니다.</small></div>
         <div id="joinStatus" class="form-status" role="status" aria-live="polite"></div>
-
         <button id="joinSubmit" class="button button-primary join-submit" type="submit">가입 신청하기</button>
       </form>
 
       <aside class="join-side">
-        <div class="privacy-box">
-          <p class="micro-label">PRIVACY</p>
-          <h2>필요한 정보만 받습니다.</h2>
-          <p>가입 검토와 로그인 안내에 필요한 정보만 수집합니다. AI 활용 수준, 참여 동기, 자유서술 답변은 가입 조건이 아닙니다.</p>
-        </div>
-
         <div class="member-benefit">
           <p class="micro-label">AFTER APPROVAL</p>
           <h2>회원이 되면</h2>
-          <ul>
-            <li>프로젝트 참여 신청</li>
-            <li>프로젝트 아이디어 제안</li>
-            <li>회원 전용 자료 다운로드</li>
-          </ul>
+          <ul><li>프로젝트 참여 신청</li><li>프로젝트 아이디어 제안</li><li>회원 전용 자료 다운로드</li><li>동호회 활동 참여</li></ul>
         </div>
+        <div class="privacy-box">
+          <p class="micro-label">PRIVACY & SAFETY</p>
+          <h2>필요한 정보만 받습니다.</h2>
+          <p>가입 검토와 로그인 안내에 필요한 정보만 수집합니다. 동호회 활동에서도 개인정보, 회사 기밀, 민감정보를 AI 도구에 입력하지 않는 것을 기본 원칙으로 합니다.</p>
+        </div>
+        <a class="join-about-link" href="/about">운영 방식과 활동을 먼저 보기 →</a>
       </aside>
     </section>
   </main>
 
   <footer class="site-footer shell">
     <a class="brand footer-brand" href="/"><span class="brand-bracket">[</span><span class="brand-name">PC통신</span><span class="brand-bracket">]</span></a>
+    <nav class="footer-links" aria-label="푸터 메뉴"><a href="/about">ABOUT</a><a href="/">HOME</a><a href="/play" class="play-link">[PLAY.EXE]</a></nav>
     <span>AI × PEOPLE × PROJECT</span>
-    <span>READ → TRY → MAKE → SHARE → REUSE</span>
   </footer>
 </body>
 </html>

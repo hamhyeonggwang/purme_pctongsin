@@ -317,3 +317,23 @@ img{max-width:100%}
 .preview-mode .tool-back,.preview-mode .tool-footer{display:none}
 .preview-mode .tool-hero{padding-top:14px}
 .preview-mode .tool-nav{margin-bottom:22px}
+
+/* Identity migration — existing club context preserved */
+.about-teaser{padding-top:88px;padding-bottom:88px}
+.about-teaser-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:56px;padding:34px;border:1px solid var(--ink);background:#fff}
+.about-teaser-copy h2{margin:12px 0 18px;font-size:clamp(42px,4.8vw,70px);line-height:.96;letter-spacing:-.06em}
+.about-teaser-copy>p:not(.micro-label){max-width:42em;margin:0 0 28px;color:var(--muted);font-size:17px;line-height:1.7}
+.activity-index{list-style:none;margin:0;padding:0;border-top:1px solid var(--ink)}
+.activity-index li{display:grid;grid-template-columns:52px 1fr;gap:14px;align-items:center;min-height:62px;border-bottom:1px solid var(--line)}
+.activity-index span{color:var(--muted);font:700 10px/1 var(--font-mono);letter-spacing:.08em}
+.activity-index strong{font-size:18px;letter-spacing:-.025em}
+.footer-links{display:flex;gap:18px;align-items:center}
+.footer-links a{min-height:44px;display:inline-flex;align-items:center}
+.footer-links a:hover{color:var(--ink)}
+.footer-links .play-link{color:var(--ink);font-weight:700}
+.footer-links .play-link:hover{background:var(--acid)}
+
+@media(max-width:820px){
+  .about-teaser-grid{grid-template-columns:1fr;gap:34px;padding:24px}
+  .footer-links{flex-wrap:wrap}
+}

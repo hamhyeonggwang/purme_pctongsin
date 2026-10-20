@@ -1,110 +1,131 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PC-TONGSIN v2.5 :: ABOUT.DOC</title>
-  <meta name="description" content="푸르메클럽 AI 활용 동호회 소개와 동호회칙 초안." />
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/quiple/galmuri@latest/dist/galmuri.css" />
-  <link rel="stylesheet" href="styles.css" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="푸르메클럽 AI 활용 동호회 PC통신의 목적, 활동, 참여 대상과 운영 방식">
+  <title>ABOUT · [PC통신]</title>
+  <link rel="stylesheet" href="/site.css">
+  <link rel="stylesheet" href="/about.css">
+  <script src="/ux.js" defer></script>
 </head>
 <body>
-  <div class="crt-overlay" aria-hidden="true"></div>
-  <div class="crt-flicker" aria-hidden="true"></div>
-
-  <main id="screen" class="screen">
-    <header class="topbar">
-      <span class="topbar-left">PC-TONGSIN v2.5</span>
-      <span class="topbar-center">Purme Club</span>
-      <span class="topbar-right">1988-∞</span>
-    </header>
-
-    <nav class="menubar" aria-label="메인 메뉴">
-      <a href="index#hero" data-key="1">[ MAIN ]</a><span class="sep">|</span>
-      <a href="about" data-key="2" class="is-current" aria-current="page">[ ABOUT ]</a><span class="sep">|</span>
-      <a href="index#board-showcase" data-key="3">[ BOARD ]</a><span class="sep">|</span>
-      <a href="curriculum" data-key="4">[ LEARN ]</a><span class="sep">|</span>
-      <a href="joinin" data-key="5">[ JOIN IN ]</a><span class="sep">|</span>
-      <a href="play" data-key="6" class="menu-play">[ PLAY ]</a>
+  <a class="skip-link" href="#about-main">본문으로 바로가기</a>
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="PC통신 홈"><span class="brand-bracket">[</span><span class="brand-name">PC통신</span><span class="brand-bracket">]</span></a>
+    <span class="header-description">푸르메클럽 AI 활용 동호회</span>
+    <nav class="desktop-nav" aria-label="주요 메뉴">
+      <a href="/#read">AI 소식</a><a href="/#try">프로젝트</a><a href="/#reuse">자료실</a><a href="/#share">결과물</a><a href="/about" aria-current="page">ABOUT</a><a href="/joinin">JOIN</a>
     </nav>
+    <details class="mobile-menu"><summary>메뉴</summary><nav aria-label="모바일 메뉴">
+      <a href="/#read">AI 소식</a><a href="/#try">프로젝트</a><a href="/#reuse">자료실</a><a href="/#share">결과물</a><a href="/about">ABOUT</a><a href="/joinin">JOIN</a>
+    </nav></details>
+  </header>
 
-    <p class="welcome">
-      ABOUT.DOC LOADED — CLUB RULES DRAFT...
-      <span class="welcome-time" id="welcomeTime">2026.06.16  09:00:00</span>
-    </p>
+  <main id="about-main" class="about-page shell">
+    <a class="about-back" href="/">← 홈으로 돌아가기</a>
 
-    <section class="window showcase-hero">
-      <div class="window-bar">
-        <span class="window-title">&gt; ABOUT.PURME</span>
-        <span class="window-ctrl">_ □ X</span>
+    <section class="about-hero">
+      <div>
+        <p class="micro-label">ABOUT / PURME CLUB</p>
+        <h1>사람과 사람이 연결되고,<br>AI를 실제 사용으로 이어갑니다.</h1>
       </div>
-      <div class="window-body">
-        <p class="showcase-kicker">동호회칙 초안</p>
-        <h1 class="showcase-title">AI랑 통하고, 새 재미를 찾는 모임</h1>
-        <p class="showcase-desc">// 본 회칙은 확정본이 아니며, 동호회 정기 모임을 통해 논의 후 확정할 예정입니다.</p>
-      </div>
-    </section>
-
-    <section class="showcase-grid">
-      <article class="window">
-        <div class="window-bar">
-          <span class="window-title">&gt; RULES.SYS</span>
-          <span class="window-ctrl">_ □ X</span>
-        </div>
-        <div class="window-body">
-          <ol class="num-list">
-            <li><span class="num">01</span> 푸르메클럽은 AI 활용 사례를 함께 배우고 나누는 사내 동호회입니다.</li>
-            <li><span class="num">02</span> 정기 모임을 통해 교육, 실습, 프로젝트, 운영 방향을 함께 논의합니다.</li>
-            <li><span class="num">03</span> 공동 계정과 실습 자료는 동호회 활동 목적 안에서만 사용합니다.</li>
-            <li><span class="num">04</span> 개인정보, 회사 기밀, 민감정보는 AI 도구에 입력하지 않습니다.</li>
-            <li><span class="num">05</span> 본 회칙은 정기 모임 논의를 거쳐 보완 및 확정합니다.</li>
-          </ol>
-        </div>
-      </article>
-
-      <article class="window">
-        <div class="window-bar">
-          <span class="window-title">&gt; BUDGET.TXT</span>
-          <span class="window-ctrl">_ □ X</span>
-        </div>
-        <div class="window-body">
-          <dl class="rule-list">
-            <dt>회비</dt>
-            <dd>2026년 6월 기준, 사우회비 월 5,000원을 급여에서 공제합니다. 금액은 1인 기준입니다.</dd>
-            <dt>활동지원금</dt>
-            <dd>동호회 활동지원금 항목으로 월 100,000원이 지급됩니다.</dd>
-            <dt>변동 가능성</dt>
-            <dd><strong>회비, 지원금, 지급 기준은 회사 내규에 따라 변동될 수 있습니다.</strong></dd>
-            <dt>예정 지출</dt>
-            <dd>동호회 운영을 위한 AI 구독료를 지출합니다. 구독 서비스는 공동계정으로 사용합니다.</dd>
-          </dl>
-        </div>
-      </article>
-    </section>
-
-    <section class="window">
-      <div class="window-bar">
-        <span class="window-title">&gt; NOTICE.LOG</span>
-        <span class="window-ctrl">_ □ X</span>
-      </div>
-      <div class="window-body">
-        <p class="terminal-log">STATUS: DRAFT</p>
-        <p class="showcase-desc">이 문서는 동호회 운영을 시작하기 위한 짧은 초안입니다. 세부 회칙, 예산 집행 기준, 공동계정 관리 방식은 정기 모임에서 구성원 의견을 반영해 확정합니다.</p>
+      <div class="about-lead">
+        <p><strong>[PC통신]</strong>은 푸르메클럽의 AI 활용 동호회입니다. AI 활용 사례를 함께 배우고 나누되, 학습에서 끝내지 않고 업무 문제를 작은 실험과 프로젝트로 연결합니다.</p>
+        <p>처음 사용하는 사람부터 직접 도구를 만드는 사람까지 함께합니다.</p>
       </div>
     </section>
 
-    <footer class="fnbar">
-      <button type="button" data-fkey="1" data-href="index#hero">[F1] MAIN</button>
-      <button type="button" data-fkey="2" data-target="#top">[F2] ABOUT</button>
-      <button type="button" data-fkey="3" data-href="index#board-showcase">[F3] BOARD</button>
-      <button type="button" data-fkey="4" data-href="curriculum">[F4] LEARN</button>
-      <button type="button" data-fkey="5" data-href="joinin">[F5] JOIN</button>
-      <button type="button" data-fkey="6" data-href="play">[F6] PLAY</button>
-      <button type="button" data-fkey="10" data-href="index#hero">[F10] QUIT</button>
-    </footer>
+    <section class="about-section" data-reveal>
+      <div class="about-section-no">01</div>
+      <div>
+        <p class="micro-label">WHAT WE DO</p>
+        <h2>우리는 무엇을 하는가</h2>
+        <p class="about-body">새로운 AI 기능을 빠르게 소비하는 것보다, 실제 업무에서 무엇이 달라지는지 확인합니다. 써보고, 비교하고, 필요한 것은 직접 만들고, 다시 사용할 수 있는 형태로 남깁니다.</p>
+        <div class="about-flow" aria-label="활동 흐름">
+          <span><b>READ</b> 변화 읽기</span><span><b>TRY</b> 직접 써보기</span><span><b>MAKE</b> 문제에 적용</span><span><b>SHARE</b> 결과 공유</span><span><b>REUSE</b> 다시 활용</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-section" data-reveal>
+      <div class="about-section-no">02</div>
+      <div>
+        <p class="micro-label">WHY PC통신</p>
+        <h2>왜 PC통신인가</h2>
+        <p class="about-body">예전 PC통신이 사람과 정보를 연결했던 것처럼, 지금의 PC통신은 사람과 사람, 현장의 문제와 AI 도구를 연결합니다. 레트로 이미지를 재현하기보다 그 연결의 의미만 오늘의 방식으로 이어갑니다.</p>
+      </div>
+    </section>
+
+    <section class="about-section" data-reveal>
+      <div class="about-section-no">03</div>
+      <div>
+        <p class="micro-label">ACTIVITIES</p>
+        <h2>우리가 하는 활동</h2>
+        <div class="activity-table">
+          <div><span>01</span><strong>AI 활용 사례</strong><p>각자의 업무에서 실제로 써본 방법과 결과를 공유합니다.</p></div>
+          <div><span>02</span><strong>업무 자동화</strong><p>반복되는 작업을 줄일 수 있는 작은 워크플로우를 실험합니다.</p></div>
+          <div><span>03</span><strong>스터디 · 워크숍</strong><p>필요한 주제를 함께 배우고 직접 따라 해봅니다.</p></div>
+          <div><span>04</span><strong>프로젝트</strong><p>1인 또는 팀으로 실제 사용할 수 있는 결과물을 만듭니다.</p></div>
+          <div><span>05</span><strong>AI 트렌드</strong><p>이번 주 중요한 변화만 선별해 읽고 의미를 해석합니다.</p></div>
+          <div><span>06</span><strong>아이디어 실험</strong><p>작은 아이디어를 빠르게 시험하고 다음 단계 여부를 결정합니다.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-section" data-reveal>
+      <div class="about-section-no">04</div>
+      <div>
+        <p class="micro-label">WHO CAN JOIN</p>
+        <h2>AI를 잘해야 참여하는 모임이 아닙니다.</h2>
+        <div class="who-grid">
+          <p>AI를 처음 써보는 사람</p>
+          <p>업무에서 더 잘 활용해보고 싶은 사람</p>
+          <p>배운 것을 다른 사람과 나누고 싶은 사람</p>
+          <p>다른 직군과 함께 무언가 만들어보고 싶은 사람</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-section" data-reveal>
+      <div class="about-section-no">05</div>
+      <div>
+        <p class="micro-label">HOW WE WORK</p>
+        <h2>어떻게 운영하는가</h2>
+        <dl class="operation-table">
+          <div><dt>정기 모임</dt><dd>동호회 정기 모임을 통해 교육, 실습, 프로젝트와 운영 방향을 함께 논의합니다.</dd></div>
+          <div><dt>참여 방식</dt><dd>1인 실험과 팀 프로젝트를 모두 허용하며, 참여는 자율적으로 선택합니다.</dd></div>
+          <div><dt>결과 공유</dt><dd>가능하면 실제 사용할 수 있는 결과와 다시 활용할 수 있는 자료를 남깁니다.</dd></div>
+          <div><dt>AI 안전 원칙</dt><dd>개인정보, 회사 기밀, 민감정보는 AI 도구에 입력하지 않습니다.</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="about-section about-admin" data-reveal>
+      <div class="about-section-no">06</div>
+      <div>
+        <p class="micro-label">OPERATION NOTE</p>
+        <h2>운영 안내</h2>
+        <p class="about-body">기존 동호회 운영안의 회비·지원금 정보는 아래와 같이 보존합니다. 금액과 지급 기준은 회사 내규에 따라 변경될 수 있습니다.</p>
+        <dl class="operation-table">
+          <div><dt>회비</dt><dd>2026년 6월 기준 1인 월 5,000원, 사우회비에서 급여 공제</dd></div>
+          <div><dt>활동지원금</dt><dd>동호회 활동지원금 항목으로 월 100,000원</dd></div>
+          <div><dt>예정 지출</dt><dd>동호회 운영에 필요한 AI 서비스 구독료 등</dd></div>
+        </dl>
+        <p class="about-caption">※ 운영 기준은 확정된 회사 내규와 동호회 논의 결과를 우선합니다.</p>
+      </div>
+    </section>
+
+    <section class="about-cta" data-reveal>
+      <div><p class="micro-label acid">JOIN / NEXT</p><h2>먼저 둘러보고,<br>필요할 때 참여하세요.</h2></div>
+      <div><p>비회원도 AI 소식, 프로젝트와 결과물을 볼 수 있습니다. 프로젝트 참여와 회원 자료 이용이 필요할 때 가입 신청하면 됩니다.</p><a class="button button-acid" href="/joinin">가입 신청하기</a></div>
+    </section>
   </main>
 
-  <script src="script.js"></script>
+  <footer class="site-footer shell">
+    <a class="brand footer-brand" href="/"><span class="brand-bracket">[</span><span class="brand-name">PC통신</span><span class="brand-bracket">]</span></a>
+    <nav class="footer-links" aria-label="푸터 메뉴"><a href="/">HOME</a><a href="/joinin">JOIN</a><a href="/play" class="play-link">[PLAY.EXE]</a></nav>
+    <span>AI × PEOPLE × PROJECT</span>
+  </footer>
 </body>
 </html>

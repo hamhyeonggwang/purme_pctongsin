@@ -1,48 +1,71 @@
-# [PC통신] Web Foundation v0.1
+# PC-TONGSIN :: 푸르메클럽 AI 활용 동호회
 
-AI 활용 동호회 **[PC통신]** 홈페이지의 새 디자인 Foundation입니다.
+1980~90년대 **PC통신 BBS** 감성을 그대로 옮긴 동호회 소개 홈페이지입니다.
+순수 HTML/CSS/JS로 만들어 별도 빌드 없이 정적 호스팅(Vercel)에 바로 배포됩니다.
 
-## 현재 방향
+## 사이트 구조
 
-- Polished Digital Magazine
-- Black / White / Acid Green (#C6FF00)
-- Responsive Editorial Layout
-- Weekly Issue 기반 AI NEWS
-- PROJECT / SELECTED WORK / ARCHIVE / GALLERY
-- 레트로 PC통신 요소는 5~10%만 사용
+| URL | 파일 | 설명 |
+|---|---|---|
+| `/` | `index.html` | 메인 BBS (소개 · BOARD 하위 실습 · 가입 CTA · PLAY 티저) |
+| `/about` | `about.html` | 동호회 소개 및 동호회칙 초안 |
+| `/curriculum` | `curriculum.html` | 6개월 AI 교육 과정 (EDUCATION.SYS) |
+| `/lab` | `lab.html` | BOARD 하위: 프롬프트 실습실 (메모 → 보고서/회의록/메시지/리서치 플랜) |
+| `/dashboard` | `dashboard.html` | BOARD 하위: 가입 신청 데이터 익명 집계 대시보드 |
+| `/project` | `project.html` | BOARD 하위: 개인 AI 프로젝트 기획서 빌더 |
+| `/play` | `play.html` | PURME-MAN 팩맨 + 레트로 테트리스 + 갤러그풍 슈팅 + 알카노이드 벽돌깨기 |
+| `/joinin` | `joinin.html` | `[ JOIN IN ]` 가입 신청 설문 (Supabase) |
 
-## 실행
+### 공통 메뉴
 
-Node.js 22 이상을 사용합니다.
+| 키 | 메뉴 | 이동 |
+|---|---|---|
+| 1 | MAIN | `index#hero` |
+| 2 | ABOUT | `about` |
+| 3 | BOARD | `index#board-showcase` |
+| 4 | LEARN | `curriculum` |
+| 5 | JOIN IN | `joinin` |
+| 6 | PLAY | `play` |
+
+### BOARD 하위 메뉴
+
+| 메뉴 | 이동 | 설명 |
+|---|---|---|
+| LAB | `lab` | 프롬프트 실습실 |
+| DASH | `dashboard` | 익명 가입 데이터 대시보드 |
+| PROJECT | `project` | 개인 AI 프로젝트 기획서 빌더 |
+
+## 구성
+
+| 파일 | 설명 |
+|---|---|
+| `styles.css` | 레트로 디자인 시스템 (네이비 + 시안, CRT 스캔라인, 픽셀 폰트) |
+| `script.js` | 부팅 시퀀스 / 실시간 시계 / 메뉴·단축키 네비게이션 |
+| `about.html` | 동호회 소개 및 회칙 초안 페이지 |
+| `curriculum.js` | 교육 과정 터미널 UI |
+| `lab.js` | 프롬프트 실습실 템플릿 변환 시뮬레이터 |
+| `dashboard.js` | Supabase RPC 기반 익명 가입 통계 대시보드 |
+| `project.js` | 개인 AI 프로젝트 기획서 생성 빌더 |
+| `play.js` | 게임 탭 전환 |
+| `arcade.js` | 공통 효과음 / 닉네임 / Supabase HIGH SCORE 랭킹 |
+| `game.js` | PURME-MAN 팩맨 (`play.html`) |
+| `tetris.js` | 테트리스 (`play.html`) |
+| `galaga.js` | 갤러그풍 슈팅 (`play.html`) |
+| `arkanoid.js` | 알카노이드 벽돌깨기 (`play.html`) |
+| `supabase_setup.sql` | 가입 신청, 익명 대시보드 집계, 게임 랭킹 DB 스키마 |
+
+## 로컬 미리보기
 
 ```bash
-npm install
-npm run dev
+npx http-server . -p 8777 -c-1
+# http://127.0.0.1:8777
 ```
 
-브라우저에서 `http://localhost:3000`을 엽니다.
+## Vercel 배포
 
-## 기술
+빌드 과정이 없는 정적 사이트입니다. Vercel에서 GitHub 저장소를 Import 하면
+- **Framework Preset:** Other
+- **Build Command:** (비움)
+- **Output Directory:** `.` (루트)
 
-- Next.js 16
-- React 19
-- Tailwind CSS 4
-- Vercel
-
-## Legacy
-
-기존 CRT/BBS 스타일 v2.5는 `legacy-retro-v2-5` 브랜치에 보존되어 있습니다.
-
-## 다음 단계
-
-HOME 디자인 검증 후 아래를 순차 연결합니다.
-
-1. AI NEWS 목록/상세
-2. PROJECT 목록/상세
-3. ARCHIVE/GALLERY
-4. Supabase
-5. Magic Link 및 회원 승인
-6. MY PAGE / ADMIN
-7. n8n AI NEWS pipeline
-
-현재 Foundation에서는 Supabase 및 회원 기능을 의도적으로 연결하지 않습니다.
+설정으로 자동 배포됩니다. `vercel.json`에 기본 옵션(cleanUrls 등)이 포함되어 있습니다.

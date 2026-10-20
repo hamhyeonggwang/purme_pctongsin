@@ -1,111 +1,63 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PC-TONGSIN v2.5 :: LAB.EXE</title>
-  <meta name="description" content="푸르메클럽 AI 활용 동호회 프롬프트 실습실 — 메모를 보고서, 회의록, 메시지, 리서치 플랜으로 변환하는 체험 페이지." />
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/quiple/galmuri@latest/dist/galmuri.css" />
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-  <div class="crt-overlay" aria-hidden="true"></div>
-  <div class="crt-flicker" aria-hidden="true"></div>
+<!doctype html><html lang="ko"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>프롬프트 실습실 · [PC통신]</title>
+<meta name="description" content="메모를 보고서, 회의록, 메시지, 리서치 플랜으로 바꾸며 프롬프트 구조를 체험하는 PC통신 실습 도구">
+<link rel="stylesheet" href="/site.css"><link rel="stylesheet" href="/tool.css">
+<script src="/ux.js" defer></script><script src="/lab.js" defer></script>
+</head><body>
+<header class="site-header">
+  <a class="brand" href="/" aria-label="PC통신 홈"><span class="brand-bracket">[</span><span class="brand-name">PC통신</span><span class="brand-bracket">]</span></a>
+  <span class="header-description">AI 활용 동호회</span>
+  <nav class="desktop-nav" aria-label="주요 메뉴">
+    <a href="/#read">AI 소식</a><a href="/#try">프로젝트</a><a href="/#reuse">자료실</a><a href="/#share">결과물</a><a href="/#member">가입 안내</a>
+  </nav>
+  <details class="mobile-menu"><summary>메뉴</summary><nav aria-label="모바일 메뉴">
+    <a href="/#read">AI 소식</a><a href="/#try">프로젝트</a><a href="/#reuse">자료실</a><a href="/#share">결과물</a><a href="/#member">가입 안내</a>
+  </nav></details>
+</header>
+<main class="tool-page shell">
+  <a class="tool-back" href="/#share">← 우리가 만든 것</a>
+  <section class="tool-hero">
+    <div><p class="micro-label">RESULT 01 / PROMPT LAB</p><h1>프롬프트 실습실</h1></div>
+    <p>짧은 메모를 여러 업무 산출물로 바꿔보며 <strong>역할·목표·형식·톤</strong>이 결과에 어떤 차이를 만드는지 체험합니다. 실제 AI API를 호출하지 않는 교육용 시뮬레이터입니다.</p>
+  </section>
 
-  <main id="screen" class="screen">
-    <header class="topbar">
-      <span class="topbar-left">PC-TONGSIN v2.5</span>
-      <span class="topbar-center">Purme Club</span>
-      <span class="topbar-right">1988-∞</span>
-    </header>
+  <nav class="tool-nav" aria-label="결과물 탐색">
+    <a href="/lab" aria-current="page">프롬프트 실습실</a>
+    <a href="/project">프로젝트 기획서 빌더</a>
+    <a href="/dashboard">가입 데이터 대시보드</a>
+  </nav>
 
-    <nav class="menubar" aria-label="메인 메뉴">
-      <a href="index#hero" data-key="1">[ MAIN ]</a><span class="sep">|</span>
-      <a href="about" data-key="2">[ ABOUT ]</a><span class="sep">|</span>
-      <a href="index#board-showcase" data-key="3" class="is-current" aria-current="page">[ BOARD ]</a><span class="sep">|</span>
-      <a href="curriculum" data-key="4">[ LEARN ]</a><span class="sep">|</span>
-      <a href="joinin" data-key="5">[ JOIN IN ]</a><span class="sep">|</span>
-      <a href="play" data-key="6" class="menu-play">[ PLAY ]</a>
-    </nav>
+  <div class="tool-steps" aria-label="사용 순서">
+    <div class="tool-step"><span>STEP 01</span><strong>원본 메모를 확인합니다</strong></div>
+    <div class="tool-step"><span>STEP 02</span><strong>원하는 결과 형식을 고릅니다</strong></div>
+    <div class="tool-step"><span>STEP 03</span><strong>프롬프트 구조와 결과를 비교합니다</strong></div>
+  </div>
 
-    <p class="welcome">
-      LAB.EXE LOADED — PROMPT SIMULATOR READY...
-      <span class="welcome-time" id="welcomeTime">2026.06.16  09:00:00</span>
-    </p>
-
-    <nav class="board-subnav" aria-label="BOARD 하위 메뉴">
-      <a href="lab" class="is-current" aria-current="page">[ LAB ]</a>
-      <a href="dashboard">[ DASH ]</a>
-      <a href="project">[ PROJECT ]</a>
-    </nav>
-
-    <section class="window showcase-hero">
-      <div class="window-bar">
-        <span class="window-title">&gt; PROMPT.LAB</span>
-        <span class="window-ctrl">_ □ X</span>
-      </div>
-      <div class="window-body">
-        <p class="showcase-kicker">LV.1 AI 활용가 실습 예시</p>
-        <h1 class="showcase-title">메모를 업무 산출물로 바꾸는 프롬프트 실습실</h1>
-        <p class="showcase-desc">// 실제 AI API 없이도 프롬프트 구조와 산출물 형식을 체험할 수 있는 교육용 시뮬레이터입니다.</p>
-      </div>
-    </section>
-
-    <section class="showcase-grid">
-      <div class="window">
-        <div class="window-bar">
-          <span class="window-title">&gt; INPUT.MEMO</span>
-          <span class="window-ctrl">_ □ X</span>
-        </div>
-        <div class="window-body">
-          <label class="showcase-label" for="labInput">원본 메모</label>
-          <textarea id="labInput" class="showcase-textarea" rows="9">다음 달 AI 동호회 오리엔테이션 준비. 대상은 AI 초보 직원. 목표는 부담 없이 참여하게 만들기. 필요한 것: 일정 안내, 실습 예시, 참여 신청 독려, 개인정보 주의 안내.</textarea>
-          <div class="showcase-actions" role="group" aria-label="변환 형식 선택">
-            <button type="button" class="terminal-action" data-lab-mode="report">보고서 초안</button>
-            <button type="button" class="terminal-action" data-lab-mode="minutes">회의록 요약</button>
-            <button type="button" class="terminal-action" data-lab-mode="message">안내 메시지</button>
-            <button type="button" class="terminal-action" data-lab-mode="research">리서치 플랜</button>
-          </div>
+  <section class="tool-workspace">
+    <article class="tool-panel">
+      <header class="tool-panel-head"><strong>원본 메모</strong><span>INPUT</span></header>
+      <div class="tool-panel-body">
+        <label class="tool-label" for="labInput">변환할 메모</label>
+        <textarea id="labInput" class="tool-textarea">다음 달 AI 동호회 오리엔테이션 준비. 대상은 AI 초보 직원. 목표는 부담 없이 참여하게 만들기. 필요한 것: 일정 안내, 실습 예시, 참여 신청 독려, 개인정보 주의 안내.</textarea>
+        <div class="tool-actions" role="group" aria-label="결과 형식 선택">
+          <button type="button" class="tool-action" data-lab-mode="report">보고서 초안</button>
+          <button type="button" class="tool-action" data-lab-mode="minutes">회의록 요약</button>
+          <button type="button" class="tool-action" data-lab-mode="message">안내 메시지</button>
+          <button type="button" class="tool-action" data-lab-mode="research">리서치 플랜</button>
         </div>
       </div>
+    </article>
 
-      <div class="window">
-        <div class="window-bar">
-          <span class="window-title">&gt; OUTPUT.DRAFT</span>
-          <span class="window-ctrl">_ □ X</span>
-        </div>
-        <div class="window-body">
-          <pre class="showcase-output" id="labOutput" aria-live="polite">[ 변환 버튼을 선택하세요 ]</pre>
-        </div>
-      </div>
-    </section>
+    <article class="tool-panel">
+      <header class="tool-panel-head"><strong>변환 결과</strong><span>OUTPUT</span></header>
+      <div class="tool-panel-body"><pre class="tool-output" id="labOutput" aria-live="polite"></pre></div>
+    </article>
+  </section>
 
-    <section class="window">
-      <div class="window-bar">
-        <span class="window-title">&gt; PROMPT.TEMPLATE</span>
-        <span class="window-ctrl">_ □ X</span>
-      </div>
-      <div class="window-body">
-        <pre class="terminal-log" id="labTemplate">역할: 업무 문서 코치
-목표: 메모를 명확한 산출물로 변환
-조건: 핵심 요약, 실행 항목, 주의사항 포함
-톤: 친절하고 실무적인 문체</pre>
-      </div>
-    </section>
-
-    <footer class="fnbar">
-      <button type="button" data-fkey="1" data-href="index#hero">[F1] MAIN</button>
-      <button type="button" data-fkey="2" data-href="about">[F2] ABOUT</button>
-      <button type="button" data-fkey="3" data-href="index#board-showcase">[F3] BOARD</button>
-      <button type="button" data-fkey="4" data-href="curriculum">[F4] LEARN</button>
-      <button type="button" data-fkey="5" data-href="joinin">[F5] JOIN</button>
-      <button type="button" data-fkey="6" data-href="play">[F6] PLAY</button>
-      <button type="button" data-fkey="10" data-href="index#hero">[F10] QUIT</button>
-    </footer>
-  </main>
-
-  <script src="script.js"></script>
-  <script src="lab.js"></script>
-</body>
-</html>
+  <aside class="tool-note">
+    <h2>이번 결과를 만든 프롬프트 구조</h2>
+    <pre class="tool-template" id="labTemplate"></pre>
+  </aside>
+  <footer class="tool-footer"><span>[PC통신] · AI × PEOPLE × PROJECT</span><a href="/">홈으로 돌아가기 ↑</a></footer>
+</main></body></html>

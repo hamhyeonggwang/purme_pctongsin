@@ -35,14 +35,17 @@
 
     <section id="adminLogin" class="admin-login">
       <div>
-        <p class="micro-label">MAGIC LINK</p>
+        <p class="micro-label">ADMIN / LOGIN</p>
         <h2>운영진 로그인</h2>
       </div>
       <form id="adminLoginForm">
         <label for="adminEmail">이메일</label>
+        <input id="adminEmail" type="email" autocomplete="email" required placeholder="admin@example.com">
+        <label for="adminPassword">비밀번호</label>
+        <input id="adminPassword" type="password" autocomplete="current-password" minlength="8" required placeholder="비밀번호">
         <div class="admin-login-row">
-          <input id="adminEmail" type="email" autocomplete="email" required placeholder="admin@example.com">
-          <button class="button button-primary" type="submit">로그인 링크 받기</button>
+          <button class="button button-primary" type="submit">로그인</button>
+          <button id="adminResetPassword" class="admin-reset-button" type="button">비밀번호 재설정</button>
         </div>
         <p id="adminLoginStatus" class="admin-status" role="status" aria-live="polite"></p>
       </form>

@@ -529,16 +529,20 @@ begin
     raise exception 'decision must be approved or rejected';
   end if;
 
-  select pa, p.capacity
-  into v_application, v_capacity
+  select pa.*
+  into v_application
   from public.project_applications pa
-  join public.projects p on p.id = pa.project_id
   where pa.id = p_application_id
     and pa.status = 'pending';
 
   if v_application.id is null then
     raise exception 'pending application not found';
   end if;
+
+  select p.capacity
+  into v_capacity
+  from public.projects p
+  where p.id = v_application.project_id;
 
   if p_decision = 'approved' and v_capacity is not null then
     select count(*)

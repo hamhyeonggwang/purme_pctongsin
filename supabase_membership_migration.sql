@@ -1200,3 +1200,178 @@ $$;
 
 revoke all on function public.reject_news_candidate(uuid) from public;
 grant execute on function public.reject_news_candidate(uuid) to authenticated;
+
+
+-- n8n collector helper. Service-role only.
+create or replace function public.ingest_news_candidate(
+  p_source_id uuid,
+  p_source_name text,
+  p_source_url text,
+  p_canonical_url text,
+  p_original_title text,
+  p_original_summary text default null,
+  p_published_at timestamptz default null,
+  p_image_url text default null,
+  p_content_fingerprint text default null
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_id uuid;
+  v_existing uuid;
+  v_canonical text;
+begin
+  v_canonical := coalesce(nullif(trim(p_canonical_url), ''), trim(p_source_url));
+
+  insert into public.news_candidates (
+    source_id,
+    source_name,
+    source_url,
+    canonical_url,
+    original_title,
+    original_summary,
+    published_at,
+    image_url,
+    content_fingerprint,
+    status
+  )
+  values (
+    p_source_id,
+    trim(p_source_name),
+    trim(p_source_url),
+    v_canonical,
+    trim(p_original_title),
+    nullif(trim(p_original_summary), ''),
+    p_published_at,
+    nullif(trim(p_image_url), ''),
+    nullif(trim(p_content_fingerprint), ''),
+    'discovered'
+  )
+  on conflict (canonical_url)
+    where canonical_url is not null
+  do nothing
+  returning id into v_id;
+
+  update public.news_sources
+  set
+    last_checked_at = now(),
+    last_success_at = now()
+  where id = p_source_id;
+
+  if v_id is not null then
+    return jsonb_build_object('status', 'inserted', 'candidate_id', v_id);
+  end if;
+
+  select id
+  into v_existing
+  from public.news_candidates
+  where canonical_url = v_canonical
+  limit 1;
+
+  return jsonb_build_object('status', 'duplicate', 'candidate_id', v_existing);
+end;
+$$;
+
+revoke all on function public.ingest_news_candidate(
+  uuid, text, text, text, text, text, timestamptz, text, text
+) from public;
+grant execute on function public.ingest_news_candidate(
+  uuid, text, text, text, text, text, timestamptz, text, text
+) to service_role;
+
+-- Atomically claims candidates so parallel processor runs do not process the same item.
+create or replace function public.claim_news_candidates(
+  p_limit integer default 10
+)
+returns table (
+  id uuid,
+  source_name text,
+  source_url text,
+  canonical_url text,
+  original_title text,
+  original_summary text,
+  published_at timestamptz,
+  image_url text,
+  trust_score integer,
+  retry_count integer
+)
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  return query
+  with claimed as (
+    select nc.id
+    from public.news_candidates nc
+    where (
+      nc.status = 'discovered'
+      or (
+        nc.status = 'failed'
+        and nc.retry_count < 3
+      )
+    )
+    order by
+      case when nc.status = 'discovered' then 0 else 1 end,
+      nc.discovered_at
+    for update skip locked
+    limit greatest(1, least(p_limit, 50))
+  ),
+  updated as (
+    update public.news_candidates nc
+    set
+      status = 'processing',
+      retry_count = nc.retry_count + 1,
+      error_message = null
+    from claimed c
+    where nc.id = c.id
+    returning nc.*
+  )
+  select
+    u.id,
+    u.source_name,
+    u.source_url,
+    u.canonical_url,
+    u.original_title,
+    u.original_summary,
+    u.published_at,
+    u.image_url,
+    coalesce(ns.trust_score, 80),
+    u.retry_count
+  from updated u
+  left join public.news_sources ns on ns.id = u.source_id;
+end;
+$$;
+
+revoke all on function public.claim_news_candidates(integer) from public;
+grant execute on function public.claim_news_candidates(integer) to service_role;
+
+-- Returns stuck processing candidates to failed so the retry workflow can pick them up.
+create or replace function public.reset_stale_news_candidates(
+  p_older_than_minutes integer default 30
+)
+returns integer
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_count integer;
+begin
+  update public.news_candidates
+  set
+    status = 'failed',
+    error_message = coalesce(error_message, 'processing timeout')
+  where status = 'processing'
+    and updated_at < now() - make_interval(mins => greatest(5, p_older_than_minutes));
+
+  get diagnostics v_count = row_count;
+  return v_count;
+end;
+$$;
+
+revoke all on function public.reset_stale_news_candidates(integer) from public;
+grant execute on function public.reset_stale_news_candidates(integer) to service_role;

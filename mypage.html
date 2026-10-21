@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>MY PAGE · [PC통신]</title>
+  <link rel="stylesheet" href="/site.css">
+  <link rel="stylesheet" href="/member.css">
+  <script type="module" src="/mypage.js"></script>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="/"><span class="brand-bracket">[</span><span class="brand-name">PC통신</span><span class="brand-bracket">]</span></a>
+  <span class="header-description">MY PAGE</span>
+  <nav class="desktop-nav"><a href="/">HOME</a><button id="memberLogout" class="member-nav-button" type="button">LOGOUT</button></nav>
+</header>
+<main class="member-page shell">
+  <section class="mypage-hero">
+    <div><p class="micro-label">MEMBER / PROFILE</p><h1 id="memberName">회원</h1></div>
+    <dl class="member-profile">
+      <div><dt>DEPARTMENT</dt><dd id="memberDepartment">--</dd></div>
+      <div><dt>EMAIL</dt><dd id="memberEmailValue">--</dd></div>
+      <div><dt>ROLE</dt><dd id="memberRole">--</dd></div>
+    </dl>
+  </section>
+
+  <section class="mypage-grid">
+    <article><span>PROJECTS</span><h2>참여 중 프로젝트</h2><p>0</p></article>
+    <article><span>APPLICATIONS</span><h2>신청 프로젝트</h2><p>0</p></article>
+    <article><span>IDEAS</span><h2>제안한 아이디어</h2><p>0</p></article>
+    <article><span>ARCHIVE</span><h2>회원 자료</h2><a href="/#reuse">자료실 보기 →</a></article>
+  </section>
+
+  <p id="mypageStatus" class="member-status" role="status"></p>
+</main>
+</body>
+</html>

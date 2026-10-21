@@ -68,6 +68,20 @@
 
       <p id="adminAppStatus" class="admin-status" role="status" aria-live="polite"></p>
       <div id="adminRequestList" class="admin-request-list"></div>
+
+      <section class="admin-project-section">
+        <div class="admin-project-head">
+          <div><p class="micro-label">PROJECTS / APPLICATIONS</p><h2>프로젝트 참여 신청</h2></div>
+          <div class="admin-project-tabs">
+            <button type="button" data-project-filter="pending" aria-selected="true">승인 대기</button>
+            <button type="button" data-project-filter="approved">승인 완료</button>
+            <button type="button" data-project-filter="rejected">반려</button>
+            <button type="button" data-project-filter="all">전체</button>
+          </div>
+        </div>
+        <p id="adminProjectStatus" class="admin-status" role="status" aria-live="polite"></p>
+        <div id="adminProjectList" class="admin-request-list"></div>
+      </section>
     </section>
   </main>
 </body>

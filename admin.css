@@ -48,3 +48,11 @@
   .admin-login-row{grid-template-columns:1fr}
   .admin-request-meta{grid-template-columns:1fr}
 }
+
+.admin-project-section{margin-top:64px;padding-top:28px;border-top:2px solid var(--ink)}
+.admin-project-head{display:flex;justify-content:space-between;gap:28px;align-items:end;margin-bottom:16px}
+.admin-project-head h2{margin:8px 0 0;font-size:34px;letter-spacing:-.05em}
+.admin-project-tabs{display:flex;gap:6px;flex-wrap:wrap}
+.admin-project-tabs button{min-height:40px;padding:0 13px;border:1px solid var(--ink);background:#fff;font-size:12px;font-weight:850;cursor:pointer}
+.admin-project-tabs button[aria-selected="true"]{background:var(--acid)}
+@media(max-width:820px){.admin-project-head{align-items:start;flex-direction:column}}

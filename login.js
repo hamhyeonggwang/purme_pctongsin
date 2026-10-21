@@ -8,6 +8,8 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
 
 const form = document.getElementById("memberLoginForm");
 const email = document.getElementById("memberEmail");
+const password = document.getElementById("memberPassword");
+const reset = document.getElementById("memberResetPassword");
 const status = document.getElementById("memberLoginStatus");
 
 function setStatus(message, type="") {
@@ -22,22 +24,45 @@ if (sessionData.session) {
 
 form?.addEventListener("submit", async (event) => {
   event.preventDefault();
-  const value = email.value.trim().toLowerCase();
-  if (!value) return;
-  setStatus("로그인 링크를 보내는 중…");
+  const emailValue = email.value.trim().toLowerCase();
+  const passwordValue = password.value;
 
-  const { error } = await supabase.auth.signInWithOtp({
-    email: value,
-    options: {
-      shouldCreateUser: false,
-      emailRedirectTo: window.location.origin + "/mypage"
-    }
+  if (!emailValue || !passwordValue) return;
+  setStatus("로그인 중…");
+
+  const { error } = await supabase.auth.signInWithPassword({
+    email: emailValue,
+    password: passwordValue
   });
 
   if (error) {
     console.error(error);
-    setStatus("승인된 회원 이메일을 확인해주세요.", "error");
+    setStatus("이메일 또는 비밀번호를 확인해주세요.", "error");
     return;
   }
-  setStatus("이메일의 로그인 링크를 확인해주세요.", "success");
+
+  window.location.replace("/mypage");
+});
+
+reset?.addEventListener("click", async () => {
+  const emailValue = email.value.trim().toLowerCase();
+  if (!emailValue) {
+    setStatus("먼저 이메일을 입력해주세요.", "error");
+    email.focus();
+    return;
+  }
+
+  setStatus("비밀번호 재설정 메일을 보내는 중…");
+
+  const { error } = await supabase.auth.resetPasswordForEmail(emailValue, {
+    redirectTo: window.location.origin + "/set-password?next=/mypage"
+  });
+
+  if (error) {
+    console.error(error);
+    setStatus("재설정 메일 발송에 실패했습니다.", "error");
+    return;
+  }
+
+  setStatus("비밀번호 재설정 메일을 확인해주세요.", "success");
 });

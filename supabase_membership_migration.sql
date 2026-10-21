@@ -255,3 +255,52 @@ comment on function public.get_membership_dashboard() is
 
 comment on function public.review_join_request(uuid, text) is
   'Admin-only review transition for pending membership requests.';
+
+
+-- Admin-only join request listing
+create or replace function public.get_admin_join_requests(
+  p_status text default null
+)
+returns table (
+  id uuid,
+  name text,
+  department text,
+  email text,
+  status text,
+  created_at timestamptz,
+  reviewed_at timestamptz
+)
+language plpgsql
+stable
+security definer
+set search_path = public
+as $$
+begin
+  if not public.is_pc_admin() then
+    raise exception 'not authorized';
+  end if;
+
+  if p_status is not null
+     and p_status not in ('pending', 'approved', 'rejected') then
+    raise exception 'invalid status';
+  end if;
+
+  return query
+  select
+    jr.id,
+    jr.name,
+    jr.department,
+    jr.email,
+    jr.status,
+    jr.created_at,
+    jr.reviewed_at
+  from public.join_requests jr
+  where p_status is null or jr.status = p_status
+  order by
+    case when jr.status = 'pending' then 0 else 1 end,
+    jr.created_at desc;
+end;
+$$;
+
+revoke all on function public.get_admin_join_requests(text) from public;
+grant execute on function public.get_admin_join_requests(text) to authenticated;

@@ -29,3 +29,5 @@
 .member-project-status.rejected{color:var(--muted)}
 .member-empty{margin:0;padding:22px 0;color:var(--muted)}
 .member-empty a{color:var(--ink);font-weight:900}
+
+.member-secondary-action{display:inline-flex;margin-top:4px;padding:0;border:0;border-bottom:1px solid var(--ink);background:transparent;color:var(--ink);font:800 12px var(--font-sans);cursor:pointer}

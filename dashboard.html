@@ -1,7 +1,7 @@
 <!doctype html><html lang="ko"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>가입 데이터 대시보드 · [PC통신]</title>
-<meta name="description" content="개인 응답은 공개하지 않고 집계된 가입 데이터를 운영 인사이트로 보는 PC통신 대시보드">
+<title>가입 현황 대시보드 · [PC통신]</title>
+<meta name="description" content="PC통신 가입 신청의 실제 집계 현황을 보여주는 대시보드">
 <link rel="stylesheet" href="/site.css"><link rel="stylesheet" href="/tool.css">
 <script src="/ux.js" defer></script><script src="/dashboard.js" defer></script>
 </head><body>
@@ -9,37 +9,49 @@
   <a class="brand" href="/" aria-label="PC통신 홈"><span class="brand-bracket">[</span><span class="brand-name">PC통신</span><span class="brand-bracket">]</span></a>
   <span class="header-description">AI 활용 동호회</span>
   <nav class="desktop-nav" aria-label="주요 메뉴">
-    <a href="/#read">AI 소식</a><a href="/#try">프로젝트</a><a href="/#reuse">자료실</a><a href="/#share">결과물</a><a href="/#member">가입 안내</a>
+    <a href="/#read">AI 소식</a><a href="/#try">프로젝트</a><a href="/#reuse">자료실</a><a href="/#share">결과물</a><a href="/about">ABOUT</a>
   </nav>
   <details class="mobile-menu"><summary>메뉴</summary><nav aria-label="모바일 메뉴">
-    <a href="/#read">AI 소식</a><a href="/#try">프로젝트</a><a href="/#reuse">자료실</a><a href="/#share">결과물</a><a href="/#member">가입 안내</a>
+    <a href="/#read">AI 소식</a><a href="/#try">프로젝트</a><a href="/#reuse">자료실</a><a href="/#share">결과물</a><a href="/about">ABOUT</a>
   </nav></details>
 </header>
 <main class="tool-page shell">
   <a class="tool-back" href="/#share">← 우리가 만든 것</a>
-  <section class="tool-hero">
-    <div><p class="micro-label">RESULT 03 / DATA DASHBOARD</p><h1>가입 데이터<br>대시보드</h1></div>
-    <p>개인의 응답을 보여주지 않고 <strong>AI 활용 수준·관심 주제·사용 도구</strong> 같은 집계 정보만 확인합니다. 데이터가 연결되지 않으면 예시 데이터를 표시합니다.</p>
+
+  <section class="tool-hero tool-hero-compact">
+    <div><p class="micro-label">RESULT 03 / LIVE DATA</p><h1>가입 현황<br>대시보드</h1></div>
+    <p id="dashConnectionText">Supabase 집계 데이터를 불러오는 중입니다.</p>
   </section>
 
   <nav class="tool-nav" aria-label="결과물 탐색">
     <a href="/lab">프롬프트 실습실</a>
     <a href="/project">프로젝트 기획서 빌더</a>
-    <a href="/dashboard" aria-current="page">가입 데이터 대시보드</a>
+    <a href="/dashboard" aria-current="page">가입 현황 대시보드</a>
   </nav>
 
-  <section class="dashboard-intro" aria-label="데이터 요약">
-    <article class="stat-modern"><span>TOTAL SIGNUPS</span><b id="dashTotal">--</b></article>
-    <article class="stat-modern"><span>DATA STATUS</span><b id="dashStatus">LOADING</b></article>
+  <section class="dashboard-intro dashboard-intro-four" aria-label="가입 현황 요약">
+    <article class="stat-modern"><span>TOTAL REQUESTS</span><b id="dashTotal">--</b></article>
+    <article class="stat-modern"><span>PENDING</span><b id="dashPending">--</b></article>
+    <article class="stat-modern"><span>APPROVED</span><b id="dashApproved">--</b></article>
+    <article class="stat-modern"><span>LAST 7 DAYS</span><b id="dashRecent">--</b></article>
   </section>
 
-  <section class="dashboard-grid">
-    <article class="metric-panel"><h2>AI 활용 수준</h2><div id="dashLevels" class="bar-list"></div></article>
-    <article class="metric-panel"><h2>관심 주제</h2><div id="dashInterests" class="bar-list"></div></article>
-    <article class="metric-panel"><h2>사용 AI 도구</h2><div id="dashTools" class="bar-list"></div></article>
-    <article class="metric-panel"><h2>선호 모임 방식</h2><div id="dashStyles" class="bar-list"></div></article>
+  <section class="dashboard-grid dashboard-grid-live">
+    <article class="metric-panel">
+      <div class="metric-panel-head"><h2>신청 상태</h2><span id="dashStatus">LOADING</span></div>
+      <div id="dashStatuses" class="bar-list"></div>
+    </article>
+    <article class="metric-panel">
+      <div class="metric-panel-head"><h2>이번 달</h2><span>MONTH</span></div>
+      <strong class="metric-big" id="dashMonth">--</strong>
+      <p class="metric-caption">이번 달 접수된 가입 신청</p>
+    </article>
   </section>
 
-  <aside class="tool-note"><h2>개인 데이터는 표시하지 않습니다</h2><p>이 페이지는 운영 방향을 정하기 위한 집계 정보만 보여줍니다. 특정 회원의 응답을 추적하거나 공개하는 용도로 사용하지 않습니다.</p></aside>
-  <footer class="tool-footer"><span>[PC통신] · AI × PEOPLE × PROJECT</span><a href="/">홈으로 돌아가기 ↑</a></footer>
+  <aside class="tool-note">
+    <h2>실제 집계 데이터</h2>
+    <p>이 화면은 <code>join_requests</code>의 집계값만 사용합니다. 이름과 이메일 같은 개별 신청 정보는 이 페이지로 전달하지 않습니다.</p>
+  </aside>
+
+  <footer class="tool-footer"><span>[PC통신] · LIVE MEMBERSHIP DATA</span><a href="/">홈으로 돌아가기 ↑</a></footer>
 </main></body></html>

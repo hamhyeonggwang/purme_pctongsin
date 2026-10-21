@@ -893,3 +893,310 @@ select * from (
 where not exists (
   select 1 from public.news_posts n where n.source_url = seed.source_url
 );
+
+
+-- ---------------------------------------------------------------------------
+-- AI News Automation v0.1
+-- Source registry -> candidates -> human review -> news_posts
+-- ---------------------------------------------------------------------------
+
+create table if not exists public.news_sources (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  source_type text not null default 'rss',
+  source_url text not null unique,
+  domain text not null,
+  trust_score integer not null default 90,
+  enabled boolean not null default true,
+  check_interval_minutes integer not null default 360,
+  last_checked_at timestamptz,
+  last_success_at timestamptz,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+
+  constraint news_sources_type_check
+    check (source_type in ('rss', 'page', 'api')),
+  constraint news_sources_trust_check
+    check (trust_score between 0 and 100),
+  constraint news_sources_interval_check
+    check (check_interval_minutes >= 60)
+);
+
+drop trigger if exists set_news_sources_updated_at on public.news_sources;
+create trigger set_news_sources_updated_at
+before update on public.news_sources
+for each row execute function public.set_updated_at();
+
+alter table public.news_sources enable row level security;
+revoke all on table public.news_sources from anon, authenticated;
+grant select, insert, update, delete on table public.news_sources to authenticated;
+
+drop policy if exists "Admins can manage news sources" on public.news_sources;
+create policy "Admins can manage news sources"
+on public.news_sources
+for all
+to authenticated
+using (public.is_pc_admin())
+with check (public.is_pc_admin());
+
+insert into public.news_sources (
+  name, source_type, source_url, domain, trust_score, enabled, check_interval_minutes
+)
+values
+  ('OpenAI News', 'rss', 'https://openai.com/news/rss.xml', 'openai.com', 100, true, 360),
+  ('Google AI', 'rss', 'https://blog.google/innovation-and-ai/technology/ai/rss/', 'blog.google', 100, true, 360),
+  ('Google DeepMind', 'rss', 'https://deepmind.google/blog/rss.xml', 'deepmind.google', 100, true, 360),
+  ('GitHub Changelog', 'rss', 'https://github.blog/changelog/feed/', 'github.blog', 95, true, 360),
+  ('Anthropic News', 'page', 'https://www.anthropic.com/news', 'anthropic.com', 100, false, 360),
+  ('Microsoft AI', 'page', 'https://www.microsoft.com/en-us/ai', 'microsoft.com', 100, false, 360)
+on conflict (source_url) do nothing;
+
+create table if not exists public.news_candidates (
+  id uuid primary key default gen_random_uuid(),
+  source_id uuid references public.news_sources(id) on delete set null,
+  source_name text not null,
+  source_url text not null,
+  canonical_url text,
+  original_title text not null,
+  original_summary text,
+  published_at timestamptz,
+  image_url text,
+  content_fingerprint text,
+
+  title_ko text,
+  summary_ko text,
+  why_it_matters text,
+  category text,
+  relevance_score integer,
+  confidence_score integer,
+  recommendation text,
+  featured_recommended boolean not null default false,
+
+  status text not null default 'discovered',
+  duplicate_of uuid references public.news_candidates(id) on delete set null,
+  retry_count integer not null default 0,
+  error_message text,
+
+  discovered_at timestamptz not null default now(),
+  processed_at timestamptz,
+  reviewed_at timestamptz,
+  reviewed_by uuid references auth.users(id) on delete set null,
+  published_post_id uuid references public.news_posts(id) on delete set null,
+  updated_at timestamptz not null default now(),
+
+  constraint news_candidates_status_check
+    check (status in ('discovered','processing','review','published','rejected','duplicate','failed')),
+  constraint news_candidates_category_check
+    check (category is null or category in ('MODEL','PRODUCT','WORK','AUTOMATION','BUILD','EDUCATION','OTHER')),
+  constraint news_candidates_relevance_check
+    check (relevance_score is null or relevance_score between 0 and 100),
+  constraint news_candidates_confidence_check
+    check (confidence_score is null or confidence_score between 0 and 100),
+  constraint news_candidates_recommendation_check
+    check (recommendation is null or recommendation in ('HIGH','REVIEW','LOW','SKIP')),
+  constraint news_candidates_retry_check
+    check (retry_count between 0 and 10)
+);
+
+create unique index if not exists news_candidates_canonical_url_unique
+  on public.news_candidates (canonical_url)
+  where canonical_url is not null;
+
+create index if not exists news_candidates_status_score_idx
+  on public.news_candidates (status, relevance_score desc, discovered_at desc);
+
+create index if not exists news_candidates_source_idx
+  on public.news_candidates (source_id, discovered_at desc);
+
+drop trigger if exists set_news_candidates_updated_at on public.news_candidates;
+create trigger set_news_candidates_updated_at
+before update on public.news_candidates
+for each row execute function public.set_updated_at();
+
+alter table public.news_candidates enable row level security;
+revoke all on table public.news_candidates from anon, authenticated;
+grant select, update on table public.news_candidates to authenticated;
+
+drop policy if exists "Admins can review news candidates" on public.news_candidates;
+create policy "Admins can review news candidates"
+on public.news_candidates
+for all
+to authenticated
+using (public.is_pc_admin())
+with check (public.is_pc_admin());
+
+create table if not exists public.news_automation_runs (
+  id uuid primary key default gen_random_uuid(),
+  workflow_name text not null,
+  started_at timestamptz not null default now(),
+  finished_at timestamptz,
+  source_count integer not null default 0,
+  fetched_count integer not null default 0,
+  new_count integer not null default 0,
+  duplicate_count integer not null default 0,
+  processed_count integer not null default 0,
+  failed_count integer not null default 0,
+  status text not null default 'running',
+  error_message text,
+
+  constraint news_automation_runs_status_check
+    check (status in ('running','success','partial','failed'))
+);
+
+create index if not exists news_automation_runs_started_idx
+  on public.news_automation_runs (started_at desc);
+
+alter table public.news_automation_runs enable row level security;
+revoke all on table public.news_automation_runs from anon, authenticated;
+grant select on table public.news_automation_runs to authenticated;
+
+drop policy if exists "Admins can read news automation runs" on public.news_automation_runs;
+create policy "Admins can read news automation runs"
+on public.news_automation_runs
+for select
+to authenticated
+using (public.is_pc_admin());
+
+create or replace function public.get_news_candidate_dashboard()
+returns jsonb
+language plpgsql
+stable
+security definer
+set search_path = public
+as $$
+begin
+  if not public.is_pc_admin() then
+    raise exception 'not authorized';
+  end if;
+
+  return (
+    select jsonb_build_object(
+      'today', count(*) filter (
+        where timezone('Asia/Seoul', discovered_at)::date =
+              timezone('Asia/Seoul', now())::date
+      ),
+      'review', count(*) filter (where status = 'review'),
+      'high', count(*) filter (
+        where status = 'review'
+          and recommendation = 'HIGH'
+      ),
+      'duplicate', count(*) filter (where status = 'duplicate'),
+      'failed', count(*) filter (where status = 'failed')
+    )
+    from public.news_candidates
+  );
+end;
+$$;
+
+revoke all on function public.get_news_candidate_dashboard() from public;
+grant execute on function public.get_news_candidate_dashboard() to authenticated;
+
+create or replace function public.publish_news_candidate(
+  p_candidate_id uuid,
+  p_featured boolean default false,
+  p_title text default null,
+  p_summary text default null
+)
+returns public.news_posts
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_candidate public.news_candidates;
+  v_post public.news_posts;
+begin
+  if not public.is_pc_admin() then
+    raise exception 'not authorized';
+  end if;
+
+  select *
+  into v_candidate
+  from public.news_candidates
+  where id = p_candidate_id
+    and status = 'review';
+
+  if v_candidate.id is null then
+    raise exception 'review candidate not found';
+  end if;
+
+  if p_featured then
+    update public.news_posts
+    set is_featured = false
+    where is_featured = true;
+  end if;
+
+  insert into public.news_posts (
+    source_name,
+    title,
+    summary,
+    source_url,
+    image_url,
+    published_at,
+    is_featured,
+    is_published,
+    created_by
+  )
+  values (
+    v_candidate.source_name,
+    coalesce(nullif(trim(p_title), ''), v_candidate.title_ko, v_candidate.original_title),
+    coalesce(nullif(trim(p_summary), ''), v_candidate.summary_ko),
+    coalesce(v_candidate.canonical_url, v_candidate.source_url),
+    v_candidate.image_url,
+    coalesce(v_candidate.published_at, now()),
+    p_featured,
+    true,
+    auth.uid()
+  )
+  returning * into v_post;
+
+  update public.news_candidates
+  set
+    status = 'published',
+    reviewed_at = now(),
+    reviewed_by = auth.uid(),
+    published_post_id = v_post.id,
+    error_message = null
+  where id = p_candidate_id;
+
+  return v_post;
+end;
+$$;
+
+revoke all on function public.publish_news_candidate(uuid, boolean, text, text) from public;
+grant execute on function public.publish_news_candidate(uuid, boolean, text, text) to authenticated;
+
+create or replace function public.reject_news_candidate(
+  p_candidate_id uuid
+)
+returns public.news_candidates
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_candidate public.news_candidates;
+begin
+  if not public.is_pc_admin() then
+    raise exception 'not authorized';
+  end if;
+
+  update public.news_candidates
+  set
+    status = 'rejected',
+    reviewed_at = now(),
+    reviewed_by = auth.uid()
+  where id = p_candidate_id
+    and status = 'review'
+  returning * into v_candidate;
+
+  if v_candidate.id is null then
+    raise exception 'review candidate not found';
+  end if;
+
+  return v_candidate;
+end;
+$$;
+
+revoke all on function public.reject_news_candidate(uuid) from public;
+grant execute on function public.reject_news_candidate(uuid) to authenticated;

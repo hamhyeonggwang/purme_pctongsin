@@ -4,16 +4,17 @@
 <meta name="description" content="PC통신 가입 신청의 실제 집계 현황을 보여주는 대시보드">
 <link rel="stylesheet" href="/site.css"><link rel="stylesheet" href="/tool.css">
 <script src="/ux.js" defer></script><script src="/dashboard.js" defer></script>
+<script type="module" src="/auth-nav.js"></script>
 </head><body>
 <header class="site-header">
   <a class="brand" href="/" aria-label="PC통신 홈"><span class="brand-bracket">[</span><span class="brand-name">PC통신</span><span class="brand-bracket">]</span></a>
   <span class="header-description">AI 활용 동호회</span>
   <nav class="desktop-nav" aria-label="주요 메뉴">
     <a href="/#read">AI 소식</a><a href="/#try">프로젝트</a><a href="/#reuse">자료실</a><a href="/#share">결과물</a><a href="/about">ABOUT</a>
-  </nav>
+  <a data-auth-link href="/login">LOGIN</a></nav>
   <details class="mobile-menu"><summary>메뉴</summary><nav aria-label="모바일 메뉴">
     <a href="/#read">AI 소식</a><a href="/#try">프로젝트</a><a href="/#reuse">자료실</a><a href="/#share">결과물</a><a href="/about">ABOUT</a>
-  </nav></details>
+  <a data-auth-link href="/login">LOGIN</a></nav></details>
 </header>
 <main class="tool-page shell">
   <a class="tool-back" href="/#share">← 우리가 만든 것</a>

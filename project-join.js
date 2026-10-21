@@ -45,11 +45,9 @@ if (projectError) {
     if (own) {
       button.textContent =
         own.status === "approved" ? "참여 중" :
-        own.status === "pending" ? "승인 대기" : "다시 신청";
+        own.status === "pending" ? "승인 대기" : "반려";
       button.dataset.applicationStatus = own.status;
-      if (own.status !== "rejected") {
-        button.setAttribute("aria-disabled", "true");
-      }
+      button.setAttribute("aria-disabled", "true");
     }
 
     button.addEventListener("click", async (event) => {

@@ -374,8 +374,10 @@ img{max-width:100%}
 
 /* HOME motion poster v1 */
 .home-motion .motion-hero{
-  --pointer-x:0;
-  --pointer-y:0;
+  --pointer-x:0px;
+  --pointer-x-inverse:0px;
+  --pointer-y:0px;
+  --pointer-y-inverse:0px;
   position:relative;
   overflow:hidden;
   isolation:isolate;
@@ -420,11 +422,11 @@ img{max-width:100%}
 }
 .motion-bracket-left{
   left:-.08em;
-  transform:translate3d(calc(-34px + var(--pointer-x) * -10px),calc(-50% + var(--pointer-y) * -8px),0);
+  transform:translate3d(calc(-34px + var(--pointer-x-inverse)),calc(-50% + var(--pointer-y-inverse)),0);
 }
 .motion-bracket-right{
   right:-.08em;
-  transform:translate3d(calc(34px + var(--pointer-x) * 10px),calc(-50% + var(--pointer-y) * 8px),0);
+  transform:translate3d(calc(34px + var(--pointer-x)),calc(-50% + var(--pointer-y)),0);
 }
 .motion-signal{
   position:absolute;
@@ -434,7 +436,7 @@ img{max-width:100%}
   height:14px;
   background:var(--acid);
   opacity:0;
-  transform:translate3d(calc(var(--pointer-x) * 12px),calc(var(--pointer-y) * 8px),0);
+  transform:translate3d(var(--pointer-x),var(--pointer-y),0);
 }
 .motion-signal::after{
   content:"";
@@ -551,11 +553,11 @@ img{max-width:100%}
 }
 @keyframes hero-bracket-left{
   from{opacity:0;transform:translate3d(-34px,-50%,0)}
-  to{opacity:.95;transform:translate3d(calc(var(--pointer-x) * -10px),calc(-50% + var(--pointer-y) * -8px),0)}
+  to{opacity:.95;transform:translate3d(var(--pointer-x-inverse),calc(-50% + var(--pointer-y-inverse)),0)}
 }
 @keyframes hero-bracket-right{
   from{opacity:0;transform:translate3d(34px,-50%,0)}
-  to{opacity:.95;transform:translate3d(calc(var(--pointer-x) * 10px),calc(-50% + var(--pointer-y) * 8px),0)}
+  to{opacity:.95;transform:translate3d(var(--pointer-x),calc(-50% + var(--pointer-y)),0)}
 }
 @keyframes hero-signal-in{
   from{opacity:0;transform:scale(.5)}

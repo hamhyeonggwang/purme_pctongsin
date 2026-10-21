@@ -85,6 +85,32 @@
         <p id="adminProjectStatus" class="admin-status" role="status" aria-live="polite"></p>
         <div id="adminProjectList" class="admin-request-list"></div>
       </section>
+
+      <section class="admin-archive-section">
+        <div class="admin-project-head">
+          <div><p class="micro-label">ARCHIVE / UPLOAD</p><h2>회원 자료 업로드</h2></div>
+        </div>
+        <form id="adminArchiveForm" class="admin-archive-form">
+          <label>제목<input id="archiveTitle" type="text" maxlength="120" required></label>
+          <label>카테고리
+            <select id="archiveCategory" required>
+              <option value="start">AI 시작하기</option>
+              <option value="work">업무 활용</option>
+              <option value="automate">자동화</option>
+              <option value="build">만들기</option>
+              <option value="learn">교육자료</option>
+              <option value="club">PC통신 자료</option>
+            </select>
+          </label>
+          <label class="admin-archive-wide">설명<textarea id="archiveDescription" rows="3" maxlength="500"></textarea></label>
+          <label class="admin-archive-wide">파일<input id="archiveFile" type="file" required></label>
+          <div class="admin-archive-actions">
+            <button class="button button-primary" type="submit">자료 업로드</button>
+            <span id="adminArchiveStatus" class="admin-status" role="status" aria-live="polite"></span>
+          </div>
+        </form>
+        <div id="adminArchiveList" class="admin-request-list"></div>
+      </section>
     </section>
   </main>
 </body>

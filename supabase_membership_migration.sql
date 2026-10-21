@@ -566,3 +566,88 @@ $$;
 
 revoke all on function public.review_project_application(uuid, text) from public;
 grant execute on function public.review_project_application(uuid, text) to authenticated;
+
+
+-- ---------------------------------------------------------------------------
+-- Member project application RPC
+-- Server-side validation for membership, recruiting state, capacity and duplicate.
+-- ---------------------------------------------------------------------------
+
+create or replace function public.apply_to_project(
+  p_project_id uuid
+)
+returns public.project_applications
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_project public.projects;
+  v_application public.project_applications;
+  v_approved bigint;
+begin
+  if auth.uid() is null then
+    raise exception 'authentication required';
+  end if;
+
+  if not exists (
+    select 1
+    from public.members m
+    where m.user_id = auth.uid()
+      and m.status = 'active'
+  ) then
+    raise exception 'active membership required';
+  end if;
+
+  select *
+  into v_project
+  from public.projects
+  where id = p_project_id;
+
+  if v_project.id is null then
+    raise exception 'project not found';
+  end if;
+
+  if v_project.status <> 'recruiting' then
+    raise exception 'project is not recruiting';
+  end if;
+
+  if exists (
+    select 1
+    from public.project_applications pa
+    where pa.project_id = p_project_id
+      and pa.user_id = auth.uid()
+  ) then
+    raise exception 'application already exists';
+  end if;
+
+  if v_project.capacity is not null then
+    select count(*)
+    into v_approved
+    from public.project_applications
+    where project_id = p_project_id
+      and status = 'approved';
+
+    if v_approved >= v_project.capacity then
+      raise exception 'project capacity reached';
+    end if;
+  end if;
+
+  insert into public.project_applications (
+    project_id,
+    user_id,
+    status
+  )
+  values (
+    p_project_id,
+    auth.uid(),
+    'pending'
+  )
+  returning * into v_application;
+
+  return v_application;
+end;
+$$;
+
+revoke all on function public.apply_to_project(uuid) from public;
+grant execute on function public.apply_to_project(uuid) to authenticated;

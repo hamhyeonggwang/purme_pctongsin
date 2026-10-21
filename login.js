@@ -11,6 +11,7 @@ const email = document.getElementById("memberEmail");
 const password = document.getElementById("memberPassword");
 const reset = document.getElementById("memberResetPassword");
 const status = document.getElementById("memberLoginStatus");
+const next = new URLSearchParams(window.location.search).get("next") || "/mypage";
 
 function setStatus(message, type="") {
   status.className = "member-status" + (type ? " " + type : "");
@@ -19,7 +20,7 @@ function setStatus(message, type="") {
 
 const { data: sessionData } = await supabase.auth.getSession();
 if (sessionData.session) {
-  window.location.replace("/mypage");
+  window.location.replace(next);
 }
 
 form?.addEventListener("submit", async (event) => {

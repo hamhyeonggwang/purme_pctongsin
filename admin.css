@@ -60,3 +60,12 @@
 .admin-login form>input{display:block;width:100%;margin-bottom:12px}
 .admin-reset-button{min-height:48px;padding:0 16px;border:1px solid var(--ink);background:#fff;font-weight:850;cursor:pointer}
 .admin-reset-button:hover{background:var(--paper)}
+
+.admin-archive-section{margin-top:64px;padding-top:28px;border-top:2px solid var(--ink)}
+.admin-archive-form{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:22px;border:1px solid var(--ink);background:#fff;margin-bottom:24px}
+.admin-archive-form label{display:grid;gap:7px;font-size:12px;font-weight:850}
+.admin-archive-form input,.admin-archive-form select,.admin-archive-form textarea{width:100%;min-height:46px;padding:10px 12px;border:1px solid var(--line);background:var(--paper);font:inherit}
+.admin-archive-form textarea{resize:vertical}
+.admin-archive-wide{grid-column:1/-1}
+.admin-archive-actions{grid-column:1/-1;display:flex;gap:14px;align-items:center}
+@media(max-width:820px){.admin-archive-form{grid-template-columns:1fr}.admin-archive-wide,.admin-archive-actions{grid-column:auto}}

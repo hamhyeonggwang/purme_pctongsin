@@ -304,3 +304,265 @@ $$;
 
 revoke all on function public.get_admin_join_requests(text) from public;
 grant execute on function public.get_admin_join_requests(text) to authenticated;
+
+
+-- ---------------------------------------------------------------------------
+-- Projects
+-- ---------------------------------------------------------------------------
+
+create table if not exists public.projects (
+  id uuid primary key default gen_random_uuid(),
+  slug text not null unique,
+  code text not null unique,
+  title text not null,
+  project_type text not null,
+  status text not null default 'recruiting',
+  capacity integer,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+
+  constraint projects_status_check
+    check (status in ('recruiting', 'active', 'completed', 'paused')),
+  constraint projects_capacity_check
+    check (capacity is null or capacity > 0)
+);
+
+drop trigger if exists set_projects_updated_at on public.projects;
+create trigger set_projects_updated_at
+before update on public.projects
+for each row execute function public.set_updated_at();
+
+insert into public.projects (slug, code, title, project_type, status, capacity)
+values
+  ('real-ai', 'PROJECT 001', '진짜 쓰는 AI', 'team', 'recruiting', 6),
+  ('solo-ai', 'PROJECT 002', '1인 AI 미션', 'solo', 'recruiting', null)
+on conflict (slug) do update
+set
+  code = excluded.code,
+  title = excluded.title,
+  project_type = excluded.project_type,
+  capacity = excluded.capacity;
+
+alter table public.projects enable row level security;
+revoke all on table public.projects from anon, authenticated;
+grant select on table public.projects to anon, authenticated;
+
+drop policy if exists "Public can read projects" on public.projects;
+create policy "Public can read projects"
+on public.projects
+for select
+to anon, authenticated
+using (true);
+
+-- ---------------------------------------------------------------------------
+-- Project applications
+-- ---------------------------------------------------------------------------
+
+create table if not exists public.project_applications (
+  id uuid primary key default gen_random_uuid(),
+  project_id uuid not null references public.projects(id) on delete cascade,
+  user_id uuid not null references auth.users(id) on delete cascade,
+  status text not null default 'pending',
+  created_at timestamptz not null default now(),
+  reviewed_at timestamptz,
+  reviewed_by uuid references auth.users(id) on delete set null,
+
+  constraint project_applications_status_check
+    check (status in ('pending', 'approved', 'rejected')),
+  constraint project_applications_unique_member
+    unique (project_id, user_id)
+);
+
+create index if not exists project_applications_status_idx
+  on public.project_applications (status, created_at desc);
+
+create index if not exists project_applications_user_idx
+  on public.project_applications (user_id, created_at desc);
+
+alter table public.project_applications enable row level security;
+revoke all on table public.project_applications from anon, authenticated;
+grant select, insert on table public.project_applications to authenticated;
+
+drop policy if exists "Members can read own project applications"
+  on public.project_applications;
+create policy "Members can read own project applications"
+on public.project_applications
+for select
+to authenticated
+using ((select auth.uid()) = user_id);
+
+drop policy if exists "Active members can apply to recruiting projects"
+  on public.project_applications;
+create policy "Active members can apply to recruiting projects"
+on public.project_applications
+for insert
+to authenticated
+with check (
+  (select auth.uid()) = user_id
+  and status = 'pending'
+  and exists (
+    select 1 from public.members m
+    where m.user_id = (select auth.uid())
+      and m.status = 'active'
+  )
+  and exists (
+    select 1 from public.projects p
+    where p.id = project_id
+      and p.status = 'recruiting'
+  )
+);
+
+-- Public project cards: aggregate counts only.
+create or replace function public.get_open_projects()
+returns table (
+  id uuid,
+  slug text,
+  code text,
+  title text,
+  project_type text,
+  status text,
+  capacity integer,
+  approved_count bigint,
+  pending_count bigint
+)
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select
+    p.id,
+    p.slug,
+    p.code,
+    p.title,
+    p.project_type,
+    p.status,
+    p.capacity,
+    count(pa.id) filter (where pa.status = 'approved') as approved_count,
+    count(pa.id) filter (where pa.status = 'pending') as pending_count
+  from public.projects p
+  left join public.project_applications pa on pa.project_id = p.id
+  where p.status in ('recruiting', 'active')
+  group by p.id
+  order by p.code;
+$$;
+
+revoke all on function public.get_open_projects() from public;
+grant execute on function public.get_open_projects() to anon, authenticated;
+
+-- Admin project application list. Applicant PII is admin-only.
+create or replace function public.get_admin_project_applications(
+  p_status text default 'pending'
+)
+returns table (
+  id uuid,
+  project_id uuid,
+  project_code text,
+  project_title text,
+  applicant_name text,
+  applicant_department text,
+  applicant_email text,
+  status text,
+  created_at timestamptz,
+  reviewed_at timestamptz
+)
+language plpgsql
+stable
+security definer
+set search_path = public
+as $$
+begin
+  if not public.is_pc_admin() then
+    raise exception 'not authorized';
+  end if;
+
+  if p_status is not null
+     and p_status not in ('pending', 'approved', 'rejected') then
+    raise exception 'invalid status';
+  end if;
+
+  return query
+  select
+    pa.id,
+    pa.project_id,
+    p.code,
+    p.title,
+    m.name,
+    m.department,
+    m.email,
+    pa.status,
+    pa.created_at,
+    pa.reviewed_at
+  from public.project_applications pa
+  join public.projects p on p.id = pa.project_id
+  join public.members m on m.user_id = pa.user_id
+  where p_status is null or pa.status = p_status
+  order by
+    case when pa.status = 'pending' then 0 else 1 end,
+    pa.created_at desc;
+end;
+$$;
+
+revoke all on function public.get_admin_project_applications(text) from public;
+grant execute on function public.get_admin_project_applications(text) to authenticated;
+
+-- Admin approval / rejection with capacity check.
+create or replace function public.review_project_application(
+  p_application_id uuid,
+  p_decision text
+)
+returns public.project_applications
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_application public.project_applications;
+  v_capacity integer;
+  v_approved bigint;
+begin
+  if not public.is_pc_admin() then
+    raise exception 'not authorized';
+  end if;
+
+  if p_decision not in ('approved', 'rejected') then
+    raise exception 'decision must be approved or rejected';
+  end if;
+
+  select pa.*, p.capacity
+  into v_application, v_capacity
+  from public.project_applications pa
+  join public.projects p on p.id = pa.project_id
+  where pa.id = p_application_id
+    and pa.status = 'pending';
+
+  if v_application.id is null then
+    raise exception 'pending application not found';
+  end if;
+
+  if p_decision = 'approved' and v_capacity is not null then
+    select count(*)
+    into v_approved
+    from public.project_applications
+    where project_id = v_application.project_id
+      and status = 'approved';
+
+    if v_approved >= v_capacity then
+      raise exception 'project capacity reached';
+    end if;
+  end if;
+
+  update public.project_applications
+  set
+    status = p_decision,
+    reviewed_at = now(),
+    reviewed_by = auth.uid()
+  where id = p_application_id
+  returning * into v_application;
+
+  return v_application;
+end;
+$$;
+
+revoke all on function public.review_project_application(uuid, text) from public;
+grant execute on function public.review_project_application(uuid, text) to authenticated;

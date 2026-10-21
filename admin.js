@@ -38,7 +38,18 @@ const els = {
   archiveDescription: document.getElementById("archiveDescription"),
   archiveFile: document.getElementById("archiveFile"),
   archiveStatus: document.getElementById("adminArchiveStatus"),
-  archiveList: document.getElementById("adminArchiveList")
+  archiveList: document.getElementById("adminArchiveList"),
+  newsForm: document.getElementById("adminNewsForm"),
+  newsSource: document.getElementById("newsSource"),
+  newsPublishedAt: document.getElementById("newsPublishedAt"),
+  newsTitle: document.getElementById("newsTitle"),
+  newsSummary: document.getElementById("newsSummary"),
+  newsSourceUrl: document.getElementById("newsSourceUrl"),
+  newsImageUrl: document.getElementById("newsImageUrl"),
+  newsFeatured: document.getElementById("newsFeatured"),
+  newsPublished: document.getElementById("newsPublished"),
+  newsStatus: document.getElementById("adminNewsStatus"),
+  newsList: document.getElementById("adminNewsList")
 };
 
 let activeFilter = "pending";
@@ -328,6 +339,140 @@ function setProjectFilter(filter) {
   loadProjectApplications();
 }
 
+async function loadNewsPosts() {
+  if (!els.newsList) return;
+  els.newsList.textContent = "";
+  const { data, error } = await supabase
+    .from("news_posts")
+    .select("id,source_name,title,source_url,published_at,is_featured,is_published")
+    .order("published_at", { ascending: false });
+
+  if (error) {
+    console.error(error);
+    setStatus(els.newsStatus, "AI 소식 목록을 불러오지 못했습니다.", "error");
+    return;
+  }
+
+  const rows = data || [];
+  if (!rows.length) {
+    setStatus(els.newsStatus, "등록된 AI 소식이 없습니다.");
+    return;
+  }
+
+  rows.forEach((row) => {
+    const article=document.createElement("article");
+    article.className="admin-request";
+
+    const top=document.createElement("div");
+    top.className="admin-request-top";
+    const info=document.createElement("div");
+    const title=document.createElement("h2");
+    const source=document.createElement("p");
+    title.textContent=row.title;
+    source.textContent=row.source_name;
+    info.append(title,source);
+
+    const badge=document.createElement("span");
+    badge.className="admin-badge " + (row.is_published ? "approved" : "rejected");
+    badge.textContent=row.is_published ? (row.is_featured ? "대표 / 게시" : "게시") : "비공개";
+    top.append(info,badge);
+
+    const meta=document.createElement("dl");
+    meta.className="admin-request-meta";
+    [["PUBLISHED",formatDate(row.published_at)],["URL",row.source_url],["FEATURED",row.is_featured ? "YES" : "NO"]].forEach(([label,value])=>{
+      const item=document.createElement("div");
+      const dt=document.createElement("dt");
+      const dd=document.createElement("dd");
+      dt.textContent=label; dd.textContent=value;
+      item.append(dt,dd); meta.appendChild(item);
+    });
+
+    const actions=document.createElement("div");
+    actions.className="admin-actions";
+
+    const toggle=document.createElement("button");
+    toggle.type="button";
+    toggle.className="button admin-reject";
+    toggle.textContent=row.is_published ? "비공개" : "게시";
+    toggle.addEventListener("click", async()=>{
+      setStatus(els.newsStatus,"변경 중…");
+      const {error:updateError}=await supabase
+        .from("news_posts")
+        .update({is_published:!row.is_published})
+        .eq("id",row.id);
+      if(updateError){
+        console.error(updateError);
+        setStatus(els.newsStatus,"게시 상태 변경에 실패했습니다.","error");
+        return;
+      }
+      setStatus(els.newsStatus,"변경했습니다.","success");
+      await loadNewsPosts();
+    });
+
+    const remove=document.createElement("button");
+    remove.type="button";
+    remove.className="button admin-reject";
+    remove.textContent="삭제";
+    remove.addEventListener("click",async()=>{
+      if(!window.confirm("이 AI 소식을 삭제할까요?")) return;
+      const {error:deleteError}=await supabase.from("news_posts").delete().eq("id",row.id);
+      if(deleteError){
+        console.error(deleteError);
+        setStatus(els.newsStatus,"삭제에 실패했습니다.","error");
+        return;
+      }
+      setStatus(els.newsStatus,"삭제했습니다.","success");
+      await loadNewsPosts();
+    });
+
+    actions.append(toggle,remove);
+    article.append(top,meta,actions);
+    els.newsList.appendChild(article);
+  });
+}
+
+async function createNewsPost(event){
+  event.preventDefault();
+  setStatus(els.newsStatus,"등록 중…");
+
+  if(els.newsFeatured.checked){
+    const {error:clearError}=await supabase
+      .from("news_posts")
+      .update({is_featured:false})
+      .eq("is_featured",true);
+    if(clearError){
+      console.error(clearError);
+      setStatus(els.newsStatus,"기존 대표 기사 상태 변경에 실패했습니다.","error");
+      return;
+    }
+  }
+
+  const publishedAt = new Date(els.newsPublishedAt.value + "T09:00:00+09:00").toISOString();
+  const {error}=await supabase.from("news_posts").insert({
+    source_name:els.newsSource.value.trim(),
+    title:els.newsTitle.value.trim(),
+    summary:els.newsSummary.value.trim() || null,
+    source_url:els.newsSourceUrl.value.trim(),
+    image_url:els.newsImageUrl.value.trim() || null,
+    published_at:publishedAt,
+    is_featured:els.newsFeatured.checked,
+    is_published:els.newsPublished.checked,
+    created_by:currentSession.user.id
+  });
+
+  if(error){
+    console.error(error);
+    setStatus(els.newsStatus,"AI 소식 등록에 실패했습니다.","error");
+    return;
+  }
+
+  els.newsForm.reset();
+  els.newsPublished.checked=true;
+  els.newsPublishedAt.value=new Date().toISOString().slice(0,10);
+  setStatus(els.newsStatus,"AI 소식을 등록했습니다.","success");
+  await loadNewsPosts();
+}
+
 function safeObjectName(name) {
   const dot = name.lastIndexOf(".");
   const ext = dot >= 0 ? name.slice(dot).toLowerCase().replace(/[^a-z0-9.]/g, "") : "";
@@ -472,7 +617,7 @@ async function enterAdmin(session) {
   els.sessionLabel.textContent = session.user.email || "SIGNED IN";
   setStatus(els.loginStatus, "");
 
-  await Promise.all([loadSummary(), loadRequests(), loadProjectApplications(), loadArchiveItems()]);
+  await Promise.all([loadSummary(), loadRequests(), loadProjectApplications(), loadNewsPosts(), loadArchiveItems()]);
 }
 
 async function syncSession() {
@@ -554,7 +699,7 @@ els.signOut?.addEventListener("click", async () => {
 });
 
 els.refresh?.addEventListener("click", async () => {
-  await Promise.all([loadSummary(), loadRequests(), loadProjectApplications(), loadArchiveItems()]);
+  await Promise.all([loadSummary(), loadRequests(), loadProjectApplications(), loadNewsPosts(), loadArchiveItems()]);
 });
 
 els.tabs.forEach((button) => {
@@ -566,6 +711,10 @@ els.projectTabs.forEach((button) => {
 });
 
 els.archiveForm?.addEventListener("submit", uploadArchive);
+els.newsForm?.addEventListener("submit", createNewsPost);
+if (els.newsPublishedAt && !els.newsPublishedAt.value) {
+  els.newsPublishedAt.value = new Date().toISOString().slice(0,10);
+}
 // data-project-filter listener marker
 
 supabase.auth.onAuthStateChange((_event, session) => {

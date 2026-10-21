@@ -10,6 +10,41 @@
   const progress = document.querySelector(".scroll-progress span");
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const revealItems = [...document.querySelectorAll("[data-reveal]")];
+  const motionHero = document.querySelector(".motion-hero");
+  const staggerGroups = [...document.querySelectorAll("[data-motion-stagger]")];
+
+  if (!reduceMotion && motionHero) {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        document.documentElement.classList.add("home-motion-ready");
+      });
+    });
+
+    let pointerFrame = 0;
+    const setHeroPointer = (event) => {
+      if (pointerFrame) cancelAnimationFrame(pointerFrame);
+      pointerFrame = requestAnimationFrame(() => {
+        const rect = motionHero.getBoundingClientRect();
+        const x = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+        const y = Math.max(0, Math.min(1, (event.clientY - rect.top) / rect.height));
+        motionHero.style.setProperty("--pointer-x", String(x - 0.5));
+        motionHero.style.setProperty("--pointer-y", String(y - 0.5));
+      });
+    };
+    motionHero.addEventListener("pointermove", setHeroPointer, { passive: true });
+    motionHero.addEventListener("pointerleave", () => {
+      motionHero.style.setProperty("--pointer-x", "0");
+      motionHero.style.setProperty("--pointer-y", "0");
+    });
+  } else {
+    document.documentElement.classList.add("home-motion-ready");
+  }
+
+  staggerGroups.forEach((group) => {
+    [...group.children].forEach((child, index) => {
+      child.style.setProperty("--stagger-index", String(index));
+    });
+  });
 
   const setActive = (stage) => {
     links.forEach((link) => {

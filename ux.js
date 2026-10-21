@@ -27,14 +27,20 @@
         const rect = motionHero.getBoundingClientRect();
         const x = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
         const y = Math.max(0, Math.min(1, (event.clientY - rect.top) / rect.height));
-        motionHero.style.setProperty("--pointer-x", String(x - 0.5));
-        motionHero.style.setProperty("--pointer-y", String(y - 0.5));
+        const px = (x - 0.5) * 10;
+        const py = (y - 0.5) * 8;
+        motionHero.style.setProperty("--pointer-x", px.toFixed(2) + "px");
+        motionHero.style.setProperty("--pointer-x-inverse", (-px).toFixed(2) + "px");
+        motionHero.style.setProperty("--pointer-y", py.toFixed(2) + "px");
+        motionHero.style.setProperty("--pointer-y-inverse", (-py).toFixed(2) + "px");
       });
     };
     motionHero.addEventListener("pointermove", setHeroPointer, { passive: true });
     motionHero.addEventListener("pointerleave", () => {
-      motionHero.style.setProperty("--pointer-x", "0");
-      motionHero.style.setProperty("--pointer-y", "0");
+      motionHero.style.setProperty("--pointer-x", "0px");
+      motionHero.style.setProperty("--pointer-x-inverse", "0px");
+      motionHero.style.setProperty("--pointer-y", "0px");
+      motionHero.style.setProperty("--pointer-y-inverse", "0px");
     });
   } else {
     document.documentElement.classList.add("home-motion-ready");

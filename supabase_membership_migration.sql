@@ -774,3 +774,122 @@ using (
   bucket_id = 'member-archive'
   and public.is_pc_admin()
 );
+
+
+-- ---------------------------------------------------------------------------
+-- AI News
+-- ---------------------------------------------------------------------------
+
+create table if not exists public.news_posts (
+  id uuid primary key default gen_random_uuid(),
+  source_name text not null,
+  title text not null,
+  summary text,
+  source_url text not null,
+  image_url text,
+  published_at timestamptz not null,
+  is_featured boolean not null default false,
+  is_published boolean not null default true,
+  created_by uuid references auth.users(id) on delete set null,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index if not exists news_posts_published_idx
+  on public.news_posts (is_published, published_at desc);
+
+create index if not exists news_posts_featured_idx
+  on public.news_posts (is_featured, published_at desc);
+
+drop trigger if exists set_news_posts_updated_at on public.news_posts;
+create trigger set_news_posts_updated_at
+before update on public.news_posts
+for each row execute function public.set_updated_at();
+
+alter table public.news_posts enable row level security;
+
+revoke all on table public.news_posts from anon, authenticated;
+grant select on table public.news_posts to anon, authenticated;
+grant insert, update, delete on table public.news_posts to authenticated;
+
+drop policy if exists "Public can read published news"
+  on public.news_posts;
+create policy "Public can read published news"
+on public.news_posts
+for select
+to anon, authenticated
+using (is_published = true);
+
+drop policy if exists "Admins can manage news"
+  on public.news_posts;
+create policy "Admins can manage news"
+on public.news_posts
+for all
+to authenticated
+using (public.is_pc_admin())
+with check (public.is_pc_admin());
+
+-- Seed the current homepage items once. The source URL is the natural key here.
+insert into public.news_posts (
+  source_name, title, summary, source_url, image_url,
+  published_at, is_featured, is_published
+)
+select * from (
+  values
+    (
+      'OPENAI / CHATGPT',
+      'ChatGPT 안에서 슬라이드를 만들고, 팀과 함께 편집한다',
+      '대화에서 초안을 만드는 데서 끝나지 않고 텍스트·이미지·도형·차트를 직접 편집하고, 팀원과 같은 덱에서 협업하는 흐름으로 확장됐습니다.',
+      'https://help.openai.com/en/articles/6825453-chatgpt-release-notes',
+      'https://learn.chatgpt.com/images/codex/app/artifact-viewer-dark.webp',
+      '2026-10-16T00:00:00+09:00'::timestamptz,
+      true,
+      true
+    ),
+    (
+      'GOOGLE',
+      'Gemini 4 Argon, Gemini 앱에서 복잡한 작업과 코딩을 더 깊게 처리',
+      null,
+      'https://blog.google/innovation-and-ai/products/gemini-app/gemini-4-argon-availability/',
+      null,
+      '2026-10-13T00:00:00+09:00'::timestamptz,
+      false,
+      true
+    ),
+    (
+      'MICROSOFT',
+      'Copilot in SharePoint, 사이트·목록·문서 작업까지 AI 지원 확대',
+      null,
+      'https://techcommunity.microsoft.com/blog/spblog/what%E2%80%99s-new-in-copilot-in-sharepoint-october-2026/4535423',
+      null,
+      '2026-10-10T00:00:00+09:00'::timestamptz,
+      false,
+      true
+    ),
+    (
+      'ANTHROPIC',
+      'Claude Haiku 5.5, 빠르고 반복적인 대량 작업을 위한 소형 모델',
+      null,
+      'https://www.anthropic.com/claude-haiku-5-5',
+      null,
+      '2026-10-07T00:00:00+09:00'::timestamptz,
+      false,
+      true
+    ),
+    (
+      'TOOLS',
+      'Gemini Connected Apps, 프로젝트·디자인·일상 도구를 채팅 안으로 연결',
+      null,
+      'https://blog.google/innovation-and-ai/products/gemini-app/new-connected-apps-gemini/',
+      null,
+      '2026-09-23T00:00:00+09:00'::timestamptz,
+      false,
+      true
+    )
+) as seed (
+  source_name, title, summary, source_url, image_url,
+  published_at, is_featured, is_published
+)
+where not exists (
+  select 1 from public.news_posts n where n.source_url = seed.source_url
+);

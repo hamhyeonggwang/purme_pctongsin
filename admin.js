@@ -15,6 +15,8 @@ const els = {
   login: document.getElementById("adminLogin"),
   loginForm: document.getElementById("adminLoginForm"),
   email: document.getElementById("adminEmail"),
+  password: document.getElementById("adminPassword"),
+  resetPassword: document.getElementById("adminResetPassword"),
   loginStatus: document.getElementById("adminLoginStatus"),
   app: document.getElementById("adminApp"),
   appStatus: document.getElementById("adminAppStatus"),
@@ -367,25 +369,51 @@ async function syncSession() {
 els.loginForm?.addEventListener("submit", async (event) => {
   event.preventDefault();
   const email = els.email.value.trim().toLowerCase();
-  if (!email) return;
+  const password = els.password.value;
+  if (!email || !password) return;
 
-  setStatus(els.loginStatus, "로그인 링크를 보내는 중…");
+  setStatus(els.loginStatus, "로그인 중…");
 
-  const { error } = await supabase.auth.signInWithOtp({
+  const { data, error } = await supabase.auth.signInWithPassword({
     email,
-    options: {
-      shouldCreateUser: false,
-      emailRedirectTo: window.location.origin + "/admin"
-    }
+    password
+  });
+
+  if (error || !data.session) {
+    console.error(error);
+    setStatus(els.loginStatus, "이메일 또는 비밀번호를 확인해주세요.", "error");
+    return;
+  }
+
+  try {
+    await enterAdmin(data.session);
+  } catch (err) {
+    console.error(err);
+    setStatus(els.loginStatus, "관리자 권한 확인에 실패했습니다.", "error");
+  }
+});
+
+els.resetPassword?.addEventListener("click", async () => {
+  const email = els.email.value.trim().toLowerCase();
+  if (!email) {
+    setStatus(els.loginStatus, "먼저 이메일을 입력해주세요.", "error");
+    els.email.focus();
+    return;
+  }
+
+  setStatus(els.loginStatus, "비밀번호 재설정 메일을 보내는 중…");
+
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.origin + "/set-password?next=/admin"
   });
 
   if (error) {
     console.error(error);
-    setStatus(els.loginStatus, "등록된 운영진 계정을 확인해주세요.", "error");
+    setStatus(els.loginStatus, "재설정 메일 발송에 실패했습니다.", "error");
     return;
   }
 
-  setStatus(els.loginStatus, "이메일의 로그인 링크를 확인해주세요.", "success");
+  setStatus(els.loginStatus, "비밀번호 재설정 메일을 확인해주세요.", "success");
 });
 
 els.signOut?.addEventListener("click", async () => {

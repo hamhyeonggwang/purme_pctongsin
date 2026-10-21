@@ -368,3 +368,5 @@ img{max-width:100%}
   .about-strip>div{align-items:flex-start;flex-direction:column;gap:8px}
   .archive-list a{grid-template-columns:42px 1fr auto}
 }
+
+.news-feature-fallback{display:flex;align-items:flex-end;justify-content:flex-start;width:100%;height:100%;min-height:510px;padding:28px;background:var(--ink);color:var(--acid);font-size:clamp(72px,9vw,140px);font-weight:900;letter-spacing:-.08em}

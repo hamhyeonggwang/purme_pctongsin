@@ -20,7 +20,10 @@
     <form id="memberLoginForm">
       <label for="memberEmail">이메일</label>
       <input id="memberEmail" type="email" autocomplete="email" required placeholder="승인된 이메일">
-      <button class="button button-primary" type="submit">로그인 링크 받기</button>
+      <label for="memberPassword">비밀번호</label>
+      <input id="memberPassword" type="password" autocomplete="current-password" minlength="8" required placeholder="비밀번호">
+      <button class="button button-primary" type="submit">로그인</button>
+      <button id="memberResetPassword" class="member-secondary-action" type="button">비밀번호를 잊으셨나요?</button>
       <p id="memberLoginStatus" class="member-status" role="status" aria-live="polite"></p>
     </form>
   </section>

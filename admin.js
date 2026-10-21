@@ -165,16 +165,34 @@ async function review(id, decision, name) {
 
   setStatus(els.appStatus, `${label} 처리 중…`);
 
-  const { error } = await supabase.rpc("review_join_request", {
-    p_request_id: id,
-    p_decision: decision
-  });
+  let error = null;
+
+  if (decision === "approved") {
+    const response = await supabase.functions.invoke("approve-member", {
+      body: { request_id: id }
+    });
+    error = response.error;
+  } else {
+    const response = await supabase.rpc("review_join_request", {
+      p_request_id: id,
+      p_decision: "rejected"
+    });
+    error = response.error;
+  }
 
   if (error) {
     console.error(error);
     setStatus(els.appStatus, `${label} 처리에 실패했습니다.`, "error");
     return;
   }
+
+  setStatus(
+    els.appStatus,
+    decision === "approved"
+      ? "승인 완료 · 회원 초대 메일을 발송했습니다."
+      : "반려 처리했습니다.",
+    "success"
+  );
 
   await Promise.all([loadSummary(), loadRequests()]);
 }

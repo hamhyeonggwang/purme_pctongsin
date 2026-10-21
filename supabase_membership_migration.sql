@@ -655,3 +655,122 @@ $$;
 
 revoke all on function public.apply_to_project(uuid) from public;
 grant execute on function public.apply_to_project(uuid) to authenticated;
+
+
+-- ---------------------------------------------------------------------------
+-- Member Archive
+-- ---------------------------------------------------------------------------
+
+create table if not exists public.archive_items (
+  id uuid primary key default gen_random_uuid(),
+  title text not null,
+  category text not null,
+  description text,
+  file_name text not null,
+  object_path text not null unique,
+  mime_type text,
+  file_size bigint,
+  is_published boolean not null default true,
+  created_by uuid references auth.users(id) on delete set null,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+
+  constraint archive_items_category_check
+    check (category in ('start', 'work', 'automate', 'build', 'learn', 'club'))
+);
+
+create index if not exists archive_items_category_idx
+  on public.archive_items (category, created_at desc);
+
+drop trigger if exists set_archive_items_updated_at on public.archive_items;
+create trigger set_archive_items_updated_at
+before update on public.archive_items
+for each row execute function public.set_updated_at();
+
+alter table public.archive_items enable row level security;
+
+revoke all on table public.archive_items from anon, authenticated;
+grant select, insert, update, delete on table public.archive_items to authenticated;
+
+drop policy if exists "Active members can read published archive items"
+  on public.archive_items;
+create policy "Active members can read published archive items"
+on public.archive_items
+for select
+to authenticated
+using (
+  is_published = true
+  and exists (
+    select 1
+    from public.members m
+    where m.user_id = auth.uid()
+      and m.status = 'active'
+  )
+);
+
+drop policy if exists "Admins can manage archive items"
+  on public.archive_items;
+create policy "Admins can manage archive items"
+on public.archive_items
+for all
+to authenticated
+using (public.is_pc_admin())
+with check (public.is_pc_admin());
+
+insert into storage.buckets (id, name, public)
+values ('member-archive', 'member-archive', false)
+on conflict (id) do update
+set public = false;
+
+drop policy if exists "Active members can read archive files"
+  on storage.objects;
+create policy "Active members can read archive files"
+on storage.objects
+for select
+to authenticated
+using (
+  bucket_id = 'member-archive'
+  and exists (
+    select 1
+    from public.members m
+    where m.user_id = auth.uid()
+      and m.status = 'active'
+  )
+);
+
+drop policy if exists "Admins can upload archive files"
+  on storage.objects;
+create policy "Admins can upload archive files"
+on storage.objects
+for insert
+to authenticated
+with check (
+  bucket_id = 'member-archive'
+  and public.is_pc_admin()
+);
+
+drop policy if exists "Admins can update archive files"
+  on storage.objects;
+create policy "Admins can update archive files"
+on storage.objects
+for update
+to authenticated
+using (
+  bucket_id = 'member-archive'
+  and public.is_pc_admin()
+)
+with check (
+  bucket_id = 'member-archive'
+  and public.is_pc_admin()
+);
+
+drop policy if exists "Admins can delete archive files"
+  on storage.objects;
+create policy "Admins can delete archive files"
+on storage.objects
+for delete
+to authenticated
+using (
+  bucket_id = 'member-archive'
+  and public.is_pc_admin()
+);

@@ -338,7 +338,7 @@ async function enterAdmin(session) {
   els.sessionLabel.textContent = session.user.email || "SIGNED IN";
   setStatus(els.loginStatus, "");
 
-  await Promise.all([loadSummary(), loadRequests()]);
+  await Promise.all([loadSummary(), loadRequests(), loadProjectApplications()]);
 }
 
 async function syncSession() {
@@ -394,7 +394,7 @@ els.signOut?.addEventListener("click", async () => {
 });
 
 els.refresh?.addEventListener("click", async () => {
-  await Promise.all([loadSummary(), loadRequests()]);
+  await Promise.all([loadSummary(), loadRequests(), loadProjectApplications()]);
 });
 
 els.tabs.forEach((button) => {

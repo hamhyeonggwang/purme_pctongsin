@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>LOGIN · [PC통신]</title>
+  <link rel="stylesheet" href="/site.css">
+  <link rel="stylesheet" href="/member.css">
+  <script type="module" src="/login.js"></script>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="/"><span class="brand-bracket">[</span><span class="brand-name">PC통신</span><span class="brand-bracket">]</span></a>
+  <span class="header-description">MEMBER LOGIN</span>
+  <nav class="desktop-nav"><a href="/">HOME</a><a href="/about">ABOUT</a><a href="/joinin">JOIN</a></nav>
+</header>
+<main class="member-page shell">
+  <section class="member-login-card">
+    <div><p class="micro-label">MEMBER / LOGIN</p><h1>로그인</h1></div>
+    <form id="memberLoginForm">
+      <label for="memberEmail">이메일</label>
+      <input id="memberEmail" type="email" autocomplete="email" required placeholder="승인된 이메일">
+      <button class="button button-primary" type="submit">로그인 링크 받기</button>
+      <p id="memberLoginStatus" class="member-status" role="status" aria-live="polite"></p>
+    </form>
+  </section>
+</main>
+</body>
+</html>

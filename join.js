@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const SUPABASE_URL = "https://kpviyourqynlhzsqznao.supabase.co";
-  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_iul4iPrWoECeurckKiaQcg_fHTmwQDi";
+  const SUPABASE_URL = "https://ojsotqyonajbkgnsigry.supabase.co";
+  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_znfYkftiraIbAqQP_Bu5ZQ_o1gipFI9";
 
   const form = document.getElementById("join-form");
   const submit = document.getElementById("joinSubmit");

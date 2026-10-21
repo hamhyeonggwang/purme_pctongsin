@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="/site.css" />
   <script src="/ux.js" defer></script>
 <script type="module" src="/auth-nav.js"></script>
+<script type="module" src="/project-join.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#content">본문으로 바로가기</a>
@@ -149,7 +150,7 @@
           </header>
 
           <div class="project-grid" data-reveal>
-            <article class="project-card">
+            <article class="project-card" data-project-slug="real-ai">
               <div class="project-top">
                 <span>PROJECT 001</span>
                 <span class="status-badge">모집 중</span>
@@ -157,12 +158,12 @@
               <div class="project-visual project-real"><strong>REAL</strong><i></i></div>
               <div class="project-body">
                 <h3>진짜 쓰는 AI</h3>
-                <div class="project-meta"><span>4 / 6명</span><span>팀 프로젝트</span><span>모집 중</span></div>
-                <a class="button button-inverse" href="#member">참여 신청</a>
+                <div class="project-meta"><span data-project-count>-- / 6명</span><span>팀 프로젝트</span><span>모집 중</span></div>
+                <a class="button button-inverse" data-project-apply href="/login">참여 신청</a>
               </div>
             </article>
 
-            <article class="project-card">
+            <article class="project-card" data-project-slug="solo-ai">
               <div class="project-top">
                 <span>PROJECT 002</span>
                 <span class="status-badge">모집 중</span>
@@ -170,8 +171,8 @@
               <div class="project-visual project-solo"><strong>SOLO</strong><i></i></div>
               <div class="project-body">
                 <h3>1인 AI 미션</h3>
-                <div class="project-meta"><span>2명 참여</span><span>1인 프로젝트</span><span>모집 중</span></div>
-                <a class="button button-inverse" href="#member">프로젝트 보기</a>
+                <div class="project-meta"><span data-project-count>--명 참여</span><span>1인 프로젝트</span><span>모집 중</span></div>
+                <a class="button button-inverse" data-project-apply href="/login">참여 신청</a>
               </div>
             </article>
           </div>

@@ -7,6 +7,54 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
 });
 
 const status = document.getElementById("mypageStatus");
+
+async function loadProjectActivity(userId) {
+  const { data, error } = await supabase
+    .from("project_applications")
+    .select("id,status,created_at,project_id,projects(code,title,project_type)")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false });
+
+  const list = document.getElementById("memberProjectList");
+  const approvedCount = document.getElementById("memberProjectCount");
+  const pendingCount = document.getElementById("memberPendingCount");
+
+  if (error) {
+    console.error(error);
+    approvedCount.textContent = "—";
+    pendingCount.textContent = "—";
+    list.innerHTML = '<p class="member-empty">프로젝트 활동을 불러오지 못했습니다.</p>';
+    return;
+  }
+
+  const rows = data || [];
+  approvedCount.textContent = String(rows.filter((row) => row.status === "approved").length);
+  pendingCount.textContent = String(rows.filter((row) => row.status === "pending").length);
+  list.textContent = "";
+
+  if (!rows.length) {
+    list.innerHTML = '<p class="member-empty">아직 신청한 프로젝트가 없습니다. <a href="/#try">프로젝트 보기 →</a></p>';
+    return;
+  }
+
+  const label = { pending: "승인 대기", approved: "참여 중", rejected: "반려" };
+
+  rows.forEach((row) => {
+    const item = document.createElement("article");
+    item.className = "member-project-row";
+    const project = row.projects || {};
+    item.innerHTML = `
+      <div>
+        <span>${project.code || "PROJECT"}</span>
+        <h3></h3>
+      </div>
+      <strong class="member-project-status ${row.status}">${label[row.status] || row.status}</strong>
+    `;
+    item.querySelector("h3").textContent = project.title || "프로젝트";
+    list.appendChild(item);
+  });
+}
+
 const { data: sessionData } = await supabase.auth.getSession();
 
 if (!sessionData.session) {
@@ -26,6 +74,7 @@ if (!sessionData.session) {
     document.getElementById("memberDepartment").textContent = member.department;
     document.getElementById("memberEmailValue").textContent = member.email;
     document.getElementById("memberRole").textContent = member.role.toUpperCase();
+    await loadProjectActivity(user.id);
   }
 }
 

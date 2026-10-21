@@ -11,7 +11,7 @@
 <script type="module" src="/project-join.js"></script>
 <script type="module" src="/home-news.js"></script>
 </head>
-<body>
+<body class="home-motion">
   <a class="skip-link" href="#content">본문으로 바로가기</a>
 
   <header class="site-header">
@@ -48,7 +48,13 @@
   </header>
 
   <main id="content">
-    <section class="hero shell" id="top">
+    <section class="hero shell motion-hero" id="top">
+      <div class="hero-motion-frame" aria-hidden="true">
+        <span class="motion-bracket motion-bracket-left">[</span>
+        <span class="motion-bracket motion-bracket-right">]</span>
+        <i class="motion-signal"></i>
+      </div>
+
       <div class="hero-meta">
         <span>AI CLUB / DIGITAL MAGAZINE</span>
         <span>ISSUE 001 · OCT 2026</span>
@@ -57,7 +63,10 @@
       <div class="hero-grid">
         <div class="hero-copy">
           <p class="section-label">PURME CLUB · AI 활용 동호회 </p>
-          <h1>PC통신<br />동호회</h1>
+          <h1 aria-label="PC통신 동호회">
+            <span class="hero-line"><span>PC통신</span></span>
+            <span class="hero-line"><span>동호회</span></span>
+          </h1>
         </div>
 
         <div class="hero-guide">
@@ -73,7 +82,7 @@
     <div class="journey-wrap home-feed shell">
       <div class="journey-content">
         <section id="read" class="content-section" data-stage="read">
-          <header class="section-header">
+          <header class="section-header" data-reveal>
             <div>
               <p class="micro-label">READ / THIS WEEK IN AI</p>
               <h2>이번 주 AI 소식</h2>
@@ -97,7 +106,7 @@
         </section>
 
         <section id="try" class="content-section dark-section" data-stage="try">
-          <header class="section-header light">
+          <header class="section-header light" data-reveal>
             <div>
               <p class="micro-label acid">TRY / PROJECT</p>
               <h2>참여할 프로젝트</h2>
@@ -133,7 +142,7 @@
             </article>
           </div>
         </section>
-        <section id="about-teaser" class="about-strip" aria-label="PC통신 소개">
+        <section id="about-teaser" class="about-strip" aria-label="PC통신 소개" data-reveal>
           <div>
             <span class="micro-label">ABOUT</span>
             <strong>푸르메 AI 활용 동호회 [PC통신]</strong>
@@ -142,7 +151,7 @@
         </section>
 
         <section id="share" class="content-section" data-stage="share">
-          <header class="section-header">
+          <header class="section-header" data-reveal>
             <div>
               <p class="micro-label">SHARE / SELECTED WORK</p>
               <h2>우리가 만든 것</h2>
@@ -207,7 +216,7 @@
         </section>
 
         <section id="reuse" class="content-section" data-stage="reuse">
-          <header class="section-header">
+          <header class="section-header" data-reveal>
             <div>
               <p class="micro-label">REUSE / ARCHIVE</p>
               <h2>다시 쓸 수 있게 남깁니다</h2>
@@ -215,7 +224,7 @@
             <span class="section-count">6 CATEGORIES</span>
           </header>
 
-          <div class="archive-list" data-reveal>
+          <div class="archive-list" data-reveal data-motion-stagger>
             <a href="/archive?category=start"><span>01</span><strong>AI 시작하기</strong><small>START</small></a>
             <a href="/archive?category=work"><span>02</span><strong>업무 활용</strong><small>WORK</small></a>
             <a href="/archive?category=automate"><span>03</span><strong>자동화</strong><small>AUTOMATE</small></a>
@@ -227,7 +236,7 @@
       </div>
     </div>
 
-    <section id="member" class="member-section member-section-compact">
+    <section id="member" class="member-section member-section-compact" data-reveal>
       <div class="shell member-compact">
         <div>
           <p class="micro-label acid">JOIN / MEMBERSHIP</p>

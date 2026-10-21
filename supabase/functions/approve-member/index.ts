@@ -66,9 +66,8 @@ Deno.serve(async (req) => {
       });
     }
 
-    const redirectTo = new URL(req.url);
-    redirectTo.pathname = "/login";
-    redirectTo.search = "";
+    const siteUrl = Deno.env.get("SITE_URL") || "https://purme-pctongsin.vercel.app";
+    const redirectTo = new URL("/login", siteUrl);
 
     const { data: inviteData, error: inviteError } =
       await adminClient.auth.admin.inviteUserByEmail(requestRow.email, {

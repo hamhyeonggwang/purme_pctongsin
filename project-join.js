@@ -63,22 +63,23 @@ if (projectError) {
       button.setAttribute("aria-disabled", "true");
       button.textContent = "신청 중…";
 
-      const { error } = await supabase
-        .from("project_applications")
-        .insert({
-          project_id: project.id,
-          user_id: session.user.id,
-          status: "pending"
-        });
+      const { error } = await supabase.rpc("apply_to_project", {
+        p_project_id: project.id
+      });
 
       if (error) {
         console.error(error);
-        if (error.code === "23505") {
+        const message = String(error.message || "");
+        if (message.includes("already exists")) {
           button.textContent = "이미 신청됨";
+        } else if (message.includes("capacity")) {
+          button.textContent = "모집 완료";
+        } else if (message.includes("membership")) {
+          button.textContent = "회원 확인 필요";
         } else {
           button.textContent = "신청 실패";
-          button.removeAttribute("aria-disabled");
         }
+        button.setAttribute("aria-disabled", "true");
         return;
       }
 

@@ -16,3 +16,16 @@
 .mypage-grid span{color:var(--muted);font:800 9px var(--font-mono);letter-spacing:.1em}
 .mypage-grid h2{margin:12px 0 20px;font-size:24px}.mypage-grid p{margin:0;font-size:54px;font-weight:900}.mypage-grid a{font-weight:900;border-bottom:1px solid var(--ink)}
 @media(max-width:820px){.member-login-card,.mypage-hero,.mypage-grid{grid-template-columns:1fr}.member-page{padding-top:30px}}
+.mypage-projects{margin-top:42px;padding-top:24px;border-top:1px solid var(--ink)}
+.mypage-section-head{display:flex;justify-content:space-between;gap:30px;align-items:end;margin-bottom:18px}
+.mypage-section-head h2{margin:8px 0 0;font-size:34px;letter-spacing:-.05em}
+.member-project-list{border-top:1px solid var(--ink)}
+.member-project-row{display:flex;justify-content:space-between;gap:20px;align-items:center;padding:18px 0;border-bottom:1px solid var(--line)}
+.member-project-row span{color:var(--muted);font:800 9px var(--font-mono);letter-spacing:.08em}
+.member-project-row h3{margin:5px 0 0;font-size:20px}
+.member-project-status{padding:6px 8px;border:1px solid var(--ink);font:800 10px var(--font-mono)}
+.member-project-status.pending{background:var(--acid)}
+.member-project-status.approved{background:var(--ink);color:#fff}
+.member-project-status.rejected{color:var(--muted)}
+.member-empty{margin:0;padding:22px 0;color:var(--muted)}
+.member-empty a{color:var(--ink);font-weight:900}

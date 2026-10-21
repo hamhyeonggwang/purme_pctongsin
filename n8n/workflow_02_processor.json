@@ -1,0 +1,304 @@
+{
+  "name": "PC통신 AI NEWS 02 - Processor",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 15
+            }
+          ]
+        }
+      },
+      "id": "schedule-processor",
+      "name": "Every 15 Minutes",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.PCTONGSIN_SUPABASE_URL + '/rest/v1/rpc/claim_news_candidates' }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $env.PCTONGSIN_SUPABASE_SERVICE_ROLE_KEY }}"
+            },
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + $env.PCTONGSIN_SUPABASE_SERVICE_ROLE_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\"p_limit\":10}",
+        "options": {}
+      },
+      "id": "claim",
+      "name": "Claim Candidates",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        240,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nif (items.length > 1) return items;\nconst raw = items[0]?.json;\nif (Array.isArray(raw)) return raw.map(row => ({ json: row }));\nreturn raw?.id ? items : [];"
+      },
+      "id": "expand-candidates",
+      "name": "Expand Candidates",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/responses",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + $env.OPENAI_API_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({\n  model: $env.PCTONGSIN_NEWS_MODEL,\n  input: [{\n    role: \"user\",\n    content: \"You are the editorial analyst for PC통신, an internal AI-use club. Analyze only the supplied official-source metadata. Do not invent facts. Return JSON only with keys title_ko, summary_ko, why_it_matters, category, relevance_score, confidence_score. category must be one of MODEL, PRODUCT, WORK, AUTOMATION, BUILD, EDUCATION, OTHER. relevance_score uses: practical work usefulness 40, source trust 25, recency 20, novelty 15.\\n\\nSOURCE: \" + $json.source_name + \"\\nTRUST: \" + $json.trust_score + \"\\nTITLE: \" + $json.original_title + \"\\nSUMMARY: \" + ($json.original_summary || \"\") + \"\\nPUBLISHED: \" + ($json.published_at || \"unknown\") + \"\\nURL: \" + ($json.canonical_url || $json.source_url)\n  }]\n}) }}",
+        "options": {}
+      },
+      "id": "ai-analyze",
+      "name": "AI Analyze",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        720,
+        0
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const candidate = $('Expand Candidates').item.json;\nconst response = $json;\n\nlet text = response.output_text;\nif (!text && Array.isArray(response.output)) {\n  const parts = [];\n  for (const item of response.output) {\n    if (!Array.isArray(item.content)) continue;\n    for (const content of item.content) {\n      if (typeof content.text === 'string') parts.push(content.text);\n    }\n  }\n  text = parts.join('\\n');\n}\n\nif (!text) {\n  return [{ json: { id: candidate.id, failed: true, error_message: 'empty AI response' } }];\n}\n\ntry {\n  const cleaned = String(text).replace(/^\\s*```json\\s*/i,'').replace(/\\s*```\\s*$/,'');\n  const a = JSON.parse(cleaned);\n  const relevance = Math.max(0, Math.min(100, Number(a.relevance_score) || 0));\n  const confidence = Math.max(0, Math.min(100, Number(a.confidence_score) || 0));\n  const recommendation = relevance >= 85 ? 'HIGH' : relevance >= 70 ? 'REVIEW' : relevance >= 50 ? 'LOW' : 'SKIP';\n\n  let recent = false;\n  if (candidate.published_at) {\n    recent = Date.now() - new Date(candidate.published_at).getTime() <= 48 * 60 * 60 * 1000;\n  }\n\n  return [{\n    json: {\n      id: candidate.id,\n      title_ko: String(a.title_ko || '').slice(0,180),\n      summary_ko: String(a.summary_ko || '').slice(0,1200),\n      why_it_matters: String(a.why_it_matters || '').slice(0,1200),\n      category: ['MODEL','PRODUCT','WORK','AUTOMATION','BUILD','EDUCATION','OTHER'].includes(a.category) ? a.category : 'OTHER',\n      relevance_score: relevance,\n      confidence_score: confidence,\n      recommendation,\n      featured_recommended: relevance >= 85 && confidence >= 90 && Number(candidate.trust_score) >= 95 && recent,\n      status: relevance >= 50 ? 'review' : 'rejected',\n      processed_at: new Date().toISOString(),\n      error_message: null,\n      failed: false\n    }\n  }];\n} catch (error) {\n  return [{ json: { id: candidate.id, failed: true, error_message: 'AI JSON parse failed: ' + error.message } }];\n}"
+      },
+      "id": "parse-analysis",
+      "name": "Parse Analysis",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        960,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "is-failed",
+              "leftValue": "={{ $json.failed }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "if-failed",
+      "name": "AI Failed?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1200,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "={{ $env.PCTONGSIN_SUPABASE_URL + '/rest/v1/news_candidates?id=eq.' + $json.id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $env.PCTONGSIN_SUPABASE_SERVICE_ROLE_KEY }}"
+            },
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + $env.PCTONGSIN_SUPABASE_SERVICE_ROLE_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({status:'failed',error_message:$json.error_message}) }}",
+        "options": {}
+      },
+      "id": "mark-failed",
+      "name": "Mark Failed",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1440,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "={{ $env.PCTONGSIN_SUPABASE_URL + '/rest/v1/news_candidates?id=eq.' + $json.id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $env.PCTONGSIN_SUPABASE_SERVICE_ROLE_KEY }}"
+            },
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + $env.PCTONGSIN_SUPABASE_SERVICE_ROLE_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({\n  title_ko:$json.title_ko,\n  summary_ko:$json.summary_ko,\n  why_it_matters:$json.why_it_matters,\n  category:$json.category,\n  relevance_score:$json.relevance_score,\n  confidence_score:$json.confidence_score,\n  recommendation:$json.recommendation,\n  featured_recommended:$json.featured_recommended,\n  status:$json.status,\n  processed_at:$json.processed_at,\n  error_message:null\n}) }}",
+        "options": {}
+      },
+      "id": "save-analysis",
+      "name": "Save Analysis",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1440,
+        100
+      ]
+    }
+  ],
+  "connections": {
+    "Every 15 Minutes": {
+      "main": [
+        [
+          {
+            "node": "Claim Candidates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claim Candidates": {
+      "main": [
+        [
+          {
+            "node": "Expand Candidates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Expand Candidates": {
+      "main": [
+        [
+          {
+            "node": "AI Analyze",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Analyze": {
+      "main": [
+        [
+          {
+            "node": "Parse Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Analysis": {
+      "main": [
+        [
+          {
+            "node": "AI Failed?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Failed?": {
+      "main": [
+        [
+          {
+            "node": "Mark Failed",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Save Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "timezone": "Asia/Seoul"
+  },
+  "active": false
+}

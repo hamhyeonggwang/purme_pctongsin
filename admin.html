@@ -86,6 +86,27 @@
         <div id="adminProjectList" class="admin-request-list"></div>
       </section>
 
+      <section class="admin-news-section">
+        <div class="admin-project-head">
+          <div><p class="micro-label">AI NEWS / PUBLISH</p><h2>AI 소식 관리</h2></div>
+        </div>
+        <form id="adminNewsForm" class="admin-archive-form">
+          <label>출처<input id="newsSource" type="text" maxlength="80" required placeholder="예: OPENAI / CHATGPT"></label>
+          <label>게시일<input id="newsPublishedAt" type="date" required></label>
+          <label class="admin-archive-wide">제목<input id="newsTitle" type="text" maxlength="180" required></label>
+          <label class="admin-archive-wide">요약<textarea id="newsSummary" rows="3" maxlength="600"></textarea></label>
+          <label class="admin-archive-wide">원문 URL<input id="newsSourceUrl" type="url" required placeholder="https://"></label>
+          <label class="admin-archive-wide">대표 이미지 URL<input id="newsImageUrl" type="url" placeholder="https://"></label>
+          <label class="admin-checkbox-row"><input id="newsFeatured" type="checkbox"> 대표 기사로 표시</label>
+          <label class="admin-checkbox-row"><input id="newsPublished" type="checkbox" checked> 게시</label>
+          <div class="admin-archive-actions">
+            <button class="button button-primary" type="submit">소식 등록</button>
+            <span id="adminNewsStatus" class="admin-status" role="status" aria-live="polite"></span>
+          </div>
+        </form>
+        <div id="adminNewsList" class="admin-request-list"></div>
+      </section>
+
       <section class="admin-archive-section">
         <div class="admin-project-head">
           <div><p class="micro-label">ARCHIVE / UPLOAD</p><h2>회원 자료 업로드</h2></div>

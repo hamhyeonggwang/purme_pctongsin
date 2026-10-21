@@ -42,7 +42,7 @@ form?.addEventListener("submit", async (event) => {
     return;
   }
 
-  window.location.replace("/mypage");
+  window.location.replace(next);
 });
 
 reset?.addEventListener("click", async () => {

@@ -31,7 +31,14 @@ const els = {
   tabs: [...document.querySelectorAll("[data-filter]")],
   projectStatus: document.getElementById("adminProjectStatus"),
   projectList: document.getElementById("adminProjectList"),
-  projectTabs: [...document.querySelectorAll("[data-project-filter]")]
+  projectTabs: [...document.querySelectorAll("[data-project-filter]")],
+  archiveForm: document.getElementById("adminArchiveForm"),
+  archiveTitle: document.getElementById("archiveTitle"),
+  archiveCategory: document.getElementById("archiveCategory"),
+  archiveDescription: document.getElementById("archiveDescription"),
+  archiveFile: document.getElementById("archiveFile"),
+  archiveStatus: document.getElementById("adminArchiveStatus"),
+  archiveList: document.getElementById("adminArchiveList")
 };
 
 let activeFilter = "pending";
@@ -321,6 +328,131 @@ function setProjectFilter(filter) {
   loadProjectApplications();
 }
 
+function safeObjectName(name) {
+  const dot = name.lastIndexOf(".");
+  const ext = dot >= 0 ? name.slice(dot).toLowerCase().replace(/[^a-z0-9.]/g, "") : "";
+  return crypto.randomUUID() + ext;
+}
+
+async function loadArchiveItems() {
+  if (!els.archiveList) return;
+  els.archiveList.textContent = "";
+  const { data, error } = await supabase
+    .from("archive_items")
+    .select("id,title,category,file_name,object_path,file_size,created_at,is_published")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error(error);
+    setStatus(els.archiveStatus, "자료 목록을 불러오지 못했습니다.", "error");
+    return;
+  }
+
+  const rows = data || [];
+  if (!rows.length) {
+    setStatus(els.archiveStatus, "등록된 자료가 없습니다.");
+    return;
+  }
+
+  rows.forEach((row) => {
+    const article = document.createElement("article");
+    article.className = "admin-request";
+    const top = document.createElement("div");
+    top.className = "admin-request-top";
+    const info = document.createElement("div");
+    const title = document.createElement("h2");
+    const category = document.createElement("p");
+    title.textContent = row.title;
+    category.textContent = row.category.toUpperCase();
+    info.append(title, category);
+    top.append(info);
+
+    const meta = document.createElement("dl");
+    meta.className = "admin-request-meta";
+    [["FILE", row.file_name], ["SIZE", row.file_size ? String(row.file_size) + " B" : "—"], ["CREATED", formatDate(row.created_at)]].forEach(([label,value]) => {
+      const item=document.createElement("div");
+      const dt=document.createElement("dt");
+      const dd=document.createElement("dd");
+      dt.textContent=label; dd.textContent=value;
+      item.append(dt,dd); meta.appendChild(item);
+    });
+
+    const actions=document.createElement("div");
+    actions.className="admin-actions";
+    const remove=document.createElement("button");
+    remove.type="button";
+    remove.className="button admin-reject";
+    remove.textContent="삭제";
+    remove.addEventListener("click", async () => {
+      if (!window.confirm(`‘${row.title}’ 자료를 삭제할까요?`)) return;
+      setStatus(els.archiveStatus, "삭제 중…");
+      const { error: storageError } = await supabase.storage.from("member-archive").remove([row.object_path]);
+      if (storageError) {
+        console.error(storageError);
+        setStatus(els.archiveStatus, "파일 삭제에 실패했습니다.", "error");
+        return;
+      }
+      const { error: rowError } = await supabase.from("archive_items").delete().eq("id", row.id);
+      if (rowError) {
+        console.error(rowError);
+        setStatus(els.archiveStatus, "자료 정보 삭제에 실패했습니다.", "error");
+        return;
+      }
+      setStatus(els.archiveStatus, "삭제했습니다.", "success");
+      await loadArchiveItems();
+    });
+    actions.append(remove);
+    article.append(top,meta,actions);
+    els.archiveList.appendChild(article);
+  });
+}
+
+async function uploadArchive(event) {
+  event.preventDefault();
+  const file = els.archiveFile.files?.[0];
+  if (!file) return;
+
+  setStatus(els.archiveStatus, "업로드 중…");
+  const objectPath = `${els.archiveCategory.value}/${safeObjectName(file.name)}`;
+
+  const { error: uploadError } = await supabase.storage
+    .from("member-archive")
+    .upload(objectPath, file, {
+      cacheControl: "3600",
+      upsert: false,
+      contentType: file.type || undefined
+    });
+
+  if (uploadError) {
+    console.error(uploadError);
+    setStatus(els.archiveStatus, "파일 업로드에 실패했습니다.", "error");
+    return;
+  }
+
+  const { error: insertError } = await supabase.from("archive_items").insert({
+    title: els.archiveTitle.value.trim(),
+    category: els.archiveCategory.value,
+    description: els.archiveDescription.value.trim() || null,
+    file_name: file.name,
+    object_path: objectPath,
+    mime_type: file.type || null,
+    file_size: file.size,
+    is_published: true,
+    created_by: currentSession.user.id
+  });
+
+  if (insertError) {
+    console.error(insertError);
+    await supabase.storage.from("member-archive").remove([objectPath]);
+    setStatus(els.archiveStatus, "자료 정보 저장에 실패했습니다.", "error");
+    return;
+  }
+
+  els.archiveForm.reset();
+  setStatus(els.archiveStatus, "자료를 업로드했습니다.", "success");
+  await loadArchiveItems();
+}
+
 async function enterAdmin(session) {
   currentSession = session;
   const allowed = await checkAdmin();
@@ -340,7 +472,7 @@ async function enterAdmin(session) {
   els.sessionLabel.textContent = session.user.email || "SIGNED IN";
   setStatus(els.loginStatus, "");
 
-  await Promise.all([loadSummary(), loadRequests(), loadProjectApplications()]);
+  await Promise.all([loadSummary(), loadRequests(), loadProjectApplications(), loadArchiveItems()]);
 }
 
 async function syncSession() {
@@ -422,7 +554,7 @@ els.signOut?.addEventListener("click", async () => {
 });
 
 els.refresh?.addEventListener("click", async () => {
-  await Promise.all([loadSummary(), loadRequests(), loadProjectApplications()]);
+  await Promise.all([loadSummary(), loadRequests(), loadProjectApplications(), loadArchiveItems()]);
 });
 
 els.tabs.forEach((button) => {
@@ -432,6 +564,8 @@ els.tabs.forEach((button) => {
 els.projectTabs.forEach((button) => {
   button.addEventListener("click", () => setProjectFilter(button.dataset.projectFilter));
 });
+
+els.archiveForm?.addEventListener("submit", uploadArchive);
 // data-project-filter listener marker
 
 supabase.auth.onAuthStateChange((_event, session) => {

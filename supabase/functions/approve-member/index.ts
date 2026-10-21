@@ -67,7 +67,7 @@ Deno.serve(async (req) => {
     }
 
     const siteUrl = Deno.env.get("SITE_URL") || "https://purme-pctongsin.vercel.app";
-    const redirectTo = new URL("/login", siteUrl);
+    const redirectTo = new URL("/set-password?next=/mypage", siteUrl);
 
     const { data: inviteData, error: inviteError } =
       await adminClient.auth.admin.inviteUserByEmail(requestRow.email, {

@@ -26,10 +26,15 @@
   </section>
 
   <section class="mypage-grid">
-    <article><span>PROJECTS</span><h2>참여 중 프로젝트</h2><p>0</p></article>
-    <article><span>APPLICATIONS</span><h2>신청 프로젝트</h2><p>0</p></article>
+    <article><span>PROJECTS</span><h2>참여 중 프로젝트</h2><p id="memberProjectCount">--</p></article>
+    <article><span>APPLICATIONS</span><h2>승인 대기</h2><p id="memberPendingCount">--</p></article>
     <article><span>IDEAS</span><h2>제안한 아이디어</h2><p>0</p></article>
     <article><span>ARCHIVE</span><h2>회원 자료</h2><a href="/#reuse">자료실 보기 →</a></article>
+  </section>
+
+  <section class="mypage-projects">
+    <div class="mypage-section-head"><p class="micro-label">PROJECTS / MY ACTIVITY</p><h2>프로젝트 활동</h2></div>
+    <div id="memberProjectList" class="member-project-list"></div>
   </section>
 
   <p id="mypageStatus" class="member-status" role="status"></p>

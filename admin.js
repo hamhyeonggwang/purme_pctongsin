@@ -26,10 +26,14 @@ const els = {
   pending: document.getElementById("adminPending"),
   approved: document.getElementById("adminApproved"),
   rejected: document.getElementById("adminRejected"),
-  tabs: [...document.querySelectorAll("[data-filter]")]
+  tabs: [...document.querySelectorAll("[data-filter]")],
+  projectStatus: document.getElementById("adminProjectStatus"),
+  projectList: document.getElementById("adminProjectList"),
+  projectTabs: [...document.querySelectorAll("[data-project-filter]")]
 };
 
 let activeFilter = "pending";
+let activeProjectFilter = "pending";
 let currentSession = null;
 
 function setStatus(el, message, type = "") {
@@ -194,7 +198,7 @@ async function review(id, decision, name) {
     "success"
   );
 
-  await Promise.all([loadSummary(), loadRequests()]);
+  await Promise.all([loadSummary(), loadRequests(), loadProjectApplications()]);
 }
 
 function setFilter(filter) {
@@ -203,6 +207,116 @@ function setFilter(filter) {
     button.setAttribute("aria-selected", String(button.dataset.filter === filter));
   });
   loadRequests();
+}
+
+async function loadProjectApplications() {
+  if (!els.projectList) return;
+  setStatus(els.projectStatus, "불러오는 중…");
+  els.projectList.textContent = "";
+
+  const { data, error } = await supabase.rpc("get_admin_project_applications", {
+    p_status: activeProjectFilter === "all" ? null : activeProjectFilter
+  });
+
+  if (error) {
+    console.error(error);
+    setStatus(els.projectStatus, "프로젝트 신청 목록을 불러오지 못했습니다.", "error");
+    return;
+  }
+
+  const rows = data || [];
+  setStatus(els.projectStatus, rows.length ? "" : "해당 상태의 프로젝트 신청이 없습니다.");
+
+  rows.forEach((row) => {
+    const article = document.createElement("article");
+    article.className = "admin-request";
+
+    const top = document.createElement("div");
+    top.className = "admin-request-top";
+    const identity = document.createElement("div");
+    const name = document.createElement("h2");
+    const dept = document.createElement("p");
+    name.textContent = row.applicant_name;
+    dept.textContent = row.applicant_department;
+    identity.append(name, dept);
+
+    const badge = document.createElement("span");
+    badge.className = "admin-badge " + row.status;
+    badge.textContent = statusLabel(row.status);
+    top.append(identity, badge);
+
+    const meta = document.createElement("dl");
+    meta.className = "admin-request-meta";
+    const fields = [
+      ["PROJECT", row.project_code + " · " + row.project_title],
+      ["EMAIL", row.applicant_email],
+      ["REQUESTED", formatDate(row.created_at)]
+    ];
+    fields.forEach(([label, value]) => {
+      const item = document.createElement("div");
+      const dt = document.createElement("dt");
+      const dd = document.createElement("dd");
+      dt.textContent = label;
+      dd.textContent = value;
+      item.append(dt, dd);
+      meta.appendChild(item);
+    });
+
+    article.append(top, meta);
+
+    if (row.status === "pending") {
+      const actions = document.createElement("div");
+      actions.className = "admin-actions";
+
+      const approve = document.createElement("button");
+      approve.type = "button";
+      approve.className = "button admin-approve";
+      approve.textContent = "승인";
+      approve.addEventListener("click", () => reviewProject(row.id, "approved", row.applicant_name, row.project_title));
+
+      const reject = document.createElement("button");
+      reject.type = "button";
+      reject.className = "button admin-reject";
+      reject.textContent = "반려";
+      reject.addEventListener("click", () => reviewProject(row.id, "rejected", row.applicant_name, row.project_title));
+
+      actions.append(approve, reject);
+      article.appendChild(actions);
+    }
+
+    els.projectList.appendChild(article);
+  });
+}
+
+async function reviewProject(id, decision, name, projectTitle) {
+  const label = decision === "approved" ? "승인" : "반려";
+  if (!window.confirm(`${name}의 ‘${projectTitle}’ 참여 신청을 ${label}할까요?`)) return;
+
+  setStatus(els.projectStatus, `${label} 처리 중…`);
+  const { error } = await supabase.rpc("review_project_application", {
+    p_application_id: id,
+    p_decision: decision
+  });
+
+  if (error) {
+    console.error(error);
+    const message = String(error.message || "").includes("capacity")
+      ? "프로젝트 정원이 모두 찼습니다."
+      : `${label} 처리에 실패했습니다.`;
+    setStatus(els.projectStatus, message, "error");
+    return;
+  }
+
+  setStatus(els.projectStatus, `${label} 처리했습니다.`, "success");
+  await loadProjectApplications();
+}
+
+function setProjectFilter(filter) {
+  activeProjectFilter = filter;
+  els.projectTabs.forEach((button) => {
+    button.setAttribute("aria-selected", String(button.dataset.projectFilter === filter));
+  });
+  loadProjectApplications();
 }
 
 async function enterAdmin(session) {
@@ -286,6 +400,11 @@ els.refresh?.addEventListener("click", async () => {
 els.tabs.forEach((button) => {
   button.addEventListener("click", () => setFilter(button.dataset.filter));
 });
+
+els.projectTabs.forEach((button) => {
+  button.addEventListener("click", () => setProjectFilter(button.dataset.projectFilter));
+});
+// data-project-filter listener marker
 
 supabase.auth.onAuthStateChange((_event, session) => {
   if (session && session !== currentSession) {

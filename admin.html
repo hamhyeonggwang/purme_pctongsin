@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>ADMIN · [PC통신]</title>
+  <link rel="stylesheet" href="/site.css">
+  <link rel="stylesheet" href="/admin.css">
+  <script type="module" src="/admin.js"></script>
+</head>
+<body>
+  <header class="site-header admin-site-header">
+    <a class="brand" href="/" aria-label="PC통신 홈">
+      <span class="brand-bracket">[</span><span class="brand-name">PC통신</span><span class="brand-bracket">]</span>
+    </a>
+    <span class="header-description">ADMIN</span>
+    <nav class="desktop-nav" aria-label="관리 메뉴">
+      <a href="/dashboard">통계</a>
+      <a href="/">HOME</a>
+    </nav>
+  </header>
+
+  <main class="admin-page shell">
+    <section class="admin-hero">
+      <div>
+        <p class="micro-label">MEMBERSHIP / ADMIN</p>
+        <h1>가입 신청 관리</h1>
+      </div>
+      <div class="admin-session">
+        <span id="adminSessionLabel">SIGNED OUT</span>
+        <button id="adminSignOut" class="admin-text-button" type="button" hidden>로그아웃</button>
+      </div>
+    </section>
+
+    <section id="adminLogin" class="admin-login">
+      <div>
+        <p class="micro-label">MAGIC LINK</p>
+        <h2>운영진 로그인</h2>
+      </div>
+      <form id="adminLoginForm">
+        <label for="adminEmail">이메일</label>
+        <div class="admin-login-row">
+          <input id="adminEmail" type="email" autocomplete="email" required placeholder="admin@example.com">
+          <button class="button button-primary" type="submit">로그인 링크 받기</button>
+        </div>
+        <p id="adminLoginStatus" class="admin-status" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section id="adminApp" hidden>
+      <div class="admin-summary" aria-label="가입 신청 요약">
+        <article><span>TOTAL</span><b id="adminTotal">--</b></article>
+        <article><span>PENDING</span><b id="adminPending">--</b></article>
+        <article><span>APPROVED</span><b id="adminApproved">--</b></article>
+        <article><span>REJECTED</span><b id="adminRejected">--</b></article>
+      </div>
+
+      <div class="admin-toolbar">
+        <div class="admin-tabs" role="tablist" aria-label="신청 상태 필터">
+          <button type="button" data-filter="pending" aria-selected="true">승인 대기</button>
+          <button type="button" data-filter="approved">승인 완료</button>
+          <button type="button" data-filter="rejected">반려</button>
+          <button type="button" data-filter="all">전체</button>
+        </div>
+        <button id="adminRefresh" class="admin-text-button" type="button">새로고침</button>
+      </div>
+
+      <p id="adminAppStatus" class="admin-status" role="status" aria-live="polite"></p>
+      <div id="adminRequestList" class="admin-request-list"></div>
+    </section>
+  </main>
+</body>
+</html>

@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="/site.css">
   <link rel="stylesheet" href="/about.css">
   <script src="/ux.js" defer></script>
+<script type="module" src="/auth-nav.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#about-main">본문으로 바로가기</a>
@@ -16,10 +17,10 @@
     <span class="header-description">푸르메클럽 AI 활용 동호회</span>
     <nav class="desktop-nav" aria-label="주요 메뉴">
       <a href="/#read">AI 소식</a><a href="/#try">프로젝트</a><a href="/#reuse">자료실</a><a href="/#share">결과물</a><a href="/about" aria-current="page">ABOUT</a><a href="/joinin">JOIN</a>
-    </nav>
+    <a data-auth-link href="/login">LOGIN</a></nav>
     <details class="mobile-menu"><summary>메뉴</summary><nav aria-label="모바일 메뉴">
       <a href="/#read">AI 소식</a><a href="/#try">프로젝트</a><a href="/#reuse">자료실</a><a href="/#share">결과물</a><a href="/about">ABOUT</a><a href="/joinin">JOIN</a>
-    </nav></details>
+    <a data-auth-link href="/login">LOGIN</a></nav></details>
   </header>
 
   <main id="about-main" class="about-page shell">

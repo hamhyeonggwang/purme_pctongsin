@@ -86,9 +86,27 @@
         <div id="adminProjectList" class="admin-request-list"></div>
       </section>
 
+      <section class="admin-news-inbox-section">
+        <div class="admin-project-head">
+          <div><p class="micro-label">AI NEWS / INBOX</p><h2>자동 수집 검토함</h2></div>
+          <button id="adminNewsInboxRefresh" class="admin-text-button" type="button">새로고침</button>
+        </div>
+
+        <div class="admin-news-inbox-summary" aria-label="AI 뉴스 후보 요약">
+          <article><span>TODAY</span><b id="newsCandidateToday">--</b></article>
+          <article><span>REVIEW</span><b id="newsCandidateReview">--</b></article>
+          <article><span>HIGH</span><b id="newsCandidateHigh">--</b></article>
+          <article><span>DUPLICATE</span><b id="newsCandidateDuplicate">--</b></article>
+          <article><span>FAILED</span><b id="newsCandidateFailed">--</b></article>
+        </div>
+
+        <p id="adminNewsInboxStatus" class="admin-status" role="status" aria-live="polite"></p>
+        <div id="adminNewsInbox" class="admin-news-inbox"></div>
+      </section>
+
       <section class="admin-news-section">
         <div class="admin-project-head">
-          <div><p class="micro-label">AI NEWS / PUBLISH</p><h2>AI 소식 관리</h2></div>
+          <div><p class="micro-label">AI NEWS / MANUAL</p><h2>AI 소식 직접 등록</h2></div>
         </div>
         <form id="adminNewsForm" class="admin-archive-form">
           <label>출처<input id="newsSource" type="text" maxlength="80" required placeholder="예: OPENAI / CHATGPT"></label>

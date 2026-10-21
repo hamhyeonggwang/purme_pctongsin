@@ -7,6 +7,7 @@
   <title>[PC통신] AI 활용 동호회</title>
   <link rel="stylesheet" href="/site.css" />
   <script src="/ux.js" defer></script>
+<script type="module" src="/auth-nav.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#content">본문으로 바로가기</a>
@@ -27,7 +28,7 @@
       <a href="#share">결과물</a>
       <a href="/about">ABOUT</a>
       <a href="#member">가입 안내</a>
-    </nav>
+    <a data-auth-link href="/login">LOGIN</a></nav>
 
     <details class="mobile-menu">
       <summary>메뉴</summary>
@@ -38,7 +39,7 @@
         <a href="#share">결과물</a>
         <a href="/about">ABOUT</a>
         <a href="#member">가입 안내</a>
-      </nav>
+      <a data-auth-link href="/login">LOGIN</a></nav>
     </details>
 
     <div class="scroll-progress" aria-hidden="true"><span></span></div>

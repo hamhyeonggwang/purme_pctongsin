@@ -49,7 +49,15 @@ const els = {
   newsFeatured: document.getElementById("newsFeatured"),
   newsPublished: document.getElementById("newsPublished"),
   newsStatus: document.getElementById("adminNewsStatus"),
-  newsList: document.getElementById("adminNewsList")
+  newsList: document.getElementById("adminNewsList"),
+  newsInbox: document.getElementById("adminNewsInbox"),
+  newsInboxStatus: document.getElementById("adminNewsInboxStatus"),
+  newsInboxRefresh: document.getElementById("adminNewsInboxRefresh"),
+  newsCandidateToday: document.getElementById("newsCandidateToday"),
+  newsCandidateReview: document.getElementById("newsCandidateReview"),
+  newsCandidateHigh: document.getElementById("newsCandidateHigh"),
+  newsCandidateDuplicate: document.getElementById("newsCandidateDuplicate"),
+  newsCandidateFailed: document.getElementById("newsCandidateFailed")
 };
 
 let activeFilter = "pending";
@@ -339,6 +347,201 @@ function setProjectFilter(filter) {
   loadProjectApplications();
 }
 
+function newsRecommendationLabel(value) {
+  return {
+    HIGH: "HIGH",
+    REVIEW: "REVIEW",
+    LOW: "LOW",
+    SKIP: "SKIP"
+  }[value] || "REVIEW";
+}
+
+async function loadNewsCandidateSummary() {
+  if (!els.newsCandidateToday) return;
+
+  const { data, error } = await supabase.rpc("get_news_candidate_dashboard");
+  if (error) {
+    console.error(error);
+    setStatus(els.newsInboxStatus, "후보 집계를 불러오지 못했습니다.", "error");
+    return;
+  }
+
+  els.newsCandidateToday.textContent = String(data?.today ?? 0);
+  els.newsCandidateReview.textContent = String(data?.review ?? 0);
+  els.newsCandidateHigh.textContent = String(data?.high ?? 0);
+  els.newsCandidateDuplicate.textContent = String(data?.duplicate ?? 0);
+  els.newsCandidateFailed.textContent = String(data?.failed ?? 0);
+}
+
+async function publishNewsCandidate(row, featured, titleInput, summaryInput) {
+  const action = featured ? "대표 기사로 게시" : "게시";
+  if (!window.confirm(`‘${titleInput.value.trim() || row.title_ko || row.original_title}’ 후보를 ${action}할까요?`)) return;
+
+  setStatus(els.newsInboxStatus, "게시 처리 중…");
+
+  const { error } = await supabase.rpc("publish_news_candidate", {
+    p_candidate_id: row.id,
+    p_featured: featured,
+    p_title: titleInput.value.trim() || null,
+    p_summary: summaryInput.value.trim() || null
+  });
+
+  if (error) {
+    console.error(error);
+    setStatus(els.newsInboxStatus, "후보 게시에 실패했습니다.", "error");
+    return;
+  }
+
+  setStatus(els.newsInboxStatus, featured ? "대표 기사로 게시했습니다." : "게시했습니다.", "success");
+  await Promise.all([loadNewsCandidateSummary(), loadNewsCandidateInbox(), loadNewsPosts()]);
+}
+
+async function rejectNewsCandidate(row) {
+  if (!window.confirm(`‘${row.title_ko || row.original_title}’ 후보를 제외할까요?`)) return;
+
+  setStatus(els.newsInboxStatus, "제외 처리 중…");
+  const { error } = await supabase.rpc("reject_news_candidate", {
+    p_candidate_id: row.id
+  });
+
+  if (error) {
+    console.error(error);
+    setStatus(els.newsInboxStatus, "후보 제외에 실패했습니다.", "error");
+    return;
+  }
+
+  setStatus(els.newsInboxStatus, "후보에서 제외했습니다.", "success");
+  await Promise.all([loadNewsCandidateSummary(), loadNewsCandidateInbox()]);
+}
+
+async function loadNewsCandidateInbox() {
+  if (!els.newsInbox) return;
+
+  els.newsInbox.textContent = "";
+  setStatus(els.newsInboxStatus, "뉴스 후보를 불러오는 중…");
+
+  const { data, error } = await supabase
+    .from("news_candidates")
+    .select("id,source_name,source_url,canonical_url,original_title,title_ko,summary_ko,why_it_matters,category,relevance_score,confidence_score,recommendation,featured_recommended,published_at,discovered_at,image_url,status")
+    .eq("status", "review")
+    .order("relevance_score", { ascending: false, nullsFirst: false })
+    .order("discovered_at", { ascending: false })
+    .limit(30);
+
+  if (error) {
+    console.error(error);
+    setStatus(els.newsInboxStatus, "뉴스 후보를 불러오지 못했습니다.", "error");
+    return;
+  }
+
+  const rows = data || [];
+  setStatus(els.newsInboxStatus, rows.length ? "" : "검토할 뉴스 후보가 없습니다.");
+
+  rows.forEach((row) => {
+    const article = document.createElement("article");
+    article.className = "news-candidate-card";
+
+    const header = document.createElement("div");
+    header.className = "news-candidate-head";
+
+    const sourceWrap = document.createElement("div");
+    const source = document.createElement("span");
+    source.className = "news-candidate-source";
+    source.textContent = row.source_name;
+    const original = document.createElement("p");
+    original.className = "news-candidate-original";
+    original.textContent = row.original_title;
+    sourceWrap.append(source, original);
+
+    const scoreWrap = document.createElement("div");
+    scoreWrap.className = "news-candidate-scores";
+    const rec = document.createElement("strong");
+    rec.className = "news-score recommendation-" + String(row.recommendation || "REVIEW").toLowerCase();
+    rec.textContent = newsRecommendationLabel(row.recommendation) + " " + String(row.relevance_score ?? "—");
+    const confidence = document.createElement("span");
+    confidence.textContent = "CONF " + String(row.confidence_score ?? "—");
+    scoreWrap.append(rec, confidence);
+    header.append(sourceWrap, scoreWrap);
+
+    const editor = document.createElement("div");
+    editor.className = "news-candidate-editor";
+
+    const titleLabel = document.createElement("label");
+    titleLabel.textContent = "제안 제목";
+    const titleInput = document.createElement("input");
+    titleInput.type = "text";
+    titleInput.maxLength = 180;
+    titleInput.value = row.title_ko || row.original_title;
+    titleLabel.appendChild(titleInput);
+
+    const summaryLabel = document.createElement("label");
+    summaryLabel.textContent = "요약";
+    const summaryInput = document.createElement("textarea");
+    summaryInput.rows = 3;
+    summaryInput.maxLength = 600;
+    summaryInput.value = row.summary_ko || "";
+    summaryLabel.appendChild(summaryInput);
+
+    editor.append(titleLabel, summaryLabel);
+
+    const why = document.createElement("div");
+    why.className = "news-candidate-why";
+    const whyLabel = document.createElement("span");
+    whyLabel.textContent = "WHY IT MATTERS";
+    const whyText = document.createElement("p");
+    whyText.textContent = row.why_it_matters || "—";
+    why.append(whyLabel, whyText);
+
+    const meta = document.createElement("div");
+    meta.className = "news-candidate-meta";
+    [
+      row.category || "OTHER",
+      row.published_at ? formatDate(row.published_at) : "게시일 미확인",
+      row.featured_recommended ? "FEATURED RECOMMENDED" : null
+    ].filter(Boolean).forEach((value) => {
+      const span = document.createElement("span");
+      span.textContent = value;
+      meta.appendChild(span);
+    });
+
+    const actions = document.createElement("div");
+    actions.className = "news-candidate-actions";
+
+    const originalLink = document.createElement("a");
+    originalLink.className = "button admin-reject";
+    originalLink.href = row.canonical_url || row.source_url;
+    originalLink.target = "_blank";
+    originalLink.rel = "noreferrer";
+    originalLink.textContent = "원문 보기";
+
+    const reject = document.createElement("button");
+    reject.type = "button";
+    reject.className = "button admin-reject";
+    reject.textContent = "제외";
+    reject.addEventListener("click", () => rejectNewsCandidate(row));
+
+    const publish = document.createElement("button");
+    publish.type = "button";
+    publish.className = "button admin-approve";
+    publish.textContent = "게시";
+    publish.addEventListener("click", () => publishNewsCandidate(row, false, titleInput, summaryInput));
+
+    const featurePublish = document.createElement("button");
+    featurePublish.type = "button";
+    featurePublish.className = "button admin-feature-publish";
+    featurePublish.textContent = "대표 게시";
+    featurePublish.addEventListener("click", () => publishNewsCandidate(row, true, titleInput, summaryInput));
+
+    actions.append(originalLink, reject, publish, featurePublish);
+    article.append(header, editor, why, meta, actions);
+    els.newsInbox.appendChild(article);
+  });
+}
+
+async function loadNewsAutomation() {
+  await Promise.all([loadNewsCandidateSummary(), loadNewsCandidateInbox()]);
+}
+
 async function loadNewsPosts() {
   if (!els.newsList) return;
   els.newsList.textContent = "";
@@ -617,7 +820,7 @@ async function enterAdmin(session) {
   els.sessionLabel.textContent = session.user.email || "SIGNED IN";
   setStatus(els.loginStatus, "");
 
-  await Promise.all([loadSummary(), loadRequests(), loadProjectApplications(), loadNewsPosts(), loadArchiveItems()]);
+  await Promise.all([loadSummary(), loadRequests(), loadProjectApplications(), loadNewsAutomation(), loadNewsPosts(), loadArchiveItems()]);
 }
 
 async function syncSession() {
@@ -699,7 +902,7 @@ els.signOut?.addEventListener("click", async () => {
 });
 
 els.refresh?.addEventListener("click", async () => {
-  await Promise.all([loadSummary(), loadRequests(), loadProjectApplications(), loadNewsPosts(), loadArchiveItems()]);
+  await Promise.all([loadSummary(), loadRequests(), loadProjectApplications(), loadNewsAutomation(), loadNewsPosts(), loadArchiveItems()]);
 });
 
 els.tabs.forEach((button) => {
@@ -712,6 +915,7 @@ els.projectTabs.forEach((button) => {
 
 els.archiveForm?.addEventListener("submit", uploadArchive);
 els.newsForm?.addEventListener("submit", createNewsPost);
+els.newsInboxRefresh?.addEventListener("click", loadNewsAutomation);
 if (els.newsPublishedAt && !els.newsPublishedAt.value) {
   els.newsPublishedAt.value = new Date().toISOString().slice(0,10);
 }

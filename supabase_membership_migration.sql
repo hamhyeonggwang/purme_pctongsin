@@ -529,7 +529,7 @@ begin
     raise exception 'decision must be approved or rejected';
   end if;
 
-  select pa.*, p.capacity
+  select pa, p.capacity
   into v_application, v_capacity
   from public.project_applications pa
   join public.projects p on p.id = pa.project_id
